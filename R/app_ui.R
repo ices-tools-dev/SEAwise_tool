@@ -1,4 +1,5 @@
 #' The application User-Interface
+source("R/utils_theme.R")
 #'
 #' @param request Internal parameter for `{shiny}`.
 #'     DO NOT REMOVE.
@@ -8,9 +9,23 @@ app_ui <- function(request) {
   tagList(
     # Leave this function for adding external resources
     golem_add_external_resources(),
-    # Your application UI logic
-    fluidPage(
-      h1("SEAwise.tool.wp6")
+    navbarPage(
+      theme = seawise_theme,
+      position = "static-top",
+      collapsible = TRUE,
+      windowTitle = "SEAwise",
+      id = "tabset",
+      fluid = TRUE,
+      title = span(tags$img(src ="www/PRIMARY_SeaWiseLOGO_Full Colour.png",
+                            style = "padding-right:10px;padding-bottom:10px; padding-top:0px; margin-top: -10px",
+                            height = "50px"), "SEAwise"),
+      navbarMenu(title = "About",
+        tabPanel("About2"),
+        tabPanel("SEAwise Partners")),
+      tabPanel("Themes",
+               mod_themes_ui("themes_1")),
+      tabPanel("Case Studies",
+               mod_case_studies_ui("case_studies_1"))
     )
   )
 }
@@ -28,13 +43,17 @@ golem_add_external_resources <- function() {
     "www",
     app_sys("app/www")
   )
-
+  add_resource_path(
+    "img",
+    app_sys("app/img")
+  )
+  
   tags$head(
-    favicon(),
+    favicon(ext = "png"),
     bundle_resources(
       path = app_sys("app/www"),
-      app_title = "SEAwise.tool.wp6"
-    )
+      app_title = "SEAwise"
+    ),
     # Add here other external resources
     # for example, you can add shinyalert::useShinyalert()
   )

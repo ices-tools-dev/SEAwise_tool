@@ -1,14 +1,15 @@
-Package: SEAwise.tool.wp6
-Title: SEAwise tool for the results of WP6
+Package: SEAwise.tool
+Title: SEAwise tool Landin Page
 Version: 0.0.0.9000
 Authors@R: 
     person(given = "Neil",
            family = "Maginnis",
            role = c("aut", "cre"),
            email = "neil.maginnis@ices.com")
-Description: Displays the results of WP6 - Evaluation of fisheries management strategies in an ecosystem context
+Description: Serves as the landing page for the users of the SEAwise Ecosystem Based Fisheries Management Tool
 License: MIT
 Imports: 
+    bslib,
     config (>= 0.3.2),
     ggplot2,
     ggthemes,
@@ -22,6 +23,6 @@ Imports:
     tidyr
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.1
+RoxygenNote: 7.2.3
 Depends: 
     R (>= 2.10)

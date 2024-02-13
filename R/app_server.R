@@ -5,5 +5,7 @@
 #' @import shiny
 #' @noRd
 app_server <- function(input, output, session) {
-  # Your application server logic
+
+  mod_themes_server("themes_1")
+  mod_case_studies_server("case_studies_1")
 }
