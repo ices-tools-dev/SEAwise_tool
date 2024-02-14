@@ -6,3 +6,4 @@ data/*.rda
 data/*.RData
 data-raw/*.rda
 data-raw/*.RData
+R/sysdata.rda

@@ -1,5 +1,4 @@
 #' The application User-Interface
-source("R/utils_theme.R")
 #'
 #' @param request Internal parameter for `{shiny}`.
 #'     DO NOT REMOVE.
