@@ -1,10 +1,10 @@
 ## code to prepare `texts` dataset goes here
 library(readxl)
 
-texts_landing <- readxl::read_xlsx("data-raw/landing_texts.xlsx", sheet = "landing_page")
-texts2 <- readxl::read_xlsx("data-raw/landing_texts.xlsx", sheet = 2)
+path <- "data-raw/landing_texts.xlsx"
+sheets <- excel_sheets(path)
+texts <- lapply(sheets, read_xlsx, path = path) 
+names(texts) <- sheets
 
-texts3 <- readxl::read_xlsx("data-raw/landing_texts.xlsx", sheet = 3)
-
-usethis::use_data(texts_landing, overwrite = TRUE)
+usethis::use_data(texts, overwrite = TRUE)
 

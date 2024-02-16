@@ -19,7 +19,10 @@ mod_themes_ui <- function(id){
       ),
     bslib::card(
       bslib::card_header("Ecological Effects on Fisheries", class = "bg-secondary"),
-      bslib::card_body(uiOutput(ns("eco_effects")))),
+      bslib::card_body(uiOutput(ns("eco_effects"))),
+      bslib::card_image(file = NULL, src = "socioeco",
+                        height = "200px",
+                        href = "https://ices-taf.shinyapps.io/seawise/")),
     bslib::card(
       bslib::card_header("Ecological Effects of Fisheries", class = "bg-success"),
       bslib::card_body(uiOutput(ns("fishery_effects")))),
@@ -39,6 +42,27 @@ mod_themes_server <- function(id){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
  
+    
+    output$socioeconomic_effects <- renderUI({
+      HTML(select_text(texts, "themes", "socioeconomic_effects"))
+    })
+    
+    output$eco_effects <- renderUI({
+      HTML(select_text(texts, "themes", "eco_effects"))
+    })
+    
+    output$fishery_effects <- renderUI({
+      HTML(select_text(texts, "themes", "fishery_effects"))
+    })
+    
+    output$spatial_management <- renderUI({
+      HTML(select_text(texts, "themes", "spatial_management"))
+    })
+    
+    output$mse <- renderUI({
+      HTML(select_text(texts, "themes", "mse"))
+    })
+    
   })
 }
     

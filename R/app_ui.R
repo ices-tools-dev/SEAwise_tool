@@ -15,7 +15,7 @@ app_ui <- function(request) {
       windowTitle = "SEAwise",
       id = "tabset",
       fluid = TRUE,
-      title = span(tags$img(src ="www/PRIMARY_SeaWiseLOGO_Full Colour.png",
+      title = span(tags$img(src ="www/PRIMARY_SeaWiseLOO_Full Colour.png",
                             style = "padding-right:10px;padding-bottom:10px; padding-top:0px; margin-top: -10px",
                             height = "50px"), "SEAwise"),
       navbarMenu(title = "About",
