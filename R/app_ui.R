@@ -15,16 +15,19 @@ app_ui <- function(request) {
       windowTitle = "SEAwise",
       id = "tabset",
       fluid = TRUE,
-      title = span(tags$img(src ="www/PRIMARY_SeaWiseLOO_Full Colour.png",
+      title = span(tags$img(src ="www/PRIMARY_SeaWiseLOGO_Full_Colour.png",
                             style = "padding-right:10px;padding-bottom:10px; padding-top:0px; margin-top: -10px",
                             height = "50px"), "SEAwise"),
-      navbarMenu(title = "About",
-        tabPanel("About2"),
-        tabPanel("SEAwise Partners")),
+      tabPanel("Home"),
       tabPanel("Themes",
                mod_themes_ui("themes_1")),
       tabPanel("Case Studies",
-               mod_case_studies_ui("case_studies_1"))
+               mod_case_studies_ui("case_studies_1")),
+      navbarMenu(title = "About",
+        tabPanel("About"),
+        tabPanel("SEAwise Partners"),
+        tabPanel("Publications")),
+      tabPanel("Resources")
     )
   )
 }

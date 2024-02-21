@@ -1,12 +1,12 @@
 Package: SEAwise.tool
-Title: SEAwise tool Landin Page
+Title: SEAwise tool Landing Page
 Version: 0.0.0.9000
 Authors@R: 
     person(given = "Neil",
            family = "Maginnis",
            role = c("aut", "cre"),
            email = "neil.maginnis@ices.com")
-Description: Serves as the landing page for the users of the SEAwise Ecosystem Based Fisheries Management Tool
+Description: The landing page for the users of the SEAwise Ecosystem Based Fisheries Management Tool
 License: MIT
 Imports: 
     bslib,
@@ -24,6 +24,6 @@ Imports:
     tidyr
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 Depends: 
     R (>= 2.10)
