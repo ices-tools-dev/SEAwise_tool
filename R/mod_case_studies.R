@@ -10,48 +10,56 @@
 mod_case_studies_ui <- function(id){
   ns <- NS(id)
   tagList(
-      bslib::card(
-        bslib::card_header("Mediterreanean", class = "bg-warning"),
-        bslib::card_body(
-          bslib::layout_column_wrap(
-            width = 1/2,
+      card(
+        card_header("Mediterreanean", class = "bg-warning"),
+        card_body(
+          layout_column_wrap(
+            width = NULL, fill = FALSE,
+            style = css(grid_template_columns = "4fr 1fr"),
             heights_equal = "row",
             uiOutput(ns("med_case")),
-            bslib::card_image(
+            card_image(
               file = NULL, src = "www/med.png",
-                          height = "200px")))),
+                          height = "200px",
+              border_radius = "none")))),
       
-      bslib::card(
-        bslib::card_header("Baltic", class = "bg-secondary"),
-        bslib::card_body(
-          bslib::layout_column_wrap(
-            width = 1/2,
+      card(
+        card_header("Baltic", class = "bg-secondary"),
+        card_body(
+          layout_column_wrap(
+            width = NULL, fill = FALSE,
+            style = css(grid_template_columns = "1fr 4fr"),
             heights_equal = "row",
-            bslib::card_image(
+            card_image(
               file = NULL, src = "www/bs.png",
-                          height = "200px"),
+                          height = "200px",
+              border_radius = "none"),
             uiOutput(ns("baltic_case"))))),
       
-      bslib::card(
-        bslib::card_header("Greater North Sea", class = "bg-success"),
-        bslib::card_body(
-          bslib::layout_column_wrap(
-            width = 1/2,
+      card(
+        card_header("Greater North Sea", class = "bg-success"),
+        card_body(
+          layout_column_wrap(
+            width = NULL, fill = FALSE,
+            style = css(grid_template_columns = "4fr 1fr"),
             heights_equal = "row",
             uiOutput(ns("gns_case")),
-            bslib::card_image(
+            card_image(
               file = NULL, src = "www/gns.png",
-                          height = "200px")))),
+                          height = "200px",
+              border_radius = "none")))),
       
-      bslib::card(
-        bslib::card_header("Western Waters", class = "bg-info"),
-        bslib::card_body(
-          bslib::layout_column_wrap(
-            width = 1/2,
+      card(
+        card_header("Western Waters", class = "bg-info"),
+        card_body(
+          layout_column_wrap(
+            width = NULL, fill = FALSE,
+            style = css(grid_template_columns = "1fr 4fr"),
             heights_equal = "row",
-            bslib::card_image(
+            card_image(
               file = NULL, src = "www/ww.png",
-                          height = "200px"),
+                          height = "200px",
+              border_radius = "none"),
             uiOutput(ns("ww_case")))))
   
 )

@@ -11,67 +11,74 @@ mod_themes_ui <- function(id){
   ns <- NS(id)
   tagList(
     
-    bslib::card(
-      bslib::card_header("Social and Economic Effects of and on Fishing", class = "bg-primary"),
-      bslib::card_body(
-        bslib::layout_column_wrap(
-          width = 1/2,
+    card(
+      card_header("Social and Economic Effects of and on Fishing", class = "bg-primary"),
+      card_body(
+        layout_column_wrap(
+            width = NULL, fill = FALSE,
+            style = css(grid_template_columns = "4fr 1fr"),
           heights_equal = "row",
           uiOutput(ns("socioeconomic_effects")),
-          bslib::card_image(
+          card_image(
             file = NULL, src = "www/socioeco.png",
             height = "200px",
+            border_radius = "all",
             href = "https://ices-taf.shinyapps.io/seawise/")))),
     
-    bslib::card(
-      bslib::card_header("Ecological Effects on Fisheries", class = "bg-secondary"),
-      bslib::card_body(
-        bslib::layout_column_wrap(
-          width = 1/2,
+    card(
+      card_header("Ecological Effects on Fisheries", class = "bg-secondary"),
+      card_body(
+        layout_column_wrap(
+          width = NULL, fill = FALSE,
+          style = css(grid_template_columns = "1fr 4fr"),
           heights_equal = "row",
-          bslib::card_image(
+          card_image(
             file = NULL, src = "www/eco.png",
             height = "200px",
+            border_radius = "all",
             href = "https://ices-taf.shinyapps.io/seawise/"),
           uiOutput(ns("eco_effects"))))),
     
-    bslib::card(
-      bslib::card_header("Ecological Effects of Fisheries", class = "bg-success"),
-      bslib::card_body(
-        bslib::layout_column_wrap(
-          width = 1/2,
-          heights_equal = "row",
+    card(
+      card_header("Ecological Effects of Fisheries", class = "bg-success"),
+      card_body(
+        layout_column_wrap(
+          width = NULL, fill = FALSE,
+          style = css(grid_template_columns = "4fr 1fr"),
           uiOutput(ns("fishery_effects")),
-          bslib::card_image(
+          card_image(
             file = NULL, src = "www/fishery.png",
             height = "200px",
-            href = "https://ices-taf.shinyapps.io/seawise/")))),
-    
-    
-    bslib::card(
-      bslib::card_header("Spatial Management impacts on Ecological Systems and Fisheries", class = "bg-info"),
-      bslib::card_body(
-        bslib::layout_column_wrap(
-          width = 1/2,
+            border_radius = "all",
+            href = "https://ices-taf.shinyapps.io/seawise/")))
+      ),
+    card(
+      card_header("Spatial Management impacts on Ecological Systems and Fisheries", class = "bg-info"),
+      card_body(
+        layout_column_wrap(
+          width = NULL, fill = FALSE,
+          style = css(grid_template_columns = "1fr 4fr"),
           heights_equal = "row",
-          bslib::card_image(
+          card_image(
             file = NULL, src = "www/spatial.png",
             height = "200px",
+            border_radius = "all",
             href = "https://ices-taf.shinyapps.io/seawise/"),
           uiOutput(ns("spatial_management"))))),
     
-    bslib::card(
-      bslib::card_header("Evaluation of Fisheries Management Strategies in an Ecosystem Context", class = "bg-warning"),
-      bslib::card_body(
-        bslib::layout_column_wrap(
-          width = 1/2,
+    card(
+      card_header("Evaluation of Fisheries Management Strategies in an Ecosystem Context", class = "bg-warning"),
+      card_body(
+        layout_column_wrap(
+            width = NULL, fill = FALSE,
+            style = css(grid_template_columns = "4fr 1fr"),
           heights_equal = "row",
           uiOutput(ns("mse")),
-          bslib::card_image(
+          card_image(
             file = NULL, src = "www/mse.png",
             height = "200px",
+            border_radius = "all",
             href = "https://ices-taf.shinyapps.io/seawise/"))))
-    
   )
 }
     
