@@ -9,7 +9,7 @@
 #'
 #' @noRd
 app_sys <- function(...) {
-  system.file(..., package = "SEAwise.tool.wp6")
+  system.file(..., package = "SEAwise.tool")
 }
 
 
