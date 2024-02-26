@@ -37,7 +37,12 @@ mod_home_ui <- function(id){
                   card_image(file = NULL, src = "img/normal-reproduction-high-resolution.jpg", height = "50px", width = "75px", border_radius = "all")),
       card(
         card_header("SEAwise Website", class = "bg-danger"),uiOutput(ns("website"))),
-      )
+      ),
+    layout_column_wrap(heights_equal = "row", width = 1, fixed_width = FALSE, fillable = T,
+                       card(
+                         card_header("Today's Featured Research", class = "bg-primary"),
+                         uiOutput(ns("featured_research")))
+    )
   )
 }
     
