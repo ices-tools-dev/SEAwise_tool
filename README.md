@@ -6,7 +6,7 @@ The following links redirect to the other applications:
 
 WP2 / Social and economic effects of and on fishing: https://github.com/ices-tools-dev/SEAwise_tool_wp2
 
-WP3 / Ecological effects on fisheries: https://github.com/ices-tools-dev/seawise_ebfm
+WP3 / Ecological effects on fisheries: https://github.com/ices-tools-dev/seawise_tool_wp3
 
 WP4 / Ecological effects of fisheries: https://github.com/ices-tools-dev/SEAwise_tool_wp4
 
