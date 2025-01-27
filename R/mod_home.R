@@ -45,14 +45,6 @@ mod_home_ui <- function(id){
       )
     ),
     
-    # layout_column_wrap(heights_equal = "row", width = 1/2, fixed_width = FALSE, fillable = T,
-    #   card(
-    #     card_header("The SEAwise Objective", class = "bg-secondary"),
-    #               uiOutput(ns("objective"))),
-    #   card(
-    #     card_header("Research Themes", class = "bg-success"),
-    #     uiOutput(ns("themes")))
-    #   ),
     layout_column_wrap(heights_equal = "row", width = 1/2, fixed_width = FALSE, fillable = T,
       card(
          card_header("Featured SEAwise Research", class = "bg-warning"),
@@ -106,10 +98,7 @@ mod_home_server <- function(id, parent_session){
       temp_location <- tolower(temp_location)
       
       print(paste("Updating selected_ecoregion to:", temp_location))
-      #selected_ecoregion(temp_location)
-      
-      # Optional: Remove if not needed anymore
-      # session$sendCustomMessage("triggerNavbarRender", list())
+
       
       removed <- setdiff(selected_map$groups, input$selected_locations)
       selected_map$groups <- input$selected_locations
