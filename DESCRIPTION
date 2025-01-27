@@ -14,6 +14,7 @@ Imports:
     ggplot2,
     ggthemes,
     golem (>= 0.4.1),
+    leaflet,
     magrittr,
     openxlsx,
     pals,
@@ -21,9 +22,12 @@ Imports:
     RColorBrewer,
     scales,
     shiny (>= 1.8.0),
+    shinyjs,
+    shinyWidgets,
+    stringr,
     tidyr
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 Depends: 
     R (>= 2.10)

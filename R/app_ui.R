@@ -14,7 +14,7 @@ app_ui <- function(request) {
       position = "static-top",
       collapsible = TRUE,
       windowTitle = "SEAwise",
-      id = "tabset",
+      id = "main-navbar",
       fluid = TRUE,
       title = span(tags$img(src ="www/PRIMARY_SeaWiseLOGO_Full_Colour.png",
                             style = "padding-right:10px;padding-bottom:10px; padding-top:0px; margin-top: -10px",
@@ -22,6 +22,8 @@ app_ui <- function(request) {
       tabPanel("Home", mod_home_ui("home_1")
                ),
       navbarMenu(title = "About",
+        tabPanel("SEAwise project",
+                 mod_seawise_ui("seawise_1")),
         tabPanel("Themes",
                  mod_themes_ui("themes_1")),
         tabPanel("Case Studies",
@@ -29,11 +31,14 @@ app_ui <- function(request) {
         tabPanel("SEAwise Partners"),
         tabPanel("Publications")),
       navbarMenu("Results",
-        tabPanel("Social and Economic Effects of and on Fishing"),
-        tabPanel("Ecological Effects on Fisheries"),
-        tabPanel("Ecological Effects of Fisheries"),
-        tabPanel("Spatial Management impacts on Ecological Systems and Fisheries"),
-        tabPanel("Evaluation of Fisheries Management Strategies in an Ecosystem Context"),
+        tabPanel("Baltic Sea",
+                 mod_results_ui("results_baltic")),
+        tabPanel("Greater North Sea",
+                 mod_results_ui("results_ns")),
+        tabPanel("Mediterranean",
+                 mod_results_ui("results_med")),
+        tabPanel("Western Waters", 
+                 mod_results_ui("results_ww"))
         ),
       tabPanel("Resources")
     )
