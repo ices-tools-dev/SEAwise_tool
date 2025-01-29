@@ -59,7 +59,7 @@ mod_home_ui <- function(id){
 #' home Server Functions
 #'
 #' @noRd 
-mod_home_server <- function(id, parent_session){
+mod_home_server <- function(id, parent_session, selected_locations){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
  
@@ -106,6 +106,9 @@ mod_home_server <- function(id, parent_session){
       proxy_map %>%
         hideGroup(removed) %>%
         showGroup(input$selected_locations)
+      
+      # **Update the reactiveVal**
+      selected_locations(temp_location)
     }, ignoreNULL = TRUE, ignoreInit = TRUE)
     
     observeEvent(input$selected_locations, {

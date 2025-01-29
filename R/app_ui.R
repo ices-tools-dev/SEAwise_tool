@@ -31,13 +31,13 @@ app_ui <- function(request) {
         tabPanel("SEAwise Partners"),
         tabPanel("Publications")),
       navbarMenu("Results",
-        tabPanel("Baltic Sea",
+        tabPanel("Baltic Sea", value = "results_baltic",
                  mod_results_ui("results_baltic")),
-        tabPanel("Greater North Sea",
+        tabPanel("Greater North Sea", value = "results_gns",
                  mod_results_ui("results_ns")),
-        tabPanel("Mediterranean",
+        tabPanel("Mediterranean", value = "results_med",
                  mod_results_ui("results_med")),
-        tabPanel("Western Waters", 
+        tabPanel("Western Waters", value = "results_ww",
                  mod_results_ui("results_ww"))
         ),
       tabPanel("Resources")
@@ -74,3 +74,7 @@ golem_add_external_resources <- function() {
     # for example, you can add shinyalert::useShinyalert()
   )
 }
+
+# Source all module files
+wp_dirs <- list.files("R/wps", full.names = TRUE)
+purrr::walk(wp_dirs, ~ purrr::walk(list.files(.x, full.names = TRUE, pattern = "\\.R$"), source))

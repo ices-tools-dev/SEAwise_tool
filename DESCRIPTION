@@ -22,6 +22,7 @@ Imports:
     RColorBrewer,
     scales,
     shiny (>= 1.8.0),
+    shinycssloaders,
     shinyjs,
     shinyWidgets,
     stringr,
