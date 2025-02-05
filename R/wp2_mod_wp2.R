@@ -40,14 +40,15 @@ mod_wp2_server <- function(id, case_study) {
   data <- reactive({
     req(!is.null(case_study()))
     switch(case_study(),
-             "bay_of_biscay" = readRDS("data/wp2/BoB_data.rds"), 
+           "bay_of_biscay" = readRDS("data/wp2/BoB_data.rds"), 
            "celtic_seas" = readRDS("data/wp2/CS_data.rds"), 
            "greater_north_sea" = readRDS("data/wp2/NS_data.rds"), 
            "central_mediterranean" = readRDS("data/wp2/CMed_data.rds"),
+           "mediterranean" = readRDS("data/wp2/CMed_data.rds"),
            "eastern_mediterranean" = readRDS("data/wp2/EMed_data.rds"))
   })
   
-  ecoregion <- reactive(input$ecoregion_selector)
+  #ecoregion <- reactive(input$ecoregion_selector)
   fleet_data <- reactive(data()$fleet_data)
   portion_data <- reactive(data()$adult_portions)
   social_data <- reactive(data()$socioeco_data)
@@ -66,9 +67,9 @@ mod_wp2_server <- function(id, case_study) {
   
   })
 }
-    
+
 ## To be copied in the UI
 # mod_wp2_ui("wp2_1")
-    
+
 ## To be copied in the server
 # mod_wp2_server("wp2_1")

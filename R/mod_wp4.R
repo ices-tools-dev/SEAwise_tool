@@ -29,7 +29,7 @@ mod_wp4_server <- function(id, ecoregion){
              "Baltic" = NULL, 
              "Celtic Seas" = NULL, 
              "greater_north_sea" = WP4_NS, 
-             "Mediterranean" = NULL)
+             "mediterranean" = WP4_med)
     })
     
     output$wp4_ui <- renderUI({
@@ -53,19 +53,19 @@ mod_wp4_server <- function(id, ecoregion){
       data()$map_parameters
     })
     
-    mod_bycatch_server("bycatch_1", data()$bycatch, map_parameters)
+    mod_bycatch_server("bycatch_1", data()$bycatch, map_parameters, ecoregion)
     
-    mod_litter_server("litter_1", data()$litter, map_parameters)
+    mod_litter_server("litter_1", data()$litter, map_parameters, ecoregion)
     
-    mod_rbs_server("rbs_1", data()$rbs, map_parameters)
+    mod_rbs_server("rbs_1", data()$rbs, map_parameters, ecoregion)
     
     mod_ecosystem_risk_server("ecosystem_risk_1", data()$ecosystem)
     
   })
 }
-    
+
 ## To be copied in the UI
 # mod_wp4_ui("wp4_1")
-    
+
 ## To be copied in the server
 # mod_wp4_server("wp4_1")

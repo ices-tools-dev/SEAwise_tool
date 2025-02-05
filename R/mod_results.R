@@ -11,13 +11,14 @@ mod_results_ui <- function(id){
   ns <- NS(id)
   tagList(
     tabsetPanel(
-      tabPanel("WP2", 
+      tabPanel("Social and Economic", 
                mod_wp2_ui(ns("wp2"))),
-      tabPanel("WP3"),
-      tabPanel("WP4",
+      tabPanel("Ecological impacts on Fisheries",
+               mod_wp3_ui(ns("wp3"))),
+      tabPanel("Ecological consequences of Fisheries",
                mod_wp4_ui(ns("wp4"))),
       tabPanel("WP5"),
-      tabPanel("WP6"),
+      tabPanel("Management Strategy and Trade-off Evaluation"),
     )
   )
 }
@@ -29,6 +30,7 @@ mod_results_server <- function(id, case_study){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
     mod_wp2_server("wp2", case_study)
+    mod_wp3_server("wp3", case_study)
     mod_wp4_server("wp4", case_study)
   })
 }
