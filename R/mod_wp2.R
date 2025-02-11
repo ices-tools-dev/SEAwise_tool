@@ -10,26 +10,26 @@
 mod_wp2_ui <- function(id){
   ns <- NS(id)
   tagList(
-      tabsetPanel(
-                 tabPanel("Large and Small Scale Fisheries",
-                          mod_fleet_histograms_ui(ns("fleet_histograms_1")),
-                 ),
-                 tabPanel("Socio-Economics",
-                          mod_socioeconomics_ui(ns("socioeconomics_1")),
-                 ),
-                 tabPanel("Carbon Emissions",
-                          mod_carbon_ui(ns("carbon_1")),
-                 ),
-                 tabPanel("Fuel use and cost",
-                          mod_fish_fuel_ui(ns("fish_fuel_1")),
-                 ),
-                 tabPanel("Meal Provision",
-                          mod_adult_portions_ui(ns("adult_portions_1"))
-                 ),
-      )
+    tabsetPanel(
+      tabPanel("Large and Small Scale Fisheries",
+               mod_fleet_histograms_ui(ns("fleet_histograms_1")),
+      ),
+      tabPanel("Socio-Economics",
+               mod_socioeconomics_ui(ns("socioeconomics_1")),
+      ),
+      tabPanel("Carbon Emissions",
+               mod_carbon_ui(ns("carbon_1")),
+      ),
+      tabPanel("Fuel use and cost",
+               mod_fish_fuel_ui(ns("fish_fuel_1")),
+      ),
+      tabPanel("Meal Provision",
+               mod_adult_portions_ui(ns("adult_portions_1"))
+      ),
     )
+  )
 }
-    
+
 #' wp2 Server Functions
 #'
 #' @noRd 

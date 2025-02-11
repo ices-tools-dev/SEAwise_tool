@@ -28,11 +28,13 @@ mod_carbon_server <- function(id, carbon_data, ecoregion){
       dat <- carbon_data()
       colnames(dat) <- tolower(colnames(dat))
       
+      
       ggplot(data=data.frame(dat), aes(x=year, y=value, fill=fleet)) + 
         geom_bar(stat="identity", position=position_dodge())+
         facet_wrap(country~ variable,scales="free_y",drop=FALSE,ncol=3)+
         theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))+
         labs(fill='Year')
+      
     })
   })
 }

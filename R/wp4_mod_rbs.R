@@ -7,14 +7,15 @@
 #' @noRd 
 #'
 #' @importFrom shiny NS tagList 
+#' @importFrom ggnewscale new_scale_fill
 mod_rbs_ui <- function(id){
   ns <- NS(id)
   tagList(
     card(full_screen = T, min_height = "80vh",
          uiOutput(ns("rbs_year_selector")),
-      card_body(max_height_full_screen = "80vh",
-        withSpinner(plotOutput(ns("rbs_plot"),height = "80vh"))
-                )
+         card_body(max_height_full_screen = "80vh",
+                   withSpinner(plotOutput(ns("rbs_plot"),height = "80vh"))
+         )
     )
     
   )
@@ -38,7 +39,7 @@ mod_rbs_server <- function(id, data, map_parameters, ecoregion){
     })
     
     output$rbs_plot <- renderPlot({
-      browser()
+      
       if (ecoregion() == "greater_north_sea"){
         req(input$rbs_year)
         data_range <- data[[input$rbs_year]]
@@ -65,7 +66,7 @@ mod_rbs_server <- function(id, data, map_parameters, ecoregion){
           ylab("Latitude")+
           xlab("Longitude")
         
-      } else if (ecoregion() == "mediterranean") {
+      } else if (ecoregion() %in% c("mediterranean", "central_mediterranean", "eastern_mediterranean")) {
         
         ggplot()+
           geom_raster(aes(x = x, y = y, fill =RBS_2017_2021_AdriaticSea_GSAs17_18),data = data[[1]],na.rm=T)+

@@ -11,26 +11,27 @@
 mod_wp3_ui <- function(id){
   ns <- NS(id)
   tagList(
- 
+    
     # selectInput(ns("stock_selection"), label = "Select Stock", choices = NULL),
     uiOutput(ns("stock_selector")),
     uiOutput(ns("scenario_selector")),
     #checkboxGroupInput("scenario", label = "Select Scenario", choices = c("Baseline", "RCP 4.5", "RCP 8.5"), selected = "Baseline"),
     
-    card(plotOutput(ns("ssb"))),
-    card(plotOutput(ns("fish"))),
-    card(plotOutput(ns("rec"))),
-    card(plotOutput(ns("cat")))
+    fluidRow(column(6, card(plotOutput(ns("cat")))),
+             column(6, card(plotOutput(ns("rec"))))),
+    fluidRow(column(6, card(plotOutput(ns("fish")))),
+             column(6, card(plotOutput(ns("ssb"))))),
+    
   )
 }
-    
+
 #' wp3 Server Functions
 #'
 #' @noRd 
 mod_wp3_server <- function(id, case_study){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
- 
+    
     case_study_data <- reactive({
       data <- stock_productivity[[case_study()]]$data
       ref <- stock_productivity[[case_study()]]$ref 

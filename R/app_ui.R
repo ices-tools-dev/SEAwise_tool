@@ -4,13 +4,14 @@
 #'     DO NOT REMOVE.
 #' @import shiny
 #' @importFrom htmltools css
+#' @importFrom bslib bs_theme
 #' @noRd
 app_ui <- function(request) {
   tagList(
     # Leave this function for adding external resources
     golem_add_external_resources(),
     navbarPage(
-      theme = seawise_theme,
+      theme = bs_theme("lumen", version = 5),
       position = "static-top",
       collapsible = TRUE,
       windowTitle = "SEAwise",
@@ -68,7 +69,7 @@ golem_add_external_resources <- function() {
     favicon(ext = "png"),
     bundle_resources(
       path = app_sys("app/www"),
-      app_title = "SEAwise"
+      app_title = "SEAwise-tool"
     ),
     # Add here other external resources
     # for example, you can add shinyalert::useShinyalert()

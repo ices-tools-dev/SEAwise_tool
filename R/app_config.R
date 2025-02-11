@@ -9,7 +9,7 @@
 #'
 #' @noRd
 app_sys <- function(...) {
-  system.file(..., package = "SEAwise.tool")
+  system.file(..., package = "SEAwise-tool")
 }
 
 
@@ -23,7 +23,7 @@ app_sys <- function(...) {
 #'
 #' @noRd
 get_golem_config <- function(
-  value,
+    value,
   config = Sys.getenv(
     "GOLEM_CONFIG_ACTIVE",
     Sys.getenv(

@@ -1,26 +1,33 @@
-Package: SEAwise.tool
+Package: SEAwise-tool
 Title: SEAwise tool Landing Page
-Version: 0.0.0.9000
+Version: 0.0.0.9010
 Authors@R: 
     person(given = "Neil",
            family = "Maginnis",
            role = c("aut", "cre"),
            email = "neil.maginnis@ices.com")
 Description: The landing page for the users of the SEAwise Ecosystem Based Fisheries Management Tool
-License: MIT
+License: MIT + file LICENSE
 Imports: 
     bslib,
     config (>= 0.3.2),
+    dplyr,
+    DT,
+    ggnewscale,
     ggplot2,
+    ggpmisc,
     ggthemes,
     golem (>= 0.4.1),
+    htmltools,
     leaflet,
     magrittr,
     openxlsx,
     pals,
+    pkgload,
     R.utils,
     RColorBrewer,
     scales,
+    sf,
     shiny (>= 1.8.0),
     shinycssloaders,
     shinyjs,

@@ -9,16 +9,17 @@
 #' @importFrom shiny NS tagList 
 #' @importFrom shinycssloaders withSpinner
 #' @import ggplot2
+#' @importFrom ggnewscale new_scale_fill
 mod_litter_ui <- function(id){
   ns <- NS(id)
   tagList(
     card(card_header("Fishing Litter"),
-      withSpinner(plotOutput(ns("litter_plot"), height = "75vh"))
-      
+         withSpinner(plotOutput(ns("litter_plot"), height = "75vh"))
+         
     )
   )
 }
-    
+
 #' litter Server Functions
 #'
 #' @noRd 
@@ -57,7 +58,7 @@ mod_litter_server <- function(id, data, map_parameters, ecoregion){
           ylab("Latitude")+
           xlab("Longitude")
         
-      } else if (ecoregion() == "mediterranean"){
+      } else if (ecoregion() %in% c("mediterranean", "central_mediterranean", "eastern_mediterranean")){
         
         nameFillgsa18 <- bquote(
           atop(

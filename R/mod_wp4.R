@@ -16,24 +16,28 @@ mod_wp4_ui <- function(id){
     
   )
 }
-    
+
 #' wp4 Server Functions
 #'
 #' @noRd 
 mod_wp4_server <- function(id, ecoregion){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
- 
+    
     data <- reactive({
       switch(ecoregion(),
-             "Baltic" = NULL, 
-             "Celtic Seas" = NULL, 
+             "baltic_sea" = NULL, 
+             "bay_of_biscay" = NULL, 
+             "celtic_seas" = NULL, 
              "greater_north_sea" = WP4_NS, 
-             "mediterranean" = WP4_med)
+             "mediterranean" = WP4_med,
+             "central_mediterranean" = WP4_med,
+             "eastern_mediterranean" = WP4_med,
+      )
     })
     
     output$wp4_ui <- renderUI({
-      req(ecoregion())
+      req(data(), ecoregion())
       tabsetPanel(
         tabPanel("RBS",
                  mod_rbs_ui(ns("rbs_1"))),

@@ -16,7 +16,7 @@ mod_bycatch_ui <- function(id){
     uiOutput(ns("bycatch_main_panel"))
   )
 }
-    
+
 #' bycatch Server Functions
 #'
 #' @noRd 
@@ -32,7 +32,7 @@ mod_bycatch_server <- function(id, data, map_parameters, ecoregion){
         )
       }
     })
-  
+    
     output$bycatch_main_panel <- renderUI({
       if(ecoregion()=="greater_north_sea"){
         req(input$bycatch_switch)
@@ -45,7 +45,7 @@ mod_bycatch_server <- function(id, data, map_parameters, ecoregion){
         } else {
           card(withSpinner(plotOutput(ns("bycatch_facet_plot"), height = "75vh")))
         }
-      } else if(ecoregion()=="mediterranean"){
+      } else if(ecoregion() %in% c("mediterranean", "central_mediterranean", "eastern_mediterranean")){
         card(withSpinner(plotOutput(ns("bycatch_med_plot"), height = "75vh")))
       }
     })
@@ -122,7 +122,7 @@ mod_bycatch_server <- function(id, data, map_parameters, ecoregion){
     })
     
     output$bycatch_med_plot <- renderPlot({
-      if(ecoregion() == "mediterranean") {
+      if(ecoregion() %in% c("mediterranean", "central_mediterranean", "eastern_mediterranean")) {
         nameFillgsa18 <- c("Bycatch mortality risk of longnose spurdog to OTB gear in GSA 18")
         nameFillgsa20 <- c("Exposure of bull ray to LLS gear in GSA 20")
 
