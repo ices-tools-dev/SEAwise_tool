@@ -12,9 +12,10 @@
 mod_fish_fuel_ui <- function(id){
   ns <- NS(id)
   tagList(
- 
-    uiOutput(ns("country_selector")), 
-    card("",plotOutput(ns("fuel_plot")))
+    card(height = "70vh", full_screen = TRUE, max_height = "100%",
+         layout_sidebar(sidebar = sidebar(uiOutput(ns("plot_filters"))),
+                        plotOutput(ns("fuel_plot")))
+    )
   )
 }
     
@@ -26,7 +27,7 @@ mod_fish_fuel_server <- function(id, ecoregion, fuel_data){
     ns <- session$ns
  
     
-    output$country_selector <- renderUI({
+    output$plot_filters <- renderUI({
       selectInput(ns("country_input"), "Select Country", choices = unique(fuel_data()$country))
     })
     

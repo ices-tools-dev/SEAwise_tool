@@ -11,7 +11,10 @@
 mod_fleet_histograms_ui <- function(id){
   ns <- NS(id)
   tagList(
-    card("",plotOutput(ns("fleet_histograms")))
+    card(height = "70vh", full_screen = TRUE, max_height = "100%",
+         layout_sidebar(sidebar = sidebar(uiOutput(ns("plot_filters"))),
+                        plotOutput(ns("fleet_histograms")))
+    )
   )
 }
     
@@ -22,15 +25,35 @@ mod_fleet_histograms_server <- function(id, fleet_data, ecoregion){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
  
-    output$fleet_histograms <- renderPlot({
-      req(fleet_data(), ecoregion())
-      
+    data <- reactive({
       dat <- fleet_data()
       colnames(dat) <- tolower(colnames(dat))
-      ggplot(data=dat, aes(x=year, y=value, fill=fleet)) + 
+      dat
+    })
+    
+    output$plot_filters <- renderUI({
+      req(data(), ecoregion())
+      countries <- unique(data()$country)
+      variables <- unique(data()$variable)
+      tagList(
+        selectizeInput(ns("country_filter"), "Select Countries", choices = countries, selected = countries, multiple = T),
+        selectizeInput(ns("variable_filter"), "Select Fleet variables", choices = variables, selected = variables, multiple = T)
+      )
+    })
+    
+    filtered_data <- reactive({
+      req(data(), input$country_filter, input$variable_filter)
+      data() %>% filter(country %in% input$country_filter, variable %in% input$variable_filter)
+    })
+    
+    output$fleet_histograms <- renderPlot({
+      req(filtered_data(), ecoregion())
+      
+      ggplot(data=filtered_data(), aes(x=year, y=value, fill=fleet)) + 
         geom_bar(stat="identity", position=position_dodge())+
-        facet_wrap(country + variable~.,scales="free_y",drop=FALSE,ncol=6)+
-        theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+        # facet_wrap(country + variable~.,scales="free_y",drop=FALSE,ncol=6)+
+        facet_grid(variable ~ country, scales="free_y", drop=FALSE, )+
+        theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1), panel.spacing = unit(1, "lines"))
       
     })
     
