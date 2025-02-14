@@ -11,10 +11,10 @@
 mod_rbs_ui <- function(id){
   ns <- NS(id)
   tagList(
-    card(full_screen = T, min_height = "80vh",
+    card(full_screen = T, min_height = "70vh",
          uiOutput(ns("rbs_year_selector")),
-         card_body(max_height_full_screen = "80vh",
-                   withSpinner(plotOutput(ns("rbs_plot"),height = "80vh"))
+         card_body(max_height_full_screen = "70vh",
+                   withSpinner(plotOutput(ns("rbs_plot"),height = "70vh"))
          )
     )
     

@@ -10,18 +10,8 @@
 mod_mse_ui <- function(id){
   ns <- NS(id)
   tagList(
-    sidebarLayout(
-      sidebarPanel = sidebarPanel(width = 2,
-                                  # shiny::selectInput(inputId = ns("mse_ecoregion"),
-                                  #                    label = "Select ecoregion", 
-                                  #                    choices = c("All Ecoregions" = "all_ecoregions", 
-                                  #                                "Greater North Sea" = "North Sea",
-                                  #                                "Celtic Sea",
-                                  #                                "Bay of Biscay", 
-                                  #                                "Baltic Sea",
-                                  #                                "Central Mediterranean", "Eastern Mediterranean"), 
-                                  #                    selected = "all_ecoregions"),
-                                         selectInput(inputId = ns("mse_plot_id"),
+                                      card(full_screen = T, 
+    layout_sidebar(sidebar = sidebar(selectInput(inputId = ns("mse_plot_id"),
                                                             label = "Select plot for display", 
                                                             choices = c("Changes at Regional Level" = "regional_change",
                                                                         "SSB" = "SSB",
@@ -32,12 +22,11 @@ mod_mse_ui <- function(id){
                                                                         "Value of Fleet Landings" = "fleet_landings_value",
                                                                         "Stock Landings" = "stock_landings",
                                                                         "Value of Stock Landings" = "stock_landings_value"),
-                                                     selected = "regional_change"
-                                         )),
-      mainPanel(
-        card(full_screen = T, 
-             card_body(plotOutput(ns("mse_plot"), height = "900px"), max_height_full_screen =  "100%", fill = T)) 
-      )
+                                                     selected = "regional_change")
+                                     ),
+                                           card_body(plotOutput(ns("mse_plot"), height = "900px"), 
+                                                     max_height_full_screen =  "100%", fill = T)) 
+      
     )
   )
 }

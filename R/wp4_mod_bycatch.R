@@ -40,13 +40,13 @@ mod_bycatch_server <- function(id, data, map_parameters, ecoregion){
           tagList(
             selectInput(ns("bycatch_season"), "Select bycatch risk season", choices = unique(data$season)),
             selectInput(ns("bycatch_gear"), "Select bycatch gear season", choices = unique(data$gear)),
-            card(withSpinner(plotOutput(ns("bycatch_plot"), height = "75vh")))
+            card(withSpinner(plotOutput(ns("bycatch_plot"), height = "70vh")))
           )
         } else {
-          card(withSpinner(plotOutput(ns("bycatch_facet_plot"), height = "75vh")))
+          card(withSpinner(plotOutput(ns("bycatch_facet_plot"), height = "70vh")))
         }
       } else if(ecoregion() %in% c("mediterranean", "central_mediterranean", "eastern_mediterranean")){
-        card(withSpinner(plotOutput(ns("bycatch_med_plot"), height = "75vh")))
+        card(withSpinner(plotOutput(ns("bycatch_med_plot"), height = "70vh")))
       }
     })
     
@@ -125,7 +125,7 @@ mod_bycatch_server <- function(id, data, map_parameters, ecoregion){
       if(ecoregion() %in% c("mediterranean", "central_mediterranean", "eastern_mediterranean")) {
         nameFillgsa18 <- c("Bycatch mortality risk of longnose spurdog to OTB gear in GSA 18")
         nameFillgsa20 <- c("Exposure of bull ray to LLS gear in GSA 20")
-
+        
         ggplot()+
           geom_sf(aes(fill = R3.score),col=NA,data = data[[1]],na.rm=T)+
           scale_fill_viridis_d(name= stringr::str_wrap(nameFillgsa18,25) ,na.value="white",labels=c("Low","Medium","High",""),option ="plasma",drop = FALSE) +

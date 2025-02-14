@@ -41,7 +41,7 @@ mod_results_server <- function(id, case_study){
     
     subregion <- reactive({
       if(case_study() == "mediterranean") {
-        region_choices <- c("Central Mediterranean" = "central_mediterranean", "Eastern Mediterranean" = "eastern_mediterranean")
+        region_choices <- c("GSA 17-19" = "central_mediterranean", "GSA 20" = "eastern_mediterranean")
       } else if(case_study() == "western_waters") {
         region_choices <- c("Celtic Sea" = "celtic_seas", "Bay of Biscay" = "bay_of_biscay")
       }

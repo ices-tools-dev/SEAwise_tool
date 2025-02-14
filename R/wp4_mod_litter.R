@@ -14,7 +14,7 @@ mod_litter_ui <- function(id){
   ns <- NS(id)
   tagList(
     card(card_header("Fishing Litter"),
-         withSpinner(plotOutput(ns("litter_plot"), height = "75vh"))
+         withSpinner(plotOutput(ns("litter_plot"), height = "70vh")), full_screen = T
          
     )
   )
