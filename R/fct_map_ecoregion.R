@@ -27,7 +27,7 @@ map_ecoregion <- function(eco_shape, map_shape) {
     resolutions = resolutions
   )
   
-  leaflet::leaflet(options = leaflet::leafletOptions(crs = crs_laea, minZoom = 1, maxZoom = 2, dragging = FALSE, )) %>%
+  leaflet::leaflet(options = leaflet::leafletOptions(crs = crs_laea, minZoom = 0.75, maxZoom = 1.75, dragging = FALSE, scrollWheelZoom = FALSE)) %>%
     leaflet::addPolygons(
       data = map_shape,
       color = "black",
@@ -57,6 +57,6 @@ map_ecoregion <- function(eco_shape, map_shape) {
       layerId = ~OBJECTID,
       group = ~Ecoregion
     ) %>%
-    leaflet::setView(lng = -5, lat = 62.5, zoom = 0.5) %>%
+    leaflet::setView(lng = 12.5, lat = 47.5, zoom = 0.75) %>%
     leaflet::hideGroup(group = eco_shape$Ecoregion)
 }

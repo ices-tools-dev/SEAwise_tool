@@ -11,6 +11,16 @@ app_ui <- function(request) {
     # Leave this function for adding external resources
     golem_add_external_resources(),
     navbarPage(
+      # Inject custom JavaScript to prevent dropdown from opening
+      tags$script(HTML("
+ $(document).on('shiny:sessioninitialized', function() {
+  $(document).on('click', function(event) {
+    if (!$(event.target).closest('.navbar').length) {
+      $('ul.navbar-nav .dropdown').removeClass('show').find('.dropdown-menu').removeClass('show');
+    }
+  });
+});
+  ")),
       theme = bs_theme("lumen", version = 5),
       position = "static-top",
       collapsible = TRUE,

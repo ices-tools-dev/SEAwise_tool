@@ -15,23 +15,17 @@ app_server <- function(input, output, session) {
   
   # Monitor navbar selection to update selected_locations
   observeEvent(input$`main-navbar`, {
-    req(input$`main-navbar`)
-    
-    # Map navbar values to ecoregion identifiers
-    ecoregion_mapping <- list(
-      "results_baltic" = "baltic_sea",
-      "results_bob" = "bay_of_biscay",
-      "results_cs"  = "celtic_seas",
-      "results_ns"  = "greater_north_sea",
-      "results_cmed" = "central_mediterranean",
-      "results_emed" = "eastern_mediterranean",
-      "results_ww" = "western_waters"
-    )
-    
-    selected_ecoregion <- ecoregion_mapping[[input$`main-navbar`]]
-    
-    if (!is.null(selected_ecoregion)) {
-      selected_locations(selected_ecoregion)
+    # Check if the selected tab is one of the "Results" tabs
+    if (input$`main-navbar` %in% c("results_baltic", "results_gns", "results_med", "results_ww")) {
+      # Update selected_locations based on the results tab selected
+      # Dynamically call the appropriate results module
+      results_tab <- switch(input$`main-navbar`,
+                            "results_baltic" = "baltic_sea",
+                            "results_gns" = "greater_north_sea",
+                            "results_med" = "mediterranean",
+                            "results_ww" = "western_waters"
+      )
+      selected_locations(results_tab)
     }
   })
   
@@ -45,12 +39,10 @@ app_server <- function(input, output, session) {
            "bay_of_biscay" = mod_results_server("results_bob", case_study = selected_locations),
            "celtic_seas" = mod_results_server("results_cs", case_study = selected_locations),
            "greater_north_sea" = mod_results_server("results_ns", case_study = selected_locations),
-           "central_mediterranean" = mod_results_server("results_cmed", case_study = selected_locations),
-           "eastern_mediterranean" = mod_results_server("results_emed", case_study = selected_locations),
+           "mediterranean" = mod_results_server("results_med", case_study = selected_locations),
            "western_waters" = mod_results_server("results_ww", case_study = selected_locations)
     )
   })
   
   
-  selected_locations("bay_of_biscay") # Default
 }

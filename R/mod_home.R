@@ -24,27 +24,27 @@ mod_home_ui <- function(id){
           heights_equal = "row",
           uiOutput(ns("welcome"))
           ))),
-    card(
-      full_screen = FALSE,
+    card(height = "40vh", full_screen = FALSE,
       card_header("Select a case study region"),
-      tags$style(type = "text/css", "#map {margin-left: auto; margin-right: auto; margin-bottom: auto;}"),
-        leafletOutput(ns("map"), width = "90%"),
-      tags$style(type = "text/css", "#selected_locations {margin-left: auto; margin-right: auto; margin-bottom: auto;}"),
-      card_body(
-        min_height = 400,
-        virtualSelectInput(
-          inputId = ns("selected_locations"),
-          label = "Selected Case study region:",
-          choices = sort(eco_shape$Ecoregion),
-          selected = NULL,
-          multiple = FALSE,
-          width = "100%",
-          search = TRUE,
-          optionsCount = 11
+      layout_column_wrap(width = 1/2,heights_equal = "all",
+        card(min_height = "30vh",
+                  tags$style(type = "text/css", "#map {margin-left: auto; margin-right: auto; margin-bottom: auto;}"),
+                    leafletOutput(ns("map"), width = "100%")
+             ),
+        
+        card(#tags$style(type = "text/css", "#selected_locations {margin-left: auto; margin-right: auto; margin-bottom: auto;}"),
+            card_body(min_height = "30vh",
+              selectInput(
+                inputId = ns("selected_locations"),
+                label = "",
+                choices = c("", sort(eco_shape$Ecoregion)),
+                selected = NULL,selectize = T,
+                  
+                multiple = FALSE,
+                width = "100%")
+              ))
         )
-      )
     ),
-    
     layout_column_wrap(heights_equal = "row", width = 1/2, fixed_width = FALSE, fillable = T,
       card(
          card_header("Featured SEAwise Research", class = "bg-warning"),
@@ -70,59 +70,24 @@ mod_home_server <- function(id, parent_session, selected_locations){
       print(paste("map_shape dimensions:", nrow(map_shape), "x", ncol(map_shape)))
       map_ecoregion(eco_shape, map_shape)
     })
-    proxy_map <- leafletProxy("map")
-    
-    # Create empty character vector to hold map selected locations
-    selected_map <- reactiveValues(groups = character())
-    
-    observeEvent(input$map_shape_click, {
-      req(!is.null(input$map_shape_click$id))
-      
-      if (input$map_shape_click$group == "Eco_regions") {
-        selected_map$groups <- c(selected_map$groups, input$map_shape_click$id)
-      }
-      
-      updateVirtualSelect(
-        inputId = "selected_locations",
-        choices = eco_shape$Ecoregion,
-        selected = input$map_shape_click$id
-      )
-    }, ignoreNULL = TRUE, ignoreInit = TRUE)
     
     observeEvent(input$selected_locations, {
-      req(input$selected_locations)
-      print(paste("Selected location:", input$selected_locations))
-      
+
       temp_location <- input$selected_locations
       temp_location <- str_replace_all(temp_location, " ", "_")
       temp_location <- tolower(temp_location)
-      
-      print(paste("Updating selected_ecoregion to:", temp_location))
-
-      
-      removed <- setdiff(selected_map$groups, input$selected_locations)
-      selected_map$groups <- input$selected_locations
-      
-      proxy_map %>%
-        hideGroup(removed) %>%
-        showGroup(input$selected_locations)
-      
-      # **Update the reactiveVal**
       selected_locations(temp_location)
-    }, ignoreNULL = TRUE, ignoreInit = TRUE)
     
-    observeEvent(input$selected_locations, {
-     
       tab_to_show <- switch(
-        input$selected_locations,
-        "greater_north_sea" = "Greater North Sea",
-        "baltic_sea" = "Baltic Sea",
-        "western_waters" = "Western Waters",
-        "mediterranean" = "Mediterranean",
+        selected_locations(),
+        "greater_north_sea" = "results_gns",
+        "baltic_sea" = "results_baltic",
+        "western_waters" = "results_ww",
+        "mediterranean" = "results_med",
         "Home"
       )
-      updateNavbarPage(session = parent_session, inputId = "main-navbar", selected = input$selected_locations)
-    }, ignoreInit = TRUE)
+      updateNavbarPage(session = parent_session, inputId = "main-navbar", selected = tab_to_show)
+    }, ignoreNULL = TRUE, ignoreInit = TRUE)
     
     
     output$welcome <- renderUI({
