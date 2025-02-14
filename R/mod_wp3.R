@@ -11,17 +11,17 @@
 mod_wp3_ui <- function(id){
   ns <- NS(id)
   tagList(
-    
-    # selectInput(ns("stock_selection"), label = "Select Stock", choices = NULL),
-    uiOutput(ns("stock_selector")),
-    uiOutput(ns("scenario_selector")),
-    #checkboxGroupInput("scenario", label = "Select Scenario", choices = c("Baseline", "RCP 4.5", "RCP 8.5"), selected = "Baseline"),
-    
-    fluidRow(column(6, card(plotOutput(ns("cat")))),
-             column(6, card(plotOutput(ns("rec"))))),
-    fluidRow(column(6, card(plotOutput(ns("fish")))),
-             column(6, card(plotOutput(ns("ssb"))))),
-    
+    card(height = "70vh", full_screen = TRUE, max_height = "120%",
+      layout_sidebar(sidebar = sidebar(
+        uiOutput(ns("stock_selector")),
+        uiOutput(ns("scenario_selector"))),
+      fluidRow(column(6, card(plotOutput(ns("cat")), full_screen = TRUE)),
+               column(6, card(plotOutput(ns("rec")), full_screen = TRUE))),
+      fluidRow(column(6, card(plotOutput(ns("fish")), full_screen = TRUE)),
+               column(6, card(plotOutput(ns("ssb"))), full_screen = TRUE)),
+      
+        
+      ))
   )
 }
 
@@ -33,26 +33,37 @@ mod_wp3_server <- function(id, case_study){
     ns <- session$ns
     
     case_study_data <- reactive({
-      data <- stock_productivity[[case_study()]]$data
-      ref <- stock_productivity[[case_study()]]$ref 
+      if (case_study() %in% c("central_mediterranean", "eastern_mediterranean")){
+        selected_region <- "mediterranean"
+      } else {
+        selected_region <- case_study()
+      }
+      data <- stock_productivity[[selected_region]]$data
+      refs <- stock_productivity[[selected_region]]$refs 
       list(data = data,
-           ref = ref)
+           refs = refs)
     })
     
     output$stock_selector <- renderUI({
       stocks <- unique(case_study_data()$data$stock)
+      if(case_study() == "eastern_mediterranean") {
+        stocks <- stocks[stocks %in% c("ars.gsa18-20", "ara.gsa.18-20", "mut.gsa.20")]
+      } else if (case_study() == "central_mediterranean") {
+        stocks <- stocks[stocks != "mut.gsa.20"]
+        }
       selectInput(ns("stock_selection"), label = "Select Stock", choices = stocks)
     })
     
     stock_data <- reactive({
       req(input$stock_selection)
       req(case_study_data())
+      
       data <- case_study_data()$data %>% 
         filter(stock == input$stock_selection)
-      ref <- case_study_data()$ref %>% 
+      refs <- case_study_data()$refs %>% 
         filter(stock == input$stock_selection)
       list(data = data,
-           ref = ref)
+           refs = refs)
     })
     
     output$scenario_selector <- renderUI({
@@ -70,13 +81,15 @@ mod_wp3_server <- function(id, case_study){
     stock_data_filtered <- reactive({
       req(stock_data())
       req(input$scenario)
+      
       stock_prod <- list(data = stock_data()$data %>% dplyr::filter(scenario == input$scenario),
-                         ref = stock_data()$ref)
+                         refs = stock_data()$refs)
       return(stock_prod)
     })
     
     output$fish <- renderPlot({
       req(stock_data_filtered())
+      
       plot_dat <- stock_data_filtered()$data %>% 
         mutate(indicator_lower = tolower(indicator)) %>% 
                  dplyr::filter(indicator_lower =="f")
