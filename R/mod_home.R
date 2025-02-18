@@ -25,14 +25,14 @@ mod_home_ui <- function(id){
           uiOutput(ns("welcome"))
           ))),
     card(height = "40vh", full_screen = FALSE,
-      card_header("Select a case study region"),
+      
       layout_column_wrap(width = 1/2,heights_equal = "all",
         card(min_height = "30vh",
                   tags$style(type = "text/css", "#map {margin-left: auto; margin-right: auto; margin-bottom: auto;}"),
                     leafletOutput(ns("map"), width = "100%")
              ),
         
-        card(#tags$style(type = "text/css", "#selected_locations {margin-left: auto; margin-right: auto; margin-bottom: auto;}"),
+        card(card_header("Please select a case study region from the drop-down box"),
             card_body(min_height = "30vh",
               selectInput(
                 inputId = ns("selected_locations"),

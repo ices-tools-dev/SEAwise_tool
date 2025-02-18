@@ -39,7 +39,7 @@ mod_wp4_server <- function(id, ecoregion){
     output$wp4_ui <- renderUI({
       req(data(), ecoregion())
       tabsetPanel(
-        tabPanel("RBS",
+        tabPanel("Relative Benthic State",
                  mod_rbs_ui(ns("rbs_1"))),
         tabPanel("Litter",
                  mod_litter_ui(ns("litter_1"))),

@@ -27,19 +27,20 @@ map_ecoregion <- function(eco_shape, map_shape) {
     resolutions = resolutions
   )
   
+  case_study_pal <- colorFactor(seawise_colours, eco_shape$Ecoregion)
   leaflet::leaflet(options = leaflet::leafletOptions(crs = crs_laea, minZoom = 0.75, maxZoom = 1.75, dragging = FALSE, scrollWheelZoom = FALSE)) %>%
     leaflet::addPolygons(
       data = map_shape,
       color = "black",
       weight = 1,
       fillOpacity = 0.4,
-      fillColor = "#CCF0FC", # "#E8EAEA"
+      fillColor = "#DFF0FA", 
       group = "Europe"
     ) %>%
     leaflet::addPolygons(
       data = eco_shape,
-      fillColor = "#E6E7E8",
-      fillOpacity = 0.15,
+      fillColor = ~case_study_pal(Ecoregion),
+      fillOpacity = 0.75,
       color = "black",
       stroke = TRUE,
       weight = 1,
@@ -47,16 +48,5 @@ map_ecoregion <- function(eco_shape, map_shape) {
       group = "Eco_regions",
       label = ~Ecoregion
     ) %>%
-    leaflet::addPolygons(
-      data = eco_shape,
-      fillColor = "#00B6F1",
-      fillOpacity = .7,
-      weight = 1,
-      color = "black",
-      stroke = TRUE,
-      layerId = ~OBJECTID,
-      group = ~Ecoregion
-    ) %>%
-    leaflet::setView(lng = 12.5, lat = 47.5, zoom = 0.75) %>%
-    leaflet::hideGroup(group = eco_shape$Ecoregion)
+    leaflet::setView(lng = 12.5, lat = 47.5, zoom = 0.75) 
 }
