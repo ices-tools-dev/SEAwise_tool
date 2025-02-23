@@ -1,6 +1,6 @@
-Package: SEAwise-tool
+Package: SEAwiseTool
 Title: SEAwise tool Landing Page
-Version: 0.0.0.9010
+Version: 0.0.0.9017
 Authors@R: 
     person(given = "Neil",
            family = "Maginnis",
@@ -26,6 +26,7 @@ Imports:
     pkgload,
     R.utils,
     RColorBrewer,
+    reshape2,
     scales,
     sf,
     shiny (>= 1.8.0),

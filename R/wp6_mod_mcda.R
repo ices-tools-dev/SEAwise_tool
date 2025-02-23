@@ -9,34 +9,31 @@
 #' @importFrom shiny NS tagList 
 #' @importFrom bslib card card_header card_body layout_sidebar sidebar accordion accordion_panel
 #' @importFrom DT DTOutput
+#' @importFrom dplyr bind_rows
+#' @importFrom stringr str_to_title
 mod_mcda_ui <- function(id){
   ns <- NS(id)
   tagList(
     layout_sidebar(sidebar = sidebar("Set Weightings", 
-                                     accordion(multiple = TRUE, open = c("Macro level Weightings","Indicator Weightings"),
-                                               accordion_panel("Macro level Weightings", 
-                                                               
-                                                               numericInput(ns("fisheries_weighting"), "Set Fisheries utility weighting", value = 1, min = 0, max = 100, step = 1),
-                                                               numericInput(ns("socioeconomic_weighting"), "Set Socio-economic utility weighting", value = 1, min = 0, max = 100),
-                                                               numericInput(ns("ecological_weighting"), "Set Ecological Weighting", value = 1, min = 0, max = 100)
-                                               ),
-                                               accordion_panel("Indicator Weightings",
-                                                               numericInput(ns("f_weight"), "Fishing level (F)",  value = 1, min = 0, max = 100),
-                                                               numericInput(ns("ssb_weight"), "Spawning Stock Biomass (SSB)",  value = 1, min = 0, max = 100),
-                                                               numericInput(ns("employment_weight"), "Employment (FTE)",  value = 1, min = 0, max = 100),
-                                                               numericInput(ns("gva_weight"), "Gross Value Add (GVA)",  value = 1, min = 0, max = 100),
-                                                               numericInput(ns("wage_weight"), "Wages",  value = 1, min = 0, max = 100),
-                                                               numericInput(ns("co2_weight"), "Carbon Dioxide Emissions",  value = 1, min = 0, max = 100)),
-                                               
-                                               accordion_panel("Advanced Settings",
-                                                               accordion_panel("Stock Weightings", uiOutput(ns("f_sub_inputs"))),
-                                                               accordion_panel("Socio-economic Sub-Weightings", uiOutput(ns("soceco_sub_inputs"))),
-                                                               accordion_panel("Ecological Sub-Weightings", uiOutput(ns("ecological_sub_inputs"))))
-                                     )
-    ),
-    card(DTOutput(ns("weightings_table")), height = 120),
-    card(DTOutput(ns("scenario_table")), height = 400),
-    card(plotOutput(ns("hist")), height = 600)
+                                     sliderInput(ns("stocks"), "Set Stocks utility weighting", value = 5, min = 0, max = 10, step = 1),
+                                     sliderInput(ns("biodiversity"), "Set Biodiversity utility weighting", value = 5, min = 0, max = 10, step = 1),
+                                     sliderInput(ns("habitats"), "Set habitats utility weighting", value = 5, min = 0, max = 10, step = 1),
+                                     sliderInput(ns("community"), "Set community utility weighting", value = 5, min = 0, max = 10, step = 1, ticks = T),
+                                     sliderInput(ns("revenue"), "Set revenue utility weighting", value = 5, min = 0, max = 10),
+                                     sliderInput(ns("well-being"), "Set well-being Weighting", value = 5, min = 0, max = 10)
+                                     ),
+    accordion(open = c("Standardised User Weightings","Table of Utilities","Histogram of Utilities"),
+      # accordion_panel("Standardised User Weightings",
+      #   card(DTOutput(ns("weightings_table")), min_height = 150, height = "10vh")
+      # ),
+      accordion_panel("Table of Utilities",
+        card(DTOutput(ns("scenario_table")), height = 400)
+      ),
+      accordion_panel("Histogram of Utilities",
+        card(plotOutput(ns("hist")), height = 600)  
+      )
+    )
+    
     )
   )
 }
@@ -49,25 +46,24 @@ mod_mcda_server <- function(id, case_study){
     ns <- session$ns
     
     
-    macro_weight <- reactive({sum(input$fisheries_weighting, input$socioeconomic_weighting, input$ecological_weighting)})
+    # macro_weight <- reactive({sum(input$fisheries_weighting, input$socioeconomic_weighting, input$ecological_weighting)})
     
     weightings <- reactive({
-      req(input$fisheries_weighting, input$socioeconomic_weighting, macro_weight(), input$f_weight, input$ssb_weight, input$employment_weight, input$gva_weight, input$wage_weight, input$co2_weight)
-      fisheries_weights <- c(input$f_weight, input$ssb_weight) * (input$fisheries_weighting/macro_weight())
-      socioeconomic_weights <- c(input$employment_weight, input$gva_weight, input$wage_weight, input$co2_weight) * (input$socioeconomic_weighting/macro_weight())
-      #ecological_weights <- c(input$f_weight, input$ssb_weight) * (input$fisheries_weighting/macro_weight())
-      dat <- c(fisheries_weights, socioeconomic_weights)
+      req(input$stocks, input$biodiversity, input$habitats, input$community, input$revenue, input$"well-being")
+     
+      dat <- c(input$stocks, input$biodiversity, input$habitats, input$community, input$revenue, input$"well-being")  
       scaling <- 100/max(dat)
-      dat <- matrix(data = dat*scaling, nrow = 1) %>% 
-        as.data.frame() %>% 
-        round(digits = 1)
-      names(dat) <- c("Fishing Level", "Spawning Stock Biomass (SSB)", "Employment (FTE)", "Gross Value Add (GVA)", "Wages", "Carbon Dioxide Emissions")
+      dat <- round(dat*scaling, digits = 1)
+        
+      names(dat) <- str_to_title(c("stocks", "biodiversity", "habitats", "community", "revenue", "well-being"))
       return(dat)
     })
     
     output$weightings_table <- renderDataTable({
       req(!is.null(weightings()))
-      DT::datatable(data = weightings(), 
+      
+      dat <- weightings() %>% bind_rows()
+      DT::datatable(data = dat, 
                     options = list(dom ="",
                                    ordering = FALSE),
                     rownames = FALSE, )
@@ -76,20 +72,11 @@ mod_mcda_server <- function(id, case_study){
     
     mcda_utilities <- reactive({
       
-      mcda <- calculate_utilities(mcda, q = 0.5)
-    })
-    
-    mcda_data_ouputs <- reactive({
-      
-      #Insert setting of weights here
-      
-      
-      
-      #aggregate utility
-      mcda <- aggregate_utilities(mcda_utilities(),
+      mcda <- calculate_utilities(mcda_data, quantile = 0.5)
+      mcda <- aggregate_utilities(mcda,
                                   criteria = c('f'), 
                                   label = "combined_f", 
-                                  method = "add", 
+                                  method = "sum", 
                                   set_weight = 1, 
                                   sub_criteria = TRUE, 
                                   weighted = TRUE)
@@ -97,99 +84,76 @@ mod_mcda_server <- function(id, case_study){
       mcda <- aggregate_utilities(mcda,
                                   criteria = c('ssb'), 
                                   label = "combined_ssb", 
-                                  method = "add", 
+                                  method = "sum", 
                                   set_weight = 1, 
                                   sub_criteria = TRUE, 
                                   weighted = TRUE)
       
-      mcda  <- run_maut(mcda,
-                        criteria = c("combined_f", "combined_ssb","employment", "wage", "gva", "rsl", "co2"))
+      # Combine criteria into macro-criteria
       
-      df <- generate_matrix(mcda,
-                            criteria = c("combined_f", "combined_ssb","employment", "wage", "gva", "rsl", "co2"),
-                            sub_criteria = c('ssb', 'f'))
+      mcda <- aggregate_utilities(mcda, criteria = c('combined_f', 'combined_ssb'), label = "stocks", method = "sum", set_weight = 1, sub_criteria = FALSE, weighted = TRUE)
+      mcda <- aggregate_utilities(mcda, criteria = c('mml', 'apex_pred'), label = "biodiversity", method = "sum", set_weight = 1, sub_criteria = FALSE, weighted = TRUE)
+      mcda <- aggregate_utilities(mcda, criteria = c('rbs'), label = "habitats", method = "sum", set_weight = 1, sub_criteria = FALSE, weighted = TRUE)
+      mcda <- aggregate_utilities(mcda, criteria = c('employment', 'rsl', 'wage'), label = "community", method = "sum", set_weight = 1, sub_criteria = FALSE, weighted = TRUE)
+      mcda <- aggregate_utilities(mcda, criteria = c('gva'), label = "revenue", method = "sum", set_weight = 1, sub_criteria = FALSE, weighted = TRUE)
+      mcda <- aggregate_utilities(mcda, criteria = c('co2'), label = "well-being", method = "sum", set_weight = 1, sub_criteria = FALSE, weighted = TRUE)
+      
+    })
+    
+    mcda_data_outputs <- reactive({
+      req(mcda_utilities(), weightings())
+      # criteria <- c("ssb", "f", "rbs", "mml", "apex_pred", "employment", "wage", "gva", "rsl", "co2")
+      
+      # mcda <- set_weights(mcda_utilities(),
+      #                     criteria = criteria,
+      #                     new_weights = weightings())
+      # 
+      
+      criteria <- c("stocks", "biodiversity", "habitats", "community", "revenue", "well-being")
+    
+      mcda <- set_weights(mcda_utilities(),
+                          criteria = criteria,
+                          new_weights = c(input$stocks, input$biodiversity, input$habitats, input$community, input$revenue, input$"well-being"))
+
+      # 
+      mcda  <- run_maut(mcda,
+                        criteria = c("stocks", "biodiversity","habitats", "community", "revenue", "well-being")
+      )
+      # note that the total utility is the result of the passed criteria only. keep that in mind for visualization
+      
+      # transfer the results on a df
+
+      df <- generate_df(mcda,
+                       criteria = c("combined_f", "combined_ssb", "rbs", "mml", "apex_pred", "employment", "wage", "gva", "rsl", "co2",
+                                    "stocks", "biodiversity","habitats", "community", "revenue", "well-being"),
+                       sub_criteria = c('ssb', 'f'))
+      return(list(results = df,
+                  mcda_object = mcda))
+      
     })
     
     output$scenario_table <- renderDataTable({
-      top_scenarios <- mcda_data_ouputs()
-      top_scenarios[,-1] <- round(top_scenarios[,-1], digits = 3)
-      tops = top_scenarios(dataframe = top_scenarios, 
-                           criterion = 'total_utility',
-                           num = 10,
-                           ascending = FALSE)
+      req(mcda_data_outputs())
       
+      scenario_utilities <- mcda_data_outputs()$results
+      scenario_utilities[,-1] <- round(scenario_utilities[,-1], digits = 3)
+      scenario_utilities <- scenario_utilities[order(scenario_utilities$total_utility, decreasing = T),]
+      DT::datatable(data = scenario_utilities,
+                    options = list(dom ="",
+                                   ordering = TRUE))
     })
+    
     output$hist <- renderPlot({
-      plot_histogram(mcda_data_ouputs(),
-                     criteria = c('combined_ssb', 'combined_f', 'employment', 'wage', 'gva', 'rsl', 'co2'))
-    })
-    
-    
-    output$f_sub_inputs <- renderUI({
-      #read data input for selected region
+      req(mcda_data_outputs())
       
-      stocks_data <- read.csv("dev/MCDA_SHARED/MCDA_SHARED/MCDA_stock_med.csv")
-      stocks <- unique(stocks_data$sub_criteria)
-      n <- length(stocks)
-      
-      sliders <- lapply(seq_len(n), function(i) {
-        numericInput(
-          inputId = ns(paste0("slider", i)),
-          label = stocks[i],
-          min = 0,
-          max = 100,
-          value = 1, # Rounded value for display
-          step = 0.01
-        )
-      })
-      do.call(tagList, sliders)
+      plot_histogram(mcda_data_outputs()$results,
+                     criteria = c("stocks", "biodiversity","habitats", "community", "revenue", "well-being"),
+                     weights = mcda_data_outputs()$mcda_object$weights,
+                     parents = mcda_data_outputs()$mcda_object$parents,
+                     subcriteria = FALSE,
+      )
       
     })
-    
-    output$soceco_sub_inputs <- renderUI({
-      #read data input for selected region
-      
-      soceco_data <- read.csv("dev/MCDA_SHARED/MCDA_SHARED/MCDA_socioeco_mml_med.csv")
-      stocks <- unique(stocks_data$sub_criteria)
-      n <- length(stocks)
-      
-      sliders <- lapply(seq_len(n), function(i) {
-        numericInput(
-          inputId = ns(paste0("slider", i)),
-          label = stocks[i],
-          min = 0,
-          max = 100,
-          value = 1, # Rounded value for display
-          step = 0.01
-        )
-      })
-      do.call(tagList, sliders)
-      
-    })
-    
-    output$ecological_sub_inputs <- renderUI({
-      #read data input for selected region
-      
-      stocks_data <- read.csv("dev/MCDA_SHARED/MCDA_SHARED/MCDA_stock_med.csv")
-      stocks <- unique(stocks_data$sub_criteria)
-      n <- length(stocks)
-      
-      sliders <- lapply(seq_len(n), function(i) {
-        numericInput(
-          inputId = ns(paste0("slider", i)),
-          label = stocks[i],
-          min = 0,
-          max = 100,
-          value = 1, # Rounded value for display
-          step = 0.01
-        )
-      })
-      do.call(tagList, sliders)
-      
-    })
-    
-    
-    
   })
 }
 
