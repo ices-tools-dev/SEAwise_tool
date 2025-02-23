@@ -39,21 +39,21 @@ mod_carbon_server <- function(id, carbon_data, ecoregion){
       variables <- unique(data()$variable)
       tagList(
         selectizeInput(ns("country_filter"), "Select Countries", choices = countries, selected = countries, multiple = T),
-        selectizeInput(ns("variable_filter"), "Select Fleet variables", choices = variables, selected = variables, multiple = T)
-      )
+        )
     })
     
     filtered_data <- reactive({
-      req(data(), input$country_filter, input$variable_filter)
-      data() %>% filter(country %in% input$country_filter, variable %in% input$variable_filter)
+      req(data(), input$country_filter)
+      data() %>% filter(country %in% input$country_filter)
     })
     
     
     output$carbon_plot <- renderPlot({
       req(nrow(filtered_data()) > 0, ecoregion())
       
-      ggplot(data=data.frame(filtered_data()), aes(x=year, y=value, fill=fleet)) + 
-        geom_bar(stat="identity", position=position_dodge())+
+      ggplot(data=data.frame(filtered_data()), aes(x=year, y=value, colour=fleet)) + 
+        geom_point(inherit.aes = T, size = 1.5)+
+        geom_line(inherit.aes = T, stat="identity",size=1)+
         facet_wrap(country~ variable,scales="free_y",drop=FALSE,ncol=3)+
         theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))+
         labs(fill='Year')

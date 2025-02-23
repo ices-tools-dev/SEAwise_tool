@@ -50,6 +50,7 @@ mod_socioeconomics_server <- function(id, ecoregion, social_data){
       req(nrow(filtered_data()) > 0, ecoregion())
       
       ggplot(aes(x=year,y=value,colour=fleet),data=filtered_data())+
+        geom_point(inherit.aes = T, size = 1.5) +
         geom_line(aes(x=year,y=value,colour=fleet, group=fleet),size=1)+
         # facet_wrap(country~variable,scale="free",ncol=6) +
         facet_grid(variable ~ country, scales="free_y", drop=FALSE, )+

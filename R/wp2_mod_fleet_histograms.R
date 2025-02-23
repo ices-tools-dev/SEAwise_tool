@@ -49,8 +49,9 @@ mod_fleet_histograms_server <- function(id, fleet_data, ecoregion){
     output$fleet_histograms <- renderPlot({
       req(nrow(filtered_data()) > 0, ecoregion(), input$country_filter, input$variable_filter)
       
-      ggplot(data=filtered_data(), aes(x=year, y=value, fill=fleet)) + 
-        geom_bar(stat="identity", position=position_dodge())+
+      ggplot(data=filtered_data(), aes(x=year, y=value, colour=fleet)) + 
+        geom_point(inherit.aes = T, , size = 1.5)+
+        geom_line(inherit.aes = T, stat="identity",size=1)+
         # facet_wrap(country + variable~.,scales="free_y",drop=FALSE,ncol=6)+
         facet_grid(variable ~ country, scales="free_y", drop=FALSE, )+
         theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1), panel.spacing = unit(1, "lines"))

@@ -9,7 +9,7 @@
 #' @importFrom shiny NS tagList 
 #' @importFrom bslib card card_header card_body layout_sidebar sidebar accordion accordion_panel
 #' @importFrom DT DTOutput
-#' @importFrom dplyr bind_rows
+#' @importFrom dplyr bind_rows select
 #' @importFrom stringr str_to_title
 mod_mcda_ui <- function(id){
   ns <- NS(id)
@@ -134,10 +134,11 @@ mod_mcda_server <- function(id, case_study){
     
     output$scenario_table <- renderDataTable({
       req(mcda_data_outputs())
-      
       scenario_utilities <- mcda_data_outputs()$results
       scenario_utilities[,-1] <- round(scenario_utilities[,-1], digits = 3)
       scenario_utilities <- scenario_utilities[order(scenario_utilities$total_utility, decreasing = T),]
+    
+      scenario_utilities <- scenario_utilities %>% select(scenario, stocks, biodiversity, habitats, community, revenue, "well-being", "Total Utility" = total_utility) %>% rename_with(str_to_title)
       DT::datatable(data = scenario_utilities,
                     options = list(dom ="",
                                    ordering = TRUE))

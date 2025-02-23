@@ -32,8 +32,6 @@ mod_wp2_projections_server <- function(id, projection_data, ecoregion){
       tagList(
         selectInput(ns("fleet"), "Fleet", choices = unique(projection_data()$SSF_LSF), selected = 'LSF'),
         selectInput(ns("names_filter"), "Social indicator", choices = unique(projection_data()$name), selected = 'GVA'),
-        selectInput(ns("model_filter"), "Area", choices = unique(projection_data()$Model)),
-        
       )
     })
     filtered_data <- reactive({
@@ -41,23 +39,21 @@ mod_wp2_projections_server <- function(id, projection_data, ecoregion){
         need(!is.null(projection_data()), message = "Projection data not available."),
         need(!is.null(input$names_filter), message = "Social indicator not selected."),
         need(!is.null(input$fleet), message = "Fleet not selected."),
-        need(!is.null(input$model_filter), message = "Model not selected.")
       )
       dat <- projection_data()
       dat %>% filter(name %in% input$names_filter, 
-                     SSF_LSF %in% input$fleet,
-                     Model %in% input$model_filter)
+                     SSF_LSF %in% input$fleet)
     })
     
     
     output$projections_plot <- renderPlot({
       req(nrow(filtered_data()>0))
       p1 <- ggplot(filtered_data(),aes(x = year , color = Climate, group = Climate))+
-        geom_point(aes(y = median))+
-        geom_line(aes(y = median))+
+        geom_point(aes(y = median), size = 1.5)+
+        geom_line(aes(y = median), size = 1)+
         geom_ribbon(aes(ymin = lower, ymax = higher, fill = Climate), alpha =.1, linetype = 0, show.legend = FALSE)+
         facet_wrap(~Mgt_scenario, scales = 'free_y')+
-        scale_y_continuous('')+theme_classic()+
+        scale_y_continuous('')+
         theme(axis.text.x = element_text(angle = 45, hjust = 1))+
         labs(color = 'Climate scenario')#+
       #ggtitle(inpu)

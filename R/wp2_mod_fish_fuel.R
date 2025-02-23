@@ -45,7 +45,7 @@ mod_fish_fuel_server <- function(id, ecoregion, fuel_data){
         formula<-y~x
   
       plot <- ggplot(dat, aes(x=fuel_price, y=Price,colour=Fleet,group=Fleet)) +
-        geom_point() +
+        geom_point(size = 1.5) +
         geom_smooth(method='lm',se=T)+
         ggtitle(paste(input$country_input,sep=" ")) +
         ylab(y_label)+
