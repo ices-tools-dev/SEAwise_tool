@@ -1,1 +1,5 @@
 .dt-head-center {text-align: center;}
+
+.leaflet-container {
+  background: #ffffff;
+}
