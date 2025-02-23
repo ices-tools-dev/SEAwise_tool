@@ -16,7 +16,7 @@ mod_home_ui <- function(id){
   ns <- NS(id)
   tagList(
     card(
-      card_header("Welcome to the SEAwise Ecosystem Based Fisheries Management Tool", class = "bg-primary"),
+      card_header("Welcome to the SEAwise Ecosystem Based Fisheries Management Toolbox", class = "bg-primary"),
       card_body(
         layout_column_wrap(
           width = NULL, fill = FALSE,
@@ -32,12 +32,11 @@ mod_home_ui <- function(id){
                     leafletOutput(ns("map"), width = "100%")
              ),
         
-        card(card_header("Please select a case study region from the drop-down box"),
-            card_body(min_height = "30vh",
+        card(card_body(min_height = "30vh",
               selectInput(
                 inputId = ns("selected_locations"),
                 label = "",
-                choices = c("", sort(eco_shape$Ecoregion)),
+                choices = c("Please select a case study region", sort(eco_shape$Ecoregion)),
                 selected = NULL,selectize = T,
                   
                 multiple = FALSE,

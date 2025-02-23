@@ -55,12 +55,11 @@ mod_adult_portions_server <- function(id, portion_data, ecoregion){
     
     
     output$adult_portions <- renderPlot({
-        req(filtered_data(), ecoregion())
-        plot <- ggplot(data=filtered_data(), aes(y=country, x=adult_portions, fill=fleet)) +
+      req(nrow(filtered_data()) > 0, ecoregion())
+        plot <- ggplot(data=filtered_data(), aes(y=adult_portions, x=country, fill=fleet)) +
                   geom_bar(stat="identity", position=position_dodge())+
-                  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))+
                   labs(y="thousands")+
-                  ggtitle ("Number of adult portions by Country and Species caught")
+                  ggtitle ("Number of adult portions by Country")
       if(ecoregion() == "greater_north_sea") {
         plot + facet_wrap(spec~.,scales="free_x",drop=FALSE,ncol=3)
       } else {

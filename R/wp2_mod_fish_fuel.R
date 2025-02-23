@@ -28,20 +28,27 @@ mod_fish_fuel_server <- function(id, ecoregion, fuel_data){
  
     
     output$plot_filters <- renderUI({
-      selectInput(ns("country_input"), "Select Country", choices = unique(fuel_data()$country))
+      countries <- unique(fuel_data()$country)
+      selectizeInput(ns("country_input"), "Select Country", choices = countries)
     })
+    y_label <- bquote(
+      atop(
+        Fish ~ Price ~ (Euro/kg)
+      )
+    )
     
     output$fuel_plot <- renderPlot({
-      req(fuel_data(), ecoregion(), input$country_input)
-      
+      req(nrow(fuel_data())>0, ecoregion(), input$country_input)
       dat <- filter(fuel_data(), country == input$country_input)
       
       #if(!ecoregion() %in% c("Central Mediterranean", "Eastern Mediterranean")){
         formula<-y~x
+  
       plot <- ggplot(dat, aes(x=fuel_price, y=Price,colour=Fleet,group=Fleet)) +
         geom_point() +
         geom_smooth(method='lm',se=T)+
         ggtitle(paste(input$country_input,sep=" ")) +
+        ylab(y_label)+
         stat_fit_glance(method = 'lm',
                         method.args = list(formula = formula),
                         geom = 'text',
@@ -49,7 +56,7 @@ mod_fish_fuel_server <- function(id, ecoregion, fuel_data){
                         label.x = 'center', label.y = 0.35, size = 4, position = position_stack(vjust = 2))+
         expand_limits(y = 2)
         
-      if(ecoregion() == "Greater North Sea"){
+      if(ecoregion() == "greater_north_sea"){
           plot + facet_wrap(spec~.,scale="free")
         } else {
           plot + facet_wrap(Stock~.,scale="free")

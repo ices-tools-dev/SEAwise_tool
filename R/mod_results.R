@@ -12,13 +12,13 @@ mod_results_ui <- function(id){
   tagList(
     fluidRow(titlePanel(title = textOutput(ns("region_title"))), uiOutput(ns("subregion_dropdown"), inline = T)),
     tabsetPanel(
-      tabPanel("Social and Economic", 
+      tabPanel("Social and Economic Effects", 
                mod_wp2_ui(ns("wp2"))),
-      tabPanel("Ecological impacts on Fisheries",
+      tabPanel("Ecological effects on Fisheries",
                mod_wp3_ui(ns("wp3"))),
       tabPanel("Ecological consequences of Fisheries",
                mod_wp4_ui(ns("wp4"))),
-      #tabPanel("WP5"),
+      tabPanel("Spatial Management Impacts"),
       tabPanel("Management Strategy and Trade-off Evaluation",
                mod_wp6_ui(ns("wp6"))),
     )

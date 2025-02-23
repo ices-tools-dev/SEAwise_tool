@@ -12,6 +12,7 @@ app_server <- function(input, output, session) {
   mod_seawise_server("seawise_1")
   mod_themes_server("themes_1")
   mod_case_studies_server("case_studies_1")
+  mod_resources_server("resources_1")
   
   # Monitor navbar selection to update selected_locations
   observeEvent(input$`main-navbar`, {

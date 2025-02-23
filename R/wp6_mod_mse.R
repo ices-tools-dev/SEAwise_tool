@@ -24,7 +24,7 @@ mod_mse_ui <- function(id){
                                                                         "Value of Stock Landings" = "stock_landings_value"),
                                                      selected = "regional_change")
                                      ),
-                                           card_body(plotOutput(ns("mse_plot"), height = "900px"), 
+                                           card_body(plotOutput(ns("mse_plot"), height = "70vh"), 
                                                      max_height_full_screen =  "100%", fill = T)) 
       
     )

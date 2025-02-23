@@ -47,7 +47,7 @@ mod_socioeconomics_server <- function(id, ecoregion, social_data){
     
     
     output$socioeco_plot <- renderPlot({
-      req(filtered_data(), ecoregion())
+      req(nrow(filtered_data()) > 0, ecoregion())
       
       ggplot(aes(x=year,y=value,colour=fleet),data=filtered_data())+
         geom_line(aes(x=year,y=value,colour=fleet, group=fleet),size=1)+

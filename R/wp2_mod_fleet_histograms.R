@@ -47,7 +47,7 @@ mod_fleet_histograms_server <- function(id, fleet_data, ecoregion){
     })
     
     output$fleet_histograms <- renderPlot({
-      req(filtered_data(), ecoregion())
+      req(nrow(filtered_data()) > 0, ecoregion(), input$country_filter, input$variable_filter)
       
       ggplot(data=filtered_data(), aes(x=year, y=value, fill=fleet)) + 
         geom_bar(stat="identity", position=position_dodge())+

@@ -11,18 +11,16 @@
 mod_wp3_ui <- function(id){
   ns <- NS(id)
   tagList(
-    card(height = "70vh", full_screen = TRUE, max_height = "120%",
       layout_sidebar(sidebar = sidebar(
         uiOutput(ns("stock_selector")),
         uiOutput(ns("scenario_selector"))),
-      fluidRow(column(6, card(plotOutput(ns("cat")), full_screen = TRUE)),
-               column(6, card(plotOutput(ns("rec")), full_screen = TRUE))),
-      fluidRow(column(6, card(plotOutput(ns("fish")), full_screen = TRUE)),
-               column(6, card(plotOutput(ns("ssb"))), full_screen = TRUE)),
-      
-        
-      ))
-  )
+      fluidRow(column(6, card(plotOutput(ns("cat")), height = "40vh",full_screen = TRUE)),
+               column(6, card(plotOutput(ns("rec")), height = "40vh",full_screen = TRUE))),
+      fluidRow(column(6, card(plotOutput(ns("fish")), height = "40vh",full_screen = TRUE)),
+               column(6, card(plotOutput(ns("ssb")), height = "40vh",full_screen = TRUE))
+      )
+      )  
+    )
 }
 
 #' wp3 Server Functions
@@ -70,12 +68,7 @@ mod_wp3_server <- function(id, case_study){
       req(input$stock_selection)
       req(stock_data())
       scenarios <- unique(stock_data()$data$scenario)
-      if("Baseline" %in% scenarios){
-        selected <- "Baseline"
-      } else {
-        selected <- scenarios[1]
-      }
-      checkboxGroupInput(ns("scenario"), label = "Select Scenario", choices = scenarios, selected = selected)
+      checkboxGroupInput(ns("scenario"), label = "Select Scenario", choices = scenarios, selected = scenarios)
     }) %>% bindEvent(input$stock_selection)
     
     stock_data_filtered <- reactive({

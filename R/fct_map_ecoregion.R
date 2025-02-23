@@ -27,7 +27,7 @@ map_ecoregion <- function(eco_shape, map_shape) {
     resolutions = resolutions
   )
   
-  case_study_pal <- colorFactor(seawise_colours, eco_shape$Ecoregion)
+  case_study_pal <- colorFactor(seawise_colours[c(2,3,5,4)], eco_shape$Ecoregion)
   leaflet::leaflet(options = leaflet::leafletOptions(crs = crs_laea, minZoom = 0.75, maxZoom = 1.75, dragging = FALSE, scrollWheelZoom = FALSE)) %>%
     leaflet::addPolygons(
       data = map_shape,

@@ -25,6 +25,9 @@ mod_carbon_server <- function(id, carbon_data, ecoregion){
     ns <- session$ns
     
     data <- reactive({
+      validate(
+        need(!is.null(carbon_data()), message = "Carbon emissions data not available.")
+      )
       dat <- carbon_data()
       colnames(dat) <- tolower(colnames(dat))
       dat
@@ -47,7 +50,7 @@ mod_carbon_server <- function(id, carbon_data, ecoregion){
     
     
     output$carbon_plot <- renderPlot({
-      req(filtered_data(), ecoregion())
+      req(nrow(filtered_data()) > 0, ecoregion())
       
       ggplot(data=data.frame(filtered_data()), aes(x=year, y=value, fill=fleet)) + 
         geom_bar(stat="identity", position=position_dodge())+

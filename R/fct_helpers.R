@@ -49,14 +49,13 @@ plot_f <- function(data, refs, region) {
       geom_ribbon(alpha=0.3) + 
       labs(x='Years', y='Fishing pressure F') + 
       geom_hline(yintercept=refs$f,linetype="dashed")+
-      annotate("text",x=min(data$year+1),y=1.1*refs$f,label="proxy Fmsy (f0.1)")+
+      annotate("text",x=min(data$Year+1),y=1.1*refs$f,label="proxy Fmsy (f0.1)")+
       ylim(0, 1.1*max(data$CI95))
   }
   
 }
 
 plot_ssb <- function(data, refs, region) {
-
   if(region %in% c("greater_north_sea", "celtic_seas")){
     ggplot(data, aes(x=year,y=q50/1000,ymin=q025/1000, ymax=q975/1000, colour = scenario)) +
       geom_line(size = 1) +
@@ -84,8 +83,8 @@ plot_ssb <- function(data, refs, region) {
       labs(x='Years', y='SSB in 1000 t')+ 
       geom_hline(yintercept=refs$Blim/1000, linetype="dashed") +
       geom_hline(yintercept=refs$b/1000, linetype="dotted") +
-      annotate("text",x=min(data$year+1),y=1.1*refs$Blim/1000,label="Blim") +
-      annotate("text",x=min(data$year+1),y=1.1*refs$b/1000,label=refs$bref)+
+      annotate("text",x=min(data$Year+1),y=1.1*refs$Blim/1000,label="Blim") +
+      annotate("text",x=min(data$Year+1),y=1.1*refs$b/1000,label=refs$bref)+
       ylim(0, 1.1*max(max(data$Median), max(data$CI95))/1000)
   }
 }

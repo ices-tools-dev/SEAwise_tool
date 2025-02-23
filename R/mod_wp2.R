@@ -11,10 +11,10 @@ mod_wp2_ui <- function(id){
   ns <- NS(id)
   tagList(
     tabsetPanel(
-      tabPanel("Large and Small Scale Fisheries",
+      tabPanel("Fleet Characteristics",
                mod_fleet_histograms_ui(ns("fleet_histograms_1")),
       ),
-      tabPanel("Socio-Economics",
+      tabPanel("Communities",
                mod_socioeconomics_ui(ns("socioeconomics_1")),
       ),
       tabPanel("Carbon Emissions",

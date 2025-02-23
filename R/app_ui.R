@@ -11,7 +11,7 @@ app_ui <- function(request) {
     # Leave this function for adding external resources
     golem_add_external_resources(),
     navbarPage(
-      # Inject custom JavaScript to prevent dropdown from opening
+      # JavaScript to close dropdown with mouseclick
       tags$script(HTML("
  $(document).on('shiny:sessioninitialized', function() {
   $(document).on('click', function(event) {
@@ -24,7 +24,7 @@ app_ui <- function(request) {
       theme = bs_theme("lumen", version = 5),
       position = "static-top",
       collapsible = TRUE,
-      windowTitle = "SEAwise",
+      windowTitle = "SEAwise EBFM Toolbox",
       id = "main-navbar",
       fluid = TRUE,
       title = span(tags$img(src ="www/PRIMARY_SeaWiseLOGO_Full_Colour.png",
@@ -51,7 +51,8 @@ app_ui <- function(request) {
         tabPanel("Western Waters", value = "results_ww",
                  mod_results_ui("results_ww"))
         ),
-      tabPanel("Resources")
+      tabPanel("Resources", mod_resources_ui("resources_1")
+      )
     )
   )
 }
@@ -79,7 +80,7 @@ golem_add_external_resources <- function() {
     favicon(ext = "png"),
     bundle_resources(
       path = app_sys("app/www"),
-      app_title = "SEAwise-tool"
+      app_title = "SEAwiseTool"
     ),
     # Add here other external resources
     # for example, you can add shinyalert::useShinyalert()
