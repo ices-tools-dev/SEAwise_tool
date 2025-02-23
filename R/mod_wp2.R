@@ -26,6 +26,9 @@ mod_wp2_ui <- function(id){
       tabPanel("Meal Provision",
                mod_adult_portions_ui(ns("adult_portions_1"))
       ),
+      tabPanel("Projections",
+               mod_wp2_projections_ui(ns("wp2_projections_1"))
+      )
     )
   )
 }
@@ -53,6 +56,7 @@ mod_wp2_server <- function(id, case_study) {
     social_data <- reactive(data()$socioeco_data)
   carbon_data <- reactive(data()$carbon_data)
   fuel_data <- reactive(data()$fish_fuel_data)
+  projection_data <- reactive(data()$projection_data)
   
   mod_fleet_histograms_server("fleet_histograms_1", fleet_data = fleet_data, ecoregion = case_study)
   
@@ -63,6 +67,8 @@ mod_wp2_server <- function(id, case_study) {
   mod_carbon_server("carbon_1", carbon_data = carbon_data, ecoregion = case_study)
   
   mod_fish_fuel_server("fish_fuel_1", fuel_data = fuel_data, ecoregion = case_study)
+  
+  mod_wp2_projections_server("wp2_projections_1", projection_data = projection_data, ecoregion = case_study)
   
   })
 }
