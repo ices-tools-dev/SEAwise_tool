@@ -88,7 +88,7 @@ mod_bycatch_server <- function(id, data, map_parameters, ecoregion){
         ylab("Latitude")+
         xlab("Longitude")
       
-    })
+    }) %>% bindCache(ecoregion(), input$bycatch_switch)
     
     output$bycatch_facet_plot <- renderPlot({
       req(filtered_data())
@@ -119,7 +119,7 @@ mod_bycatch_server <- function(id, data, map_parameters, ecoregion){
         xlab("Longitude")+
         facet_grid(rows = vars(gear),
                    cols = vars(season))
-    })
+    }) %>% bindCache(ecoregion(), input$bycatch_switch)
     
     output$bycatch_med_plot <- renderPlot({
       if(ecoregion() %in% c("mediterranean", "central_mediterranean", "eastern_mediterranean")) {
@@ -151,7 +151,7 @@ mod_bycatch_server <- function(id, data, map_parameters, ecoregion){
           ylab("Latitude")+
           xlab("Longitude")
       }
-    })
+    }) %>% bindCache(ecoregion(), input$bycatch_switch)
   })
 }
 

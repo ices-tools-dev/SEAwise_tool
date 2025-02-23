@@ -96,7 +96,7 @@ mod_rbs_server <- function(id, data, map_parameters, ecoregion){
           ylab("Latitude")+
           xlab("Longitude")
       }
-    })
+    }) %>% bindCache(ecoregion(), input$rbs_year)
   })
 }
 

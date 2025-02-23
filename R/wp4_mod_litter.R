@@ -105,7 +105,7 @@ mod_litter_server <- function(id, data, map_parameters, ecoregion){
         litmap
         
       }
-    })
+    }) %>% bindCache(ecoregion())
   })
 }
 
