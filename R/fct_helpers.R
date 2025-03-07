@@ -93,19 +93,19 @@ plot_recruitment <- function(data, refs, region) {
 
   if(region %in% c("greater_north_sea", "celtic_seas")){
     ggplot(data, aes(y=q50/1000000, x=year, colour = scenario)) +
-      geom_bar(position="stack", stat='identity') +
+      geom_bar(position="dodge", stat='identity') +
       labs(x='Years', y='Recruitment in millions') +
       geom_errorbar(aes(ymin=q025/1000000, ymax=q975/1000000), width=.2, position=position_dodge(.9))
     
   } else if (region == "bay_of_biscay"){
     ggplot(data, aes(y=q50/1000000, x=year, colour = scenario)) +
-      geom_bar(position="stack", stat='identity') +
+      geom_bar(position="dodge", stat='identity') +
       labs(x='Years', y='Recruitment in millions') +
       geom_errorbar(aes(ymin=q05/1000000, ymax=q95/1000000), width=.2, position=position_dodge(.9))
   } else if (region %in% c("central_mediterranean", "eastern_mediterranean")) {
   
     ggplot(data, aes(x=Year,y=Median/1000000, colour = scenario)) +
-      geom_bar(position="stack", stat='identity') +
+      geom_bar(position="dodge", stat='identity') +
       labs(x='Years', y='Recruitment in millions') +
       geom_errorbar(aes(ymin=CI05/1000000, ymax=CI95/1000000), width=.2, position=position_dodge(.9))
   }
@@ -115,18 +115,18 @@ plot_catch <- function(data, refs, region) {
 
   if(region %in% c("greater_north_sea", "celtic_seas")){
     ggplot(data, aes(x=year,y=q50/1000, colour = scenario)) +
-      geom_bar(position="stack", stat='identity') +
+      geom_bar(position="dodge", stat='identity') +
       labs(x='Years', y='Catches in 1000 t') +
       geom_errorbar(aes(ymin=q025/1000, ymax=q975/1000), width=.2, position=position_dodge(.9))
     
   } else if (region == "bay_of_biscay"){
     ggplot(data, aes(x=year,y=q50/1000, colour = scenario)) +
-      geom_bar(position="stack", stat='identity') +
+      geom_bar(position="dodge", stat='identity') +
       labs(x='Years', y='Catches in 1000 t') +
       geom_errorbar(aes(ymin=q05/1000, ymax=q95/1000), width=.2, position=position_dodge(.9))
   } else if (region %in% c("central_mediterranean", "eastern_mediterranean")) {
     ggplot(data, aes(x=Year,y=Median/1000, colour = scenario)) +
-      geom_bar(position="stack", stat='identity') +
+      geom_bar(position="dodge", stat='identity') +
       labs(x='Years', y='Catches in 1000 t') + 
       geom_errorbar(aes(ymin=CI05/1000, ymax=CI95/1000), width=.2, position=position_dodge(.9)) +
       ylim(0, 1.1*max(data$Median/1000))

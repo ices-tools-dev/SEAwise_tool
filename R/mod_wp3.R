@@ -75,14 +75,14 @@ mod_wp3_server <- function(id, case_study){
       req(stock_data())
       req(input$scenario)
       
-      stock_prod <- list(data = stock_data()$data %>% dplyr::filter(scenario == input$scenario),
+      stock_prod <- list(data = stock_data()$data %>% dplyr::filter(scenario %in% input$scenario),
                          refs = stock_data()$refs)
       return(stock_prod)
     })
     
     output$fish <- renderPlot({
       req(stock_data_filtered())
-      
+
       plot_dat <- stock_data_filtered()$data %>% 
         mutate(indicator_lower = tolower(indicator)) %>% 
                  dplyr::filter(indicator_lower =="f")
@@ -92,6 +92,7 @@ mod_wp3_server <- function(id, case_study){
     
     output$ssb <- renderPlot({
       req(stock_data_filtered())
+      
       plot_dat <- stock_data_filtered()$data %>% 
         mutate(indicator_lower = tolower(indicator)) %>% 
                  dplyr::filter(indicator_lower =="ssb")
@@ -101,6 +102,7 @@ mod_wp3_server <- function(id, case_study){
     
     output$rec <- renderPlot({
       req(stock_data_filtered())
+      
       plot_dat <- stock_data_filtered()$data %>% 
         mutate(indicator_lower = tolower(indicator)) %>% 
                  dplyr::filter(indicator_lower %in% c("rec", "recruitment"))
@@ -110,6 +112,7 @@ mod_wp3_server <- function(id, case_study){
     
     output$cat <- renderPlot({
       req(stock_data_filtered())
+      
       plot_dat <- stock_data_filtered()$data %>% 
         mutate(indicator_lower = tolower(indicator)) %>% 
                  dplyr::filter(indicator_lower=="catch")
