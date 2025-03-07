@@ -47,6 +47,9 @@ mod_bycatch_server <- function(id, data, map_parameters, ecoregion){
         }
       } else if(ecoregion() %in% c("mediterranean", "central_mediterranean", "eastern_mediterranean")){
         card(withSpinner(plotOutput(ns("bycatch_med_plot"), height = "70vh")))
+      } else if(ecoregion() %in% c("celtic_seas", "bay_of_biscay", "western_waters")){
+        fluidRow(column(width = 6, card(withSpinner(plotOutput(ns("bycatch_ww_shearwater_plot"), height = "70vh")))),
+                 column(width = 6, card(withSpinner(plotOutput(ns("bycatch_ww_cetacean_plot"), height = "70vh")))))
       }
     })
     
@@ -152,6 +155,54 @@ mod_bycatch_server <- function(id, data, map_parameters, ecoregion){
           xlab("Longitude")
       }
     }) %>% bindCache(ecoregion(), input$bycatch_switch)
+    
+    output$bycatch_ww_shearwater_plot <- renderPlot({
+      
+      nameFillshearwater <- c("Bycatch mortality risk of balearic shearwater to longlines in the Bay of Biscay")
+      ggplot() +
+        geom_sf(aes(fill = z),col=NA,data = data$shearwater,na.rm=T)+
+          scale_fill_viridis_d(name= stringr::str_wrap(nameFillshearwater,25) ,na.value="white",labels=c("Low","Medium","High",""),option ="viridis",drop = FALSE) +
+          geom_sf(data=land,col=NA,fill="grey")+
+          # theme_classic()+
+          theme(plot.background=element_blank(),
+                panel.background=element_blank(),
+                axis.text.y   = element_text(size=16),
+                axis.text.x   = element_text(size=16),
+                axis.title.y  = element_text(size=16),
+                axis.title.x  = element_text(size=16),
+                panel.border  = element_rect(colour = "grey", linewidth=.5,fill=NA),
+                legend.text   = element_text(size=11),
+                legend.title  = element_text(size=11))+
+          scale_x_continuous(breaks=coordxmap)+
+          scale_y_continuous(breaks=coordymap,expand=c(0,0))+
+          coord_sf(xlim=c(coordslim_bob[1], coordslim_bob[2]), ylim=c(coordslim_bob[3],coordslim_bob[4]))+
+          ylab("Latitude")+
+          xlab("Longitude")
+        
+    })
+    output$bycatch_ww_cetacean_plot <- renderPlot({
+      nameFillcetacean <- c("Bycatch mortality risk of harbour porpoise to netters in Irish waters in summer")
+     
+      ggplot() +
+          geom_sf(aes(fill = R1.score),col=NA,data = data$cetacean,na.rm=T)+
+          scale_fill_viridis_d(na.value="white",labels=c("Low","Medium","High",""),option ="plasma",drop = FALSE,name = stringr::str_wrap(nameFillcetacean,25)) +
+          geom_sf(data=land,col=NA,fill="grey")+
+          # theme_classic()+
+          theme(plot.background=element_blank(),
+                panel.background=element_blank(),
+                axis.text.y   = element_text(size=16),
+                axis.text.x   = element_text(size=16),
+                axis.title.y  = element_text(size=16),
+                axis.title.x  = element_text(size=16),
+                panel.border  = element_rect(colour = "grey", linewidth=.5,fill=NA),
+                legend.text   = element_text(size=11),
+                legend.title  = element_text(size=11))+
+          scale_x_continuous(breaks=coordxmap)+
+          scale_y_continuous(breaks=coordymap,expand=c(0,0))+
+          coord_sf(xlim=c(coordslim_cs[1], coordslim_cs[2]), ylim=c(coordslim_cs[3],coordslim_cs[4]))+
+          ylab("Latitude")+
+          xlab("Longitude")
+    })
   })
 }
 

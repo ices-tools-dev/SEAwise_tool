@@ -5,7 +5,7 @@ library(dplyr)
 
 
 
-fleet_data=data.frame(readxl::read_xlsx("data-raw/template for deliverable 2.10.1_BoB_Demersal.xlsx",sheet="aggregated"))
+fleet_data=data.frame(readxl::read_xlsx("data-raw/wp2/template for deliverable 2.10.1_BoB_Demersal.xlsx",sheet="aggregated"))
 
 fleet_data1=fleet_data[fleet_data$variable %in% c("vessels","land"),]
 fleet_data1=fleet_data1[!is.na(fleet_data1$value),]

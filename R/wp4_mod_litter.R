@@ -103,7 +103,35 @@ mod_litter_server <- function(id, data, map_parameters, ecoregion){
           xlab("Longitude")
         
         litmap
+      }  else if (ecoregion() %in% c("celtic_seas", "bay_of_biscay", "western_waters")){
         
+        nameFilllit <- bquote(
+          atop(
+            Predicted ~ fisheries ~ related,
+            litter ~ (Numbers/km^2)
+          )
+        )
+
+        ggplot()+
+          geom_raster(aes(x = lon, y = lat, fill =noperkm),data = data,na.rm=T)+
+          scale_fill_viridis_c(option="viridis",na.value = NA, name = nameFilllit,direction = -1,trans = "sqrt")+
+          geom_sf(data=land,col=NA,fill="grey")+
+          #theme_classic()+
+          theme(plot.background=element_blank(),
+                panel.background=element_blank(),
+                axis.text.y   = element_text(size=16),
+                axis.text.x   = element_text(size=16),
+                axis.title.y  = element_text(size=16),
+                axis.title.x  = element_text(size=16),
+                panel.border  = element_rect(colour = "grey", linewidth=.5,fill=NA),
+                legend.text   = element_text(size=11),
+                legend.title  = element_text(size=11))+
+          guides(colour = guide_legend(nrow = 3))+
+          scale_x_continuous(breaks=coordxmap)+
+          scale_y_continuous(breaks=coordymap,expand=c(0,0))+
+          coord_sf(xlim=c(coordslim_ww[1], coordslim_ww[2]), ylim=c(coordslim_ww[3],coordslim_ww[4]))+
+          ylab("Latitude")+
+          xlab("Longitude")
       }
     }) %>% bindCache(ecoregion())
   })

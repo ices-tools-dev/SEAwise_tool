@@ -1,8 +1,9 @@
 rm(list=ls())
 library(ggplot2)
 library(dplyr)
+library(tidyr)
 
-fleet_data=data.frame(readxl::read_xlsx("data-raw/WW_d2_10_fleet_info.xlsx",sheet="WW_d2_10_fleet_info"))
+fleet_data=data.frame(readxl::read_xlsx("data-raw/wp2/WW_d2_10_fleet_info.xlsx",sheet="WW_d2_10_fleet_info"))
 # head(fleet_data)
 
 fleet_data1=fleet_data[fleet_data$variable %in% c("vessels"),]
@@ -85,38 +86,56 @@ output_data$carbon_data <- carbon_data
 
 # Linear regressions
 
-# dati2=data.frame(readxl::read_xlsx("data-raw/WW_d2_10_fleet_info.xlsx",sheet="fish_price"))
+dati2=data.frame(readxl::read_xlsx("data-raw/wp2/WW_d2_10_fleet_info.xlsx",sheet="fish_price"))
+
+fish_fuel_price <- data.frame()
 # colnames(dati2)
 # 
 # #dati2=dati2[,-3]
 # #colnames(dati2)[2]="Value"
 # #colnames(dati2)[3]="Stock_Country"
 # 
-# fish_fuel_price <- data.frame()
-# dati2<- dati2 %>%
-#    group_by(Year, Stock,Price.per.kg, Country, Fleet) %>%
-#   summarise(Price=mean(Price.per.kg))
-# dati2$Stock_Country=paste(dati2$Country,dati2$Stock,sep="_")
-# dati2$Variable="Price"
+dati2<- dati2 %>%
+   group_by(Year, Stock,Price.per.kg, Country, Fleet) %>%
+  summarise(Price=mean(Price.per.kg))
+dati2$Stock_Country=paste(dati2$Country,dati2$Stock,sep="_")
+dati2$Variable="Price"
 # 
-# dati2=dati2[dati2$Fleet!="all",]
+dati2=dati2[dati2$Fleet!="all",]
 # 
 # Country="BE"
 # #Fleet="small"
 # #size="small"
 # dati2=dati2[dati2$Country==Country,]
-# 
+# # 
 # fuel=as.data.frame(fleet_data[fleet_data$variable=="fuel_price" & fleet_data$country==Country,])
-# 
+# # 
 # dati3<- dati2 #data.frame(dati2[,c(1,2,6,4,5,7)])
 # colnames(dati3)[3]="variable"
-# 
 # DF=merge(dati3,fuel,by.x=c("Year","Country"),by.y=c("year","country"))
-# #colnames(DF)[5]="Price"
-# 
+# # #colnames(DF)[5]="Price"
+# # 
 # colnames(DF)[11]="fuel_price"
 #   
 # fish_fuel_price <- bind_rows(fish_fuel_price, DF)
+
+for(i in unique(dati2$Country)) {
+  dat=dati2[dati2$Country==i,]
+  # 
+  fuel=as.data.frame(fleet_data[fleet_data$variable=="fuel_price" & fleet_data$country==i,])
+  # 
+  dati3<- dat #data.frame(dati2[,c(1,2,6,4,5,7)])
+  colnames(dati3)[3]="variable"
+  DF=merge(dati3,fuel,by.x=c("Year","Country"),by.y=c("year","country"))
+  # #colnames(DF)[5]="Price"
+  # 
+  colnames(DF)[11]="fuel_price"
+  #   
+  fish_fuel_price <- bind_rows(fish_fuel_price, DF)
+  
+  
+}
+
 # # library(ggpmisc)
 # # formula<-y~x
 # # ggplot(DF,aes(x=fuel_price, y=Price,colour=Fleet,group=Fleet)) +
@@ -224,7 +243,7 @@ output_data$carbon_data <- carbon_data
 # #   expand_limits(y = 2)
 # # 
 # # ggsave(paste("Fish_fuel_price",Country,".jpg",sep=" "),width=20,height=20,units="cm")
-# 
+ 
 # fish_fuel_price <- bind_rows(fish_fuel_price, DF)
 # 
 # 
@@ -324,11 +343,12 @@ output_data$carbon_data <- carbon_data
 # # ggsave(paste("Fish_fuel_price",Country,".jpg",sep=" "),width=20,height=20,units="cm")
 # 
 # fish_fuel_price <- bind_rows(fish_fuel_price, DF)
-# output_data$fish_fuel_data <- fish_fuel_price
+colnames(fish_fuel_price)[2]="country"
+output_data$fish_fuel_data <- fish_fuel_price
 
 # Adult portions
 
-dat=readxl::read_xlsx("data-raw/Fish_portions.xlsx",sheet="CS") 
+dat=readxl::read_xlsx("data-raw/wp2/Fish_portions.xlsx",sheet="CS") 
 
 output_data$adult_portions <- dat
 saveRDS(output_data, file = "data/wp2/CS_data.rds")
@@ -339,3 +359,23 @@ saveRDS(output_data, file = "data/wp2/CS_data.rds")
 #   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))+labs(y="thousands")+ggtitle ("Numer of adult portions by Country and Stock")
 # 
 # ggsave(paste("Adult_portions_CS.jpg",sep=" "),width=25,height=20,units="cm")
+
+# Socio-eco projections
+
+projections <- read.csv("data-raw/wp2/tool_social_input.txt", sep = '\t')
+
+projections <- projections %>% filter(Area %in% c('WW Celtic'))
+
+projections <- projections %>% select(active, everything()) %>% pivot_longer(9:20) %>% na.omit() 
+projections <- projections %>% group_by(Area, Model, SSF_LSF, 
+                                        Mgt_scenario, Climate, year, Quantile, name) %>% summarise(value = mean(value))
+
+projections$Quantile[projections$Quantile == '0.025'] <- 'lower'
+projections$Quantile[projections$Quantile == '0.975'] <- 'higher'
+projections$Quantile[projections$Quantile == '0.5'] <- 'median'
+
+projections <- projections %>% pivot_wider(values_from = value, names_from = Quantile)
+
+output_data$projection_data <- projections
+saveRDS(output_data, file = "data/wp2/CS_data.rds")
+

@@ -27,8 +27,8 @@ mod_wp4_server <- function(id, ecoregion){
     data <- reactive({
       switch(ecoregion(),
              "baltic_sea" = NULL, 
-             "bay_of_biscay" = NULL, 
-             "celtic_seas" = NULL, 
+             "bay_of_biscay" = WP4_WW, 
+             "celtic_seas" = WP4_WW, 
              "greater_north_sea" = WP4_NS, 
              "mediterranean" = WP4_med,
              "central_mediterranean" = WP4_med,
@@ -45,7 +45,7 @@ mod_wp4_server <- function(id, ecoregion){
                  mod_litter_ui(ns("litter_1"))),
         tabPanel("Bycatch",
                  mod_bycatch_ui(ns("bycatch_1"))),
-        if(ecoregion() %in% c("greater_north_sea", "western_waters")){
+        if(ecoregion() %in% c("greater_north_sea", "western_waters", "celtic_seas", "bay_of_biscay")){
           tabPanel("Ecosystem Depletion Risk",
                    mod_ecosystem_risk_ui(ns("ecosystem_risk_1")))
         }

@@ -1,0 +1,5 @@
+source("data-raw/task26-plots-EasternMed.R")
+source("data-raw/task26-plots-CentralMed.R")
+source("data-raw/task26-plots-CelticSea.R")
+source("data-raw/task26-plots-NorthSea_BK.R")
+source("data-raw/task26-plots-BoB.R")

@@ -95,6 +95,30 @@ mod_rbs_server <- function(id, data, map_parameters, ecoregion){
           coord_sf(xlim=c(map_parameters()$coordslim[1], map_parameters()$coordslim[2]), ylim=c(map_parameters()$coordslim[3],map_parameters()$coordslim[4]))+
           ylab("Latitude")+
           xlab("Longitude")
+      } else if (ecoregion() %in% c("celtic_seas", "bay_of_biscay", "western_waters")){
+        
+        ggplot()+
+          geom_raster(aes(x = x, y = y, fill =  RBS_surface_sarmean),data = data$rbs_bob,na.rm=T)+
+          scale_fill_viridis_c(option="viridis",na.value = NA, name = "RBS with EVHOE survey",direction = -1)+
+          new_scale_fill() +
+          geom_raster(aes(x = x, y = y, fill =state),data = data$rbs_cs,na.rm=T)+
+          scale_fill_viridis_c(option="plasma",na.value = NA, name = "RBS with the IGFS survey",direction = -1)+
+          geom_sf(data=land,col=NA,fill="grey")+
+          theme_classic()+
+          theme(plot.background=element_blank(),
+                panel.background=element_blank(),
+                axis.text.y   = element_text(size=16),
+                axis.text.x   = element_text(size=16),
+                axis.title.y  = element_text(size=16),
+                axis.title.x  = element_text(size=16),
+                panel.border  = element_rect(colour = "grey", linewidth=.5,fill=NA),
+                legend.text   = element_text(size=11),
+                legend.title  = element_text(size=11))+
+          scale_x_continuous(breaks=coordxmap)+
+          scale_y_continuous(breaks=coordymap,expand=c(0,0))+
+          coord_sf(xlim=c(coordslim_ww[1], coordslim_ww[2]), ylim=c(coordslim_ww[3],coordslim_ww[4]))+
+          ylab("Latitude")+
+          xlab("Longitude")
       }
     }) %>% bindCache(ecoregion(), input$rbs_year)
   })

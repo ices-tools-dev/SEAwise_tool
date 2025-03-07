@@ -25,7 +25,6 @@ mod_ecosystem_risk_server <- function(id, data){
  
     
     output$ecosystem_risk <- renderPlot({
-
       cmin<-min(data$ratio, na.rm=TRUE)
       cmax<-max(data$ratio, na.rm=TRUE)
       

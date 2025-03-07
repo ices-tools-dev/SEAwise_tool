@@ -133,7 +133,6 @@ plot_mse_stock_landings <- function(df) {
 #' @import ggplot2
 #'
 plot_mse_generic <- function(df, input, list_params, ecoregion) {
-  #browser()
   plot_params <- list_params[[input]]
   
   data <- df %>% filter(period != '2021')#, !(stock_name %in% constant_cpue))
