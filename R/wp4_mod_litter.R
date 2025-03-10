@@ -127,9 +127,10 @@ mod_litter_server <- function(id, data, map_parameters, ecoregion){
                 legend.text   = element_text(size=11),
                 legend.title  = element_text(size=11))+
           guides(colour = guide_legend(nrow = 3))+
-          scale_x_continuous(breaks=coordxmap)+
-          scale_y_continuous(breaks=coordymap,expand=c(0,0))+
-          coord_sf(xlim=c(coordslim_ww[1], coordslim_ww[2]), ylim=c(coordslim_ww[3],coordslim_ww[4]))+
+          scale_x_continuous(breaks=map_parameters()$coordxmap$coordxmap_ww)+
+          scale_y_continuous(breaks=map_parameters()$coordxmap$coordymap_ww,expand=c(0,0))+
+          coord_sf(xlim=c(map_parameters()$coordslim$coordslim_ww[1], map_parameters()$coordslim$coordslim_ww[2]), 
+                   ylim=c(map_parameters()$coordslim$coordslim_ww[3],map_parameters()$coordslim$coordslim_ww[4]))+
           ylab("Latitude")+
           xlab("Longitude")
       }

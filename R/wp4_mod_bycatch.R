@@ -173,9 +173,10 @@ mod_bycatch_server <- function(id, data, map_parameters, ecoregion){
                 panel.border  = element_rect(colour = "grey", linewidth=.5,fill=NA),
                 legend.text   = element_text(size=11),
                 legend.title  = element_text(size=11))+
-          scale_x_continuous(breaks=coordxmap)+
-          scale_y_continuous(breaks=coordymap,expand=c(0,0))+
-          coord_sf(xlim=c(coordslim_bob[1], coordslim_bob[2]), ylim=c(coordslim_bob[3],coordslim_bob[4]))+
+          scale_x_continuous(breaks=map_parameters()$coordxmap_bob)+
+          scale_y_continuous(breaks=map_parameters()$coordymap_bob,expand=c(0,0))+
+          coord_sf(xlim=c(map_parameters()$coordslim$coordslim_bob[1], map_parameters()$coordslim$coordslim_bob[2]),
+                   ylim=c(map_parameters()$coordslim$coordslim_bob[3], map_parameters()$coordslim$coordslim_bob[4]))+
           ylab("Latitude")+
           xlab("Longitude")
         
@@ -197,9 +198,10 @@ mod_bycatch_server <- function(id, data, map_parameters, ecoregion){
                 panel.border  = element_rect(colour = "grey", linewidth=.5,fill=NA),
                 legend.text   = element_text(size=11),
                 legend.title  = element_text(size=11))+
-          scale_x_continuous(breaks=coordxmap)+
-          scale_y_continuous(breaks=coordymap,expand=c(0,0))+
-          coord_sf(xlim=c(coordslim_cs[1], coordslim_cs[2]), ylim=c(coordslim_cs[3],coordslim_cs[4]))+
+          scale_x_continuous(breaks=map_parameters()$coordxmap$coordxmap_cs)+
+          scale_y_continuous(breaks=map_parameters()$coordxmap$coordymap_cs,expand=c(0,0))+
+          coord_sf(xlim=c(map_parameters()$coordslim$coordslim_cs[1], map_parameters()$coordslim$coordslim_cs[2]), 
+                   ylim=c(map_parameters()$coordslim$coordslim_cs[3],map_parameters()$coordslim$coordslim_cs[4]))+
           ylab("Latitude")+
           xlab("Longitude")
     })
