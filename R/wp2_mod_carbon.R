@@ -26,7 +26,7 @@ mod_carbon_server <- function(id, carbon_data, ecoregion){
     
     data <- reactive({
       validate(
-        need(!is.null(carbon_data()), message = "Carbon emissions data not available.")
+        need(nrow(carbon_data())>0, message = "Carbon emissions data not available.")
       )
       dat <- carbon_data()
       colnames(dat) <- tolower(colnames(dat))
@@ -54,6 +54,8 @@ mod_carbon_server <- function(id, carbon_data, ecoregion){
       ggplot(data=data.frame(filtered_data()), aes(x=year, y=value, colour=fleet)) + 
         geom_point(inherit.aes = T, size = 1.5)+
         geom_line(inherit.aes = T, stat="identity",size=1)+
+        scale_colour_discrete(name = "Fleet type",
+                              labels = c("large" = "Large scale", "small" = "Small scale"))+
         facet_wrap(country~ variable,scales="free_y",drop=FALSE,ncol=3)+
         theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))+
         labs(fill='Year')

@@ -36,19 +36,39 @@ mod_fish_fuel_server <- function(id, ecoregion, fuel_data){
         Fish ~ Price ~ (Euro/kg)
       )
     )
+    x_label <- bquote(
+      atop(
+        Fuel ~ Price ~ (Euro/kg)
+      )
+    )
     
     output$fuel_plot <- renderPlot({
       req(nrow(fuel_data())>0, ecoregion(), input$country_input)
       dat <- filter(fuel_data(), country == input$country_input)
       
-      #if(!ecoregion() %in% c("Central Mediterranean", "Eastern Mediterranean")){
-        formula<-y~x
-  
+      
+      formula<-y~x
+        
+        var_labels <- c(
+          GVA   = "Gross Value Add",
+          land_val = "Landings value",
+          vessels = "Vessels",
+          BE = "Belgium",
+          DE = "Germany",
+          ES = "Spain",
+          FRA = "France",
+          IE = "Ireland",
+          UKE = "England"
+        )
+        
       plot <- ggplot(dat, aes(x=fuel_price, y=Price,colour=Fleet,group=Fleet)) +
         geom_point(size = 1.5) +
         geom_smooth(method='lm',se=T)+
-        ggtitle(paste(input$country_input,sep=" ")) +
+        ggtitle(paste(var_labels[input$country_input],sep=" ")) +
         ylab(y_label)+
+        scale_colour_discrete(name = "Fleet type",
+                              labels = c("large" = "Large scale", "small" = "Small scale"))+
+        labs(x=x_label, y = y_label)+
         stat_fit_glance(method = 'lm',
                         method.args = list(formula = formula),
                         geom = 'text',

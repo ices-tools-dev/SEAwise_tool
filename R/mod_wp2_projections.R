@@ -52,7 +52,7 @@ mod_wp2_projections_server <- function(id, projection_data, ecoregion){
         geom_point(aes(y = median), size = 1.5)+
         geom_line(aes(y = median), size = 1)+
         geom_ribbon(aes(ymin = lower, ymax = higher, fill = Climate), alpha =.1, linetype = 0, show.legend = FALSE)+
-        facet_wrap(~Mgt_scenario, scales = 'free_y')+
+        facet_wrap(~Mgt_scenario, scales = 'fixed')+
         scale_y_continuous('')+
         theme(axis.text.x = element_text(angle = 45, hjust = 1))+
         labs(color = 'Climate scenario')#+

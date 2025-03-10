@@ -58,7 +58,10 @@ mod_adult_portions_server <- function(id, portion_data, ecoregion){
       req(nrow(filtered_data()) > 0, ecoregion())
         plot <- ggplot(data=filtered_data(), aes(y=adult_portions, x=country, fill=fleet)) +
                   geom_bar(stat="identity", position=position_dodge())+
-                  labs(y="thousands")+
+                  labs(x= "Country", y="Thousands", fill = "Fleet type")+
+          scale_fill_discrete(name = "Fleet type",
+                                labels = c("large" = "Large scale", "small" = "Small scale"))+
+          
                   ggtitle ("Number of adult portions by Country")
       if(ecoregion() == "greater_north_sea") {
         plot + facet_wrap(spec~.,scales="free_x",drop=FALSE,ncol=3)

@@ -26,7 +26,7 @@ mod_wp2_ui <- function(id){
       tabPanel("Meal Provision",
                mod_adult_portions_ui(ns("adult_portions_1"))
       ),
-      tabPanel("Projections",
+      tabPanel("Climate and Management impacts",
                mod_wp2_projections_ui(ns("wp2_projections_1"))
       )
     )
