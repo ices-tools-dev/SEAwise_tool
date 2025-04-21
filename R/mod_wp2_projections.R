@@ -31,7 +31,7 @@ mod_wp2_projections_server <- function(id, projection_data, ecoregion){
       )
       tagList(
         selectInput(ns("fleet"), "Fleet", choices = unique(projection_data()$SSF_LSF), selected = 'LSF'),
-        selectInput(ns("names_filter"), "Social indicator", choices = unique(projection_data()$name), selected = 'GVA'),
+        selectInput(ns("names_filter"), "Indicator", choices = unique(projection_data()$name), selected = 'GVA'),
       )
     })
     filtered_data <- reactive({
@@ -40,6 +40,7 @@ mod_wp2_projections_server <- function(id, projection_data, ecoregion){
         need(!is.null(input$names_filter), message = "Social indicator not selected."),
         need(!is.null(input$fleet), message = "Fleet not selected."),
       )
+    
       dat <- projection_data()
       dat %>% filter(name %in% input$names_filter, 
                      SSF_LSF %in% input$fleet)
@@ -48,12 +49,23 @@ mod_wp2_projections_server <- function(id, projection_data, ecoregion){
     
     output$projections_plot <- renderPlot({
       req(nrow(filtered_data()>0))
+      
       p1 <- ggplot(filtered_data(),aes(x = year , color = Climate, group = Climate))+
         geom_point(aes(y = median), size = 1.5)+
         geom_line(aes(y = median), size = 1)+
         geom_ribbon(aes(ymin = lower, ymax = higher, fill = Climate), alpha =.1, linetype = 0, show.legend = FALSE)+
-        facet_wrap(~Mgt_scenario, scales = 'fixed')+
+        # facet_wrap(~Mgt_scenario, scales = 'fixed', 
+        #            labeller = as_labeller(var_labels)
+        # #            )+
+        # facet_grid(Model~Mgt_scenario, scales = 'fixed', rows = 2,
+        #             labeller = as_labeller(seawise_var_labels()) 
+        #            )+
+        facet_wrap(~Mgt_scenario, scales = 'fixed', nrow = 2,
+                    labeller = as_labeller(seawise_var_labels()) 
+                   )+
         scale_y_continuous('')+
+        scale_colour_discrete(name = "Climate Scenario",
+                              labels = c("current" = "Current", "RCP4.5" = "RCP 4.5", "RCP8.5" = "RCP 8.5"))+
         theme(axis.text.x = element_text(angle = 45, hjust = 1))+
         labs(color = 'Climate scenario')#+
       #ggtitle(inpu)

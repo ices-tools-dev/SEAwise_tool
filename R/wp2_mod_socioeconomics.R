@@ -48,18 +48,6 @@ mod_socioeconomics_server <- function(id, ecoregion, social_data){
     
     output$socioeco_plot <- renderPlot({
       req(nrow(filtered_data()) > 0, ecoregion())
-      
-      var_labels <- c(
-        GVA   = "Gross Value Add",
-        land_val = "Landings value",
-        vessels = "Vessels",
-        BE = "Belgium",
-        DE = "Germany",
-        ES = "Spain",
-        FRA = "France",
-        IE = "Ireland",
-        UKE = "England"
-      )
 
       ggplot(aes(x=year,y=value,colour=fleet),data=filtered_data())+
         geom_point(inherit.aes = T, size = 1.5) +
@@ -69,8 +57,9 @@ mod_socioeconomics_server <- function(id, ecoregion, social_data){
         )+
         scale_colour_discrete(name = "Fleet type",
                               labels = c("large" = "Large scale", "small" = "Small scale"))+
-        facet_grid(variable ~ country, scales="free_y", drop=FALSE, labeller = as_labeller(var_labels))+
-        labs(x='Year', y = "Euro")+
+        facet_grid(variable ~ country, scales="free_y", drop=FALSE, labeller = as_labeller(seawise_var_labels()))+
+        # labs(x='Year', y = "Euro")+
+        labs(x='Year', y = "")+
         theme(axis.text.x = element_text(angle=45, hjust = 1))
     }) 
   })

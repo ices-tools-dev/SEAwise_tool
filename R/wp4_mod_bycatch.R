@@ -12,8 +12,9 @@
 mod_bycatch_ui <- function(id){
   ns <- NS(id)
   tagList(
-    uiOutput(ns("bycatch_selection_panel")),
-    uiOutput(ns("bycatch_main_panel"))
+    card(height = "70vh", full_screen = TRUE, max_height = "100%",
+         layout_sidebar(sidebar = sidebar(uiOutput(ns("bycatch_selection_panel"))),
+                        uiOutput(ns("bycatch_main_panel"))))
   )
 }
 
@@ -38,18 +39,30 @@ mod_bycatch_server <- function(id, data, map_parameters, ecoregion){
         req(input$bycatch_switch)
         if (input$bycatch_switch == "Selection") {
           tagList(
-            selectInput(ns("bycatch_season"), "Select bycatch risk season", choices = unique(data$season)),
-            selectInput(ns("bycatch_gear"), "Select bycatch gear season", choices = unique(data$gear)),
-            card(withSpinner(plotOutput(ns("bycatch_plot"), height = "70vh")))
-          )
+            card(
+            card_header(
+              fluidRow(column(width = 6, 
+                              selectInput(ns("bycatch_season"), "Select bycatch risk season", choices = unique(data$season))
+                              ),
+                       column(width = 6,
+              selectInput(ns("bycatch_gear"), "Select bycatch gear season", choices = unique(data$gear))
+              ))
+            ),
+            withSpinner(plotOutput(ns("bycatch_plot"), height = "55vh"))
+          ))
         } else {
-          card(withSpinner(plotOutput(ns("bycatch_facet_plot"), height = "70vh")))
+          tagList(
+            card(
+              withSpinner(plotOutput(ns("bycatch_facet_plot"), height = "65vh"))
+            )
+          )
         }
       } else if(ecoregion() %in% c("mediterranean", "central_mediterranean", "eastern_mediterranean")){
-        card(withSpinner(plotOutput(ns("bycatch_med_plot"), height = "70vh")))
-      } else if(ecoregion() %in% c("celtic_seas", "bay_of_biscay", "western_waters")){
-        fluidRow(column(width = 6, card(withSpinner(plotOutput(ns("bycatch_ww_shearwater_plot"), height = "70vh")))),
-                 column(width = 6, card(withSpinner(plotOutput(ns("bycatch_ww_cetacean_plot"), height = "70vh")))))
+        ns("bycatch_med_plot")
+      } else if(ecoregion() %in% c("celtic_seas")){
+        plotOutput(ns("bycatch_ww_cetacean_plot"), height = "70vh")
+      } else if(ecoregion() %in% c("bay_of_biscay", "western_waters")){
+        plotOutput(ns("bycatch_ww_shearwater_plot"), height = "70vh")
       }
     })
     
@@ -91,7 +104,7 @@ mod_bycatch_server <- function(id, data, map_parameters, ecoregion){
         ylab("Latitude")+
         xlab("Longitude")
       
-    }) %>% bindCache(ecoregion(), input$bycatch_switch)
+    }) %>% bindCache(ecoregion(), input$bycatch_switch, input$bycatch_species, input$bycatch_gear, input$bycatch_season)
     
     output$bycatch_facet_plot <- renderPlot({
       req(filtered_data())

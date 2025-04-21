@@ -35,8 +35,16 @@ coordslim_bob <- c(-12,maxlong,minlat,52)
 coordslim_cs <- c(minlong,2,48,maxlat)
 
 
-coordxmap <- round(seq(minlong,maxlong,length.out = 4))
-coordymap <- round(seq(minlat,maxlat,length.out = 4))
+coordxmap_ww <- round(seq(minlong,maxlong,length.out = 4))
+coordymap_ww <- round(seq(minlat,maxlat,length.out = 4))
+coordxmap_bob <- round(seq(-12,maxlong,length.out = 4))
+coordymap_bob <- round(seq(minlat,52,length.out = 4))
+coordxmap_cs <- round(seq(minlong,2,length.out = 4))
+coordymap_cs <- round(seq(48,maxlat,length.out = 4))
+
+
+
+
 ext <- st_bbox(c(xmin = minlong, xmax = maxlong,
                  ymin = minlat, ymax = maxlat),
                crs =  4326)
@@ -182,7 +190,11 @@ WP4_WW <- list(rbs = rbs_data,
                map_parameters = list(coordslim = list(coordslim_ww = coordslim_ww,
                                                       coordslim_cs = coordslim_cs,
                                                       coordslim_bob = coordslim_bob),
-                                     coordxmap = coordxmap,
-                                     coordymap = coordymap))
+                                     coordxmap = list(coordxmap_ww=coordxmap_ww,
+                                                      coordxmap_cs=coordxmap_cs,
+                                                      coordxmap_bob=coordxmap_bob),
+                                     coordymap = list(coordymap_ww=coordymap_ww,
+                                                      coordymap_cs=coordymap_cs,
+                                                      coordymap_bob=coordymap_bob)))
 
 usethis::use_data(WP4_WW, overwrite = T)

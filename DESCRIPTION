@@ -1,6 +1,6 @@
 Package: SEAwiseTool
 Title: SEAwise tool Landing Page
-Version: 0.0.0.9021
+Version: 0.0.0.9028
 Authors@R: 
     person(given = "Neil",
            family = "Maginnis",

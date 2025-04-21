@@ -49,17 +49,23 @@ mod_fleet_histograms_server <- function(id, fleet_data, ecoregion){
     output$fleet_histograms <- renderPlot({
       req(nrow(filtered_data()) > 0, ecoregion(), input$country_filter, input$variable_filter)
       
-      var_labels <- c(
-        GVA   = "Gross Value Add",
-        land_val = "Landings value",
-        vessels = "Vessels",
-        BE = "Belgium",
-        DE = "Germany",
-        ES = "Spain",
-        FRA = "France",
-        IE = "Ireland",
-        UKE = "England"
-      )
+      # var_labels <- c(
+      #   GVA   = "Gross Value Add",
+      #   land_val = "Landings value",
+      #   vessels = "Vessels",
+      #   BE = "Belgium",
+      #   DK = "DK",
+      #   DE = "Germany",
+      #   EN = "England",
+      #   ES = "Spain",
+      #   FRA = "France",
+      #   FR = "France",
+      #   IE = "Ireland",
+      #   NL = "Netherlands",
+      #   Sc = "Scotland",
+      #   SW = "Sweden",
+      #   UKE = "England"
+      # )
       
       ggplot(data=filtered_data(), aes(x=year, y=value, colour=fleet)) + 
         geom_point(inherit.aes = T, size = 1.5,)+
@@ -70,8 +76,9 @@ mod_fleet_histograms_server <- function(id, fleet_data, ecoregion){
         scale_colour_discrete(name = "Fleet type",
                               labels = c("large" = "Large scale", "small" = "Small scale"))+
         # facet_wrap(country + variable~.,scales="free_y",drop=FALSE,ncol=6)+
-        facet_grid(variable ~ country, scales="free_y", drop=FALSE, labeller = as_labeller(var_labels))+
-        labs(x='Year', y='Number')+
+        facet_grid(variable ~ country, scales="free_y", drop=FALSE, labeller = as_labeller(seawise_var_labels()))+
+        # labs(x='Year', y='Number')+
+        labs(x='Year', y='')+
         theme(axis.text.x = element_text(angle = 45,  hjust=1))
       
     })

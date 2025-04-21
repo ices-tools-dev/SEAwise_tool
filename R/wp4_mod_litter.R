@@ -112,7 +112,7 @@ mod_litter_server <- function(id, data, map_parameters, ecoregion){
           )
         )
 
-        ggplot()+
+        lit_plot <- ggplot()+
           geom_raster(aes(x = lon, y = lat, fill =noperkm),data = data,na.rm=T)+
           scale_fill_viridis_c(option="viridis",na.value = NA, name = nameFilllit,direction = -1,trans = "sqrt")+
           geom_sf(data=land,col=NA,fill="grey")+
@@ -126,13 +126,23 @@ mod_litter_server <- function(id, data, map_parameters, ecoregion){
                 panel.border  = element_rect(colour = "grey", linewidth=.5,fill=NA),
                 legend.text   = element_text(size=11),
                 legend.title  = element_text(size=11))+
-          guides(colour = guide_legend(nrow = 3))+
-          scale_x_continuous(breaks=map_parameters()$coordxmap$coordxmap_ww)+
-          scale_y_continuous(breaks=map_parameters()$coordxmap$coordymap_ww,expand=c(0,0))+
-          coord_sf(xlim=c(map_parameters()$coordslim$coordslim_ww[1], map_parameters()$coordslim$coordslim_ww[2]), 
-                   ylim=c(map_parameters()$coordslim$coordslim_ww[3],map_parameters()$coordslim$coordslim_ww[4]))+
-          ylab("Latitude")+
-          xlab("Longitude")
+          guides(colour = guide_legend(nrow = 3))
+        
+        if(ecoregion() %in% "celtic_seas") {
+          lit_plot + scale_x_continuous(breaks=map_parameters()$coordxmap_cs)+
+            scale_y_continuous(breaks=map_parameters()$coordymap_cs,expand=c(0,0))+
+            coord_sf(xlim=c(map_parameters()$coordslim$coordslim_cs[1], map_parameters()$coordslim$coordslim_cs[2]),
+                     ylim=c(map_parameters()$coordslim$coordslim_cs[3], map_parameters()$coordslim$coordslim_cs[4]))+
+            ylab("Latitude")+
+            xlab("Longitude")
+        } else if (ecoregion() %in% "bay_of_biscay") {
+          lit_plot + scale_x_continuous(breaks=map_parameters()$coordxmap_bob)+
+            scale_y_continuous(breaks=map_parameters()$coordymap_bob,expand=c(0,0))+
+            coord_sf(xlim=c(map_parameters()$coordslim$coordslim_bob[1], map_parameters()$coordslim$coordslim_bob[2]),
+                     ylim=c(map_parameters()$coordslim$coordslim_bob[3], map_parameters()$coordslim$coordslim_bob[4]))+
+            ylab("Latitude")+
+            xlab("Longitude")
+        }
       }
     }) %>% bindCache(ecoregion())
   })

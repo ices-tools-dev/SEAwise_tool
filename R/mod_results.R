@@ -18,7 +18,7 @@ mod_results_ui <- function(id){
                mod_wp3_ui(ns("wp3"))),
       tabPanel("Ecological consequences of Fisheries",
                mod_wp4_ui(ns("wp4"))),
-      tabPanel("Spatial Management Impacts"),
+      #tabPanel("Spatial Management Impacts"),
       tabPanel("Management Strategy and Trade-off Evaluation",
                mod_wp6_ui(ns("wp6"))),
     )

@@ -91,8 +91,7 @@ mod_home_server <- function(id, parent_session, selected_locations){
     
     output$welcome <- renderUI({
   
-      text <- paste(select_text(texts, "landing_page", "welcome"), 
-                    select_text(texts, "landing_page", "website"))
+      text <- paste(select_text(texts, "landing_page", "welcome"))
       
       HTML(text)
       

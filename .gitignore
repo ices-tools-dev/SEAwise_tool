@@ -5,5 +5,8 @@
 data/*.rda
 data/*.RData
 data-raw/*.rda
+data-raw/*.rds
+data-raw/*.csv
+data-raw/*.xlsx
 data-raw/*.RData
 R/sysdata.rda
