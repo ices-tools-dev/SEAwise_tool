@@ -18,8 +18,10 @@ mod_wp3_ui <- function(id){
                column(6, card(plotOutput(ns("rec")), height = "40vh",full_screen = TRUE))),
       fluidRow(column(6, card(plotOutput(ns("fish")), height = "40vh",full_screen = TRUE)),
                column(6, card(plotOutput(ns("ssb")), height = "40vh",full_screen = TRUE))
-      )
-      )  
+      )),
+      card(card_header("Figure Information"),
+           uiOutput(ns("caption")))
+      
     )
 }
 
@@ -138,7 +140,7 @@ mod_wp3_server <- function(id, case_study){
       if(case_study() == "greater_north_sea" && 
          input$stock_selection %in% unique(case_study_data()$data$sms$sp.name)) {
         ggplot(plot_dat, aes(x = year, y = value, color = scenario))+geom_line()+
-          labs(x='Years', y='Fishing pressure F')
+          labs(x='Year', y='Fishing pressure F')
           #theme(legend.position = 'top')
       } else {
         plot_refs <- stock_data_filtered()$refs
@@ -157,7 +159,7 @@ mod_wp3_server <- function(id, case_study){
       if(case_study() == "greater_north_sea" && 
          input$stock_selection %in% unique(case_study_data()$data$sms$sp.name)) {
         ggplot(plot_dat, aes(x = year, y = value, color = scenario))+geom_line()+
-          labs(x='Years', y='SSB in 1000 t')
+          labs(x='Year', y='SSB in 1000 t')
       } else {
       plot_refs <- stock_data_filtered()$refs
       plot_ssb(data = plot_dat, refs = plot_refs, region = case_study())
@@ -173,7 +175,7 @@ mod_wp3_server <- function(id, case_study){
       if(case_study() == "greater_north_sea" && 
          input$stock_selection %in% unique(case_study_data()$data$sms$sp.name)) {
         ggplot(plot_dat, aes(x = year, y = value, color = scenario))+geom_line()+
-          labs(x='Years', y='Recruitment in millions')
+          labs(x='Year', y='Recruitment in millions')
       } else {
       plot_refs <- stock_data_filtered()$refs
       plot_recruitment(data = plot_dat, refs = plot_refs, region = case_study())
@@ -189,13 +191,20 @@ mod_wp3_server <- function(id, case_study){
       if(case_study() == "greater_north_sea" && 
          input$stock_selection %in% unique(case_study_data()$data$sms$sp.name)) {
         ggplot(plot_dat, aes(x = year, y = value, color = scenario))+geom_line()+
-          labs(x='Years', y='Catches in 1000 t') 
+          labs(x='Year', y='Catches in 1000 t') 
       } else {
       plot_refs <- stock_data_filtered()$refs
       plot_catch(data = plot_dat, refs = plot_refs, region = case_study())
       }
     })
     
+    output$caption <- renderUI({
+      validate(
+        need(!is.null(figure_texts[[case_study()]]), message = "")
+      )
+      text <- paste(select_text(figure_texts, ecoregion = case_study(), "wp3", "caption"))
+      HTML(text)
+    })
   })
 }
     

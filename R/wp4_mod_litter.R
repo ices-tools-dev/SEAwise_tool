@@ -15,8 +15,9 @@ mod_litter_ui <- function(id){
   tagList(
     card(card_header("Fishing Litter"),
          withSpinner(plotOutput(ns("litter_plot"), height = "70vh")), full_screen = T
-         
-    )
+    ),
+    card(card_header("Figure Information"),
+         uiOutput(ns("caption")))
   )
 }
 
@@ -145,6 +146,15 @@ mod_litter_server <- function(id, data, map_parameters, ecoregion){
         }
       }
     }) %>% bindCache(ecoregion())
+    
+    output$caption <- renderUI({
+      validate(
+        need(!is.null(figure_texts[[ecoregion()]]), message = "")
+      )
+      text <- paste(select_text(figure_texts, ecoregion = ecoregion(), "litter", "caption"))
+      HTML(text)
+    })
+    
   })
 }
 

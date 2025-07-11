@@ -25,7 +25,9 @@ mod_mse_ui <- function(id){
                                                      selected = "regional_change")
                                      ),
                                            card_body(plotOutput(ns("mse_plot"), height = "70vh"), 
-                                                     max_height_full_screen =  "100%", fill = T)) 
+                                                     max_height_full_screen =  "100%", fill = T)),
+    card(card_header("Figure Information"),
+         uiOutput(ns("caption"))) 
       
     )
   )
@@ -50,24 +52,36 @@ mod_mse_server <- function(id, case_study){
       if (input$mse_plot_id %in% c("SSB", "F_ratio", "mean_age", "ssb_blim")) {
         
         filtered_stocks <- stock %>% dplyr::filter(!stock_name %in% constant_cpue)
-        plot_mse_generic(df = filtered_stocks, input = input$mse_plot_id, list_params = mse_plot_params, ecoregion)
+        
+        filtered_stocks %>% filter(!HCR == "PGY") %>% plot_mse_generic(input = input$mse_plot_id, list_params = mse_plot_params, ecoregion)
+        # plot_mse_generic(df = filtered_stocks, input = input$mse_plot_id, list_params = mse_plot_params, ecoregion)
         
       } else if (input$mse_plot_id %in% c("fleet_landings", "fleet_landings_value")) {
         
-        plot_mse_generic(df = total_landings_fleet, input = input$mse_plot_id, list_params = mse_plot_params, ecoregion)
+        total_landings_fleet %>% filter(!HCR == "PGY") %>% plot_mse_generic(input = input$mse_plot_id, list_params = mse_plot_params, ecoregion)
+        # plot_mse_generic(df = total_landings_fleet, input = input$mse_plot_id, list_params = mse_plot_params, ecoregion)
         
       } else if (input$mse_plot_id %in% c("stock_landings", "stock_landings_value")) {
         
-        plot_mse_generic(df = total_landings_stock, input = input$mse_plot_id, list_params = mse_plot_params, ecoregion)
+        total_landings_stock %>% filter(!HCR == "PGY") %>% plot_mse_generic(input = input$mse_plot_id, list_params = mse_plot_params, ecoregion)
+        # plot_mse_generic(df = total_landings_stock, input = input$mse_plot_id, list_params = mse_plot_params, ecoregion)
         
       } else if (input$mse_plot_id == "regional_change") {
         
-        plot_mse_indicators_regional(df = tab_stock, ecoregion)
+        tab_stock %>% filter(!HCR == "PGY") %>% plot_mse_indicators_regional(ecoregion)
+        #plot_mse_indicators_regional(df = tab_stock, ecoregion)
         
       }
       
     })
     
+    output$caption <- renderUI({
+      validate(
+        need(!is.null(figure_texts[[case_study()]]), message = "")
+      )
+      text <- paste(select_text(figure_texts, ecoregion = case_study(), "mse", "caption"))
+      HTML(text)
+    })
   })
 }
 

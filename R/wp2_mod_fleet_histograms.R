@@ -14,7 +14,10 @@ mod_fleet_histograms_ui <- function(id){
     card(height = "70vh", full_screen = TRUE, max_height = "100%",
          layout_sidebar(sidebar = sidebar(uiOutput(ns("plot_filters"))),
                         plotOutput(ns("fleet_histograms")))
-    )
+    ),
+    card(
+      card_header("Figure Information"),
+      uiOutput(ns("caption")))
   )
 }
     
@@ -26,6 +29,7 @@ mod_fleet_histograms_server <- function(id, fleet_data, ecoregion){
     ns <- session$ns
  
     data <- reactive({
+      
       dat <- fleet_data()
       colnames(dat) <- tolower(colnames(dat))
       dat
@@ -49,30 +53,12 @@ mod_fleet_histograms_server <- function(id, fleet_data, ecoregion){
     output$fleet_histograms <- renderPlot({
       req(nrow(filtered_data()) > 0, ecoregion(), input$country_filter, input$variable_filter)
       
-      # var_labels <- c(
-      #   GVA   = "Gross Value Add",
-      #   land_val = "Landings value",
-      #   vessels = "Vessels",
-      #   BE = "Belgium",
-      #   DK = "DK",
-      #   DE = "Germany",
-      #   EN = "England",
-      #   ES = "Spain",
-      #   FRA = "France",
-      #   FR = "France",
-      #   IE = "Ireland",
-      #   NL = "Netherlands",
-      #   Sc = "Scotland",
-      #   SW = "Sweden",
-      #   UKE = "England"
-      # )
-      
       ggplot(data=filtered_data(), aes(x=year, y=value, colour=fleet)) + 
         geom_point(inherit.aes = T, size = 1.5,)+
         geom_line(stat="identity",aes(x=year, y=value, colour = fleet, group = fleet),size=1)+
-        scale_x_discrete(
-          breaks = as.numeric(seq(min(filtered_data()$year), max(filtered_data()$year), by = 2))
-        )+
+        # scale_x_discrete(
+        #   breaks = as.numeric(seq(min(filtered_data()$year), max(filtered_data()$year), by = 2))
+        # )+
         scale_colour_discrete(name = "Fleet type",
                               labels = c("large" = "Large scale", "small" = "Small scale"))+
         # facet_wrap(country + variable~.,scales="free_y",drop=FALSE,ncol=6)+
@@ -83,6 +69,13 @@ mod_fleet_histograms_server <- function(id, fleet_data, ecoregion){
       
     })
     
+    output$caption <- renderUI({
+      validate(
+        need(!is.null(figure_texts[[ecoregion()]]), message = "")
+      )
+      text <- paste(select_text(figure_texts, ecoregion = ecoregion(), "fleet_characteristics", "caption"))
+      HTML(text)
+    })
   })
 }
     

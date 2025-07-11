@@ -8,15 +8,20 @@
 #'
 #' @importFrom shiny NS tagList 
 #' @importFrom ggnewscale new_scale_fill
+#' @importFrom bslib card_footer
 mod_rbs_ui <- function(id){
   ns <- NS(id)
   tagList(
     card(height = "70vh", full_screen = TRUE, max_height = "100%",
          #layout_sidebar(sidebar = sidebar(uiOutput(ns("plot_filters"))),
-                        withSpinner(uiOutput(ns("rbs_main_panel"),height = "70vh"))
+                        withSpinner(uiOutput(ns("rbs_main_panel"),height = "65vh"))
+         
                                     
       #)
-    )
+    ),
+    card(card_header("Figure Information"),
+         uiOutput(ns("caption")))
+    
   )
 }
     
@@ -80,8 +85,7 @@ mod_rbs_server <- function(id, data, map_parameters, ecoregion){
       } else { 
         withSpinner(plotOutput(ns("rbs_plot"),height = "70vh"))
       }
-      }
-    )
+    })
     
     output$rbs_time_series <- renderImage({
       req(ecoregion())
@@ -211,6 +215,11 @@ mod_rbs_server <- function(id, data, map_parameters, ecoregion){
           xlab("Longitude")
       }
     }) #%>% bindCache(ecoregion(), input$rbs_year)
+  
+    output$caption <- renderUI({
+      text <- paste(select_text(figure_texts, ecoregion = ecoregion(), "rbs", "caption"))
+      HTML(text)
+    })
   })
 }
 

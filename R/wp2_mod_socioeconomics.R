@@ -13,7 +13,9 @@ mod_socioeconomics_ui <- function(id){
     card(height = "70vh", full_screen = TRUE, max_height = "100%",
          layout_sidebar(sidebar = sidebar(uiOutput(ns("plot_filters"))),
                         plotOutput(ns("socioeco_plot")))
-        )
+        ),
+    card(card_header("Figure Information"),
+         uiOutput(ns("caption")))
   )
 }
     
@@ -25,6 +27,7 @@ mod_socioeconomics_server <- function(id, ecoregion, social_data){
     ns <- session$ns
     
     data <- reactive({
+      
       dat <- social_data()
       colnames(dat) <- tolower(colnames(dat))
       dat
@@ -52,9 +55,9 @@ mod_socioeconomics_server <- function(id, ecoregion, social_data){
       ggplot(aes(x=year,y=value,colour=fleet),data=filtered_data())+
         geom_point(inherit.aes = T, size = 1.5) +
         geom_line(aes(x=year,y=value,colour=fleet, group=fleet),size=1)+
-        scale_x_discrete(
-          breaks = as.numeric(seq(min(filtered_data()$year), max(filtered_data()$year), by = 2))
-        )+
+        # scale_x_discrete(
+        #   breaks = as.numeric(seq(min(filtered_data()$year), max(filtered_data()$year), by = 2))
+        # )+
         scale_colour_discrete(name = "Fleet type",
                               labels = c("large" = "Large scale", "small" = "Small scale"))+
         facet_grid(variable ~ country, scales="free_y", drop=FALSE, labeller = as_labeller(seawise_var_labels()))+
@@ -62,6 +65,14 @@ mod_socioeconomics_server <- function(id, ecoregion, social_data){
         labs(x='Year', y = "")+
         theme(axis.text.x = element_text(angle=45, hjust = 1))
     }) 
+    
+    output$caption <- renderUI({
+      validate(
+        need(!is.null(figure_texts[[ecoregion()]]), message = "")
+      )
+      text <- paste(select_text(figure_texts, ecoregion = ecoregion(), "communities", "caption"))
+      HTML(text)
+    })
   })
 }
     

@@ -14,7 +14,9 @@ mod_wp2_projections_ui <- function(id){
            layout_sidebar(sidebar = sidebar(uiOutput(ns("filters"))),
       plotOutput(ns("projections_plot"))
          )
-      )
+      ),
+      card(card_header("Figure Information"),
+           uiOutput(ns("caption")))
   )
 }
     
@@ -40,7 +42,6 @@ mod_wp2_projections_server <- function(id, projection_data, ecoregion){
         need(!is.null(input$names_filter), message = "Social indicator not selected."),
         need(!is.null(input$fleet), message = "Fleet not selected."),
       )
-    
       dat <- projection_data()
       dat %>% filter(name %in% input$names_filter, 
                      SSF_LSF %in% input$fleet)
@@ -70,6 +71,13 @@ mod_wp2_projections_server <- function(id, projection_data, ecoregion){
         labs(color = 'Climate scenario')#+
       #ggtitle(inpu)
       p1
+    })
+    output$caption <- renderUI({
+      validate(
+        need(!is.null(figure_texts[[ecoregion()]]), message = "")
+      )
+      text <- paste(select_text(figure_texts, ecoregion = ecoregion(), "projections", "caption"))
+      HTML(text)
     })
     
   })

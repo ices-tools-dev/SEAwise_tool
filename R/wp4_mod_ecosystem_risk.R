@@ -12,7 +12,9 @@ mod_ecosystem_risk_ui <- function(id){
   tagList(
     card(
       plotOutput(ns("ecosystem_risk"),height = "75vh")
-    )
+    ),
+    card(card_header("Figure Information"),
+         uiOutput(ns("caption")))
   )
 }
     
@@ -66,6 +68,14 @@ mod_ecosystem_risk_server <- function(id, data){
       
       
       p
+    })
+    
+    output$caption <- renderUI({
+      validate(
+        need(!is.null(figure_texts[[ecoregion()]]), message = "")
+      )
+      text <- paste(select_text(figure_texts, ecoregion = ecoregion(), "rbs", "caption"))
+      HTML(text)
     })
   })
 }

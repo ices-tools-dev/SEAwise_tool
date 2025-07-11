@@ -15,7 +15,9 @@ mod_fish_fuel_ui <- function(id){
     card(height = "70vh", full_screen = TRUE, max_height = "100%",
          layout_sidebar(sidebar = sidebar(uiOutput(ns("plot_filters"))),
                         plotOutput(ns("fuel_plot")))
-    )
+    ),
+    card(card_header("Figure Information"),
+         uiOutput(ns("caption")))
   )
 }
     
@@ -28,6 +30,9 @@ mod_fish_fuel_server <- function(id, ecoregion, fuel_data){
  
     
     output$plot_filters <- renderUI({
+      validate(
+        need(nrow(fuel_data())>0, message = "Carbon emissions data not available for this region.")
+      )
       countries <- unique(fuel_data()$country)
       selectizeInput(ns("country_input"), "Select Country", choices = countries)
     })
@@ -83,6 +88,14 @@ mod_fish_fuel_server <- function(id, ecoregion, fuel_data){
         }
       #}
     }) 
+    
+    output$caption <- renderUI({
+      validate(
+        need(!is.null(figure_texts[[ecoregion()]]), message = "")
+      )
+      text <- paste(select_text(figure_texts, ecoregion = ecoregion(), "wp3", "caption"))
+      HTML(text)
+    })
   })
 }
     

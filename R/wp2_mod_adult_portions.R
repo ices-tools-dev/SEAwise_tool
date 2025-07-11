@@ -12,7 +12,9 @@ mod_adult_portions_ui <- function(id){
   tagList(
     card(height = "70vh", full_screen = TRUE, max_height = "100%",
          layout_sidebar(sidebar = sidebar(uiOutput(ns("plot_filters"))),
-                        plotOutput(ns("adult_portions")))
+                        plotOutput(ns("adult_portions"))),
+         card(card_header("Figure Information"),
+              uiOutput(ns("caption")))
     )
   )
 }
@@ -40,7 +42,7 @@ mod_adult_portions_server <- function(id, portion_data, ecoregion){
       }
       tagList(
         selectizeInput(ns("country_filter"), "Select Countries", choices = countries, selected = countries, multiple = T),
-        selectizeInput(ns("stock_filter"), "Select Stock", choices = stocks, selected = stocks, multiple = T)
+        selectizeInput(ns("stock_filter"), "Select Stock", choices = stocks, selected = stocks[1:5], multiple = T)
       )
     })
     
@@ -69,6 +71,13 @@ mod_adult_portions_server <- function(id, portion_data, ecoregion){
         plot + facet_wrap(stock~.,scales="free_x",drop=FALSE,ncol=3)
       }
     }) 
+    output$caption <- renderUI({
+      validate(
+        need(!is.null(figure_texts[[ecoregion()]]), message = "")
+      )
+      text <- paste(select_text(figure_texts, ecoregion = ecoregion(), "meals", "caption"))
+      HTML(text)
+    })
   })
 }
     

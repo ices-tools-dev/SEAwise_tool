@@ -13,7 +13,9 @@ mod_carbon_ui <- function(id){
     card(height = "70vh", full_screen = TRUE, max_height = "100%",
          layout_sidebar(sidebar = sidebar(uiOutput(ns("plot_filters"))),
                         plotOutput(ns("carbon_plot")))
-    )
+    ),
+    card(card_header("Figure Information"),
+         uiOutput(ns("caption")))
   )
 }
     
@@ -57,9 +59,17 @@ mod_carbon_server <- function(id, carbon_data, ecoregion){
         scale_colour_discrete(name = "Fleet type",
                               labels = c("large" = "Large scale", "small" = "Small scale"))+
         facet_wrap(country~ variable,scales="free_y",drop=FALSE,ncol=3, labeller = as_labeller(seawise_var_labels()))+
-        theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))+
+        theme(axis.text.x = element_text(angle = 45,  hjust=1))+
         labs(fill='Year', x = "kg / Fishing day", y = "Year")
       
+    })
+    
+    output$caption <- renderUI({
+      validate(
+        need(!is.null(figure_texts[[ecoregion()]]), message = "")
+      )
+      text <- paste(select_text(figure_texts, ecoregion = ecoregion(), "carbon", "caption"))
+      HTML(text)
     })
   })
 }

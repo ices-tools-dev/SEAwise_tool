@@ -18,6 +18,8 @@ library(ggmap, quietly = T)
 library(ggnewscale)
 library(ggtext)
 library(stringr)
+library(ggh4x)
+library(units)
 
 
 land <- read_sf("data-raw/wp4/data/Europe_coastline_shapefile/Europe_coastline_poly.shp")
@@ -25,13 +27,13 @@ land <- read_sf("data-raw/wp4/data/Europe_coastline_shapefile/Europe_coastline_p
 land <-sf::st_transform(land, crs =4326)
 usethis::use_data(land)
 
-minlong <- -6
-maxlong <- 13
-minlat  <- 48
-maxlat  <- 63
+minlong <- -4
+maxlong <- 11
+minlat  <- 46
+maxlat  <- 61
 
 coordslim <- c(minlong,maxlong,minlat,maxlat)
-coordxmap <- round(seq(minlong,maxlong,length.out = 4))
+coordxmap <- round(seq(minlong,maxlong,length.out = 3))
 coordymap <- round(seq(minlat,maxlat,length.out = 4))
 ext <- st_bbox(c(xmin = minlong, xmax = maxlong,
                                   ymin = minlat, ymax = maxlat),
@@ -181,3 +183,39 @@ WP4_NS <- list(rbs = rbs_grid,
 
 usethis::use_data(WP4_NS, overwrite = T)
 
+
+# Plots as pics
+
+for (i in 1:length(unique(bycatch$species))) {
+# for (i in 1:1) {
+    
+    species <- unique(bycatch$species)[i]
+    filtered_data <- filter(bycatch, species == species)
+    summary(filtered_data)
+    
+    bycatch_plot <- ggplot()+
+      geom_raster(aes(x = x, y = y, fill =value), data = filtered_data, na.rm=T)+
+      scale_fill_viridis_d(name= "Bycatch mortality risk" ,na.value="white",labels=c("Low","Medium","High",""),option ="viridis",drop = FALSE)+
+      geom_sf(data=land,col=NA,fill="grey")+
+      theme_linedraw(base_size = 14)+
+      # theme(axis.text.y   = element_text(size=12),
+      #       axis.text.x   = element_text(size=12),
+      #       axis.title.y  = element_text(size=12),
+      #       axis.title.x  = element_text(size=12),
+      #       panel.border  = element_rect(colour = "grey", linewidth=.5,fill=NA),
+      #       legend.text   = element_text(size=12),
+      #       legend.title  = element_text(size=12))+
+      scale_x_continuous(breaks=coordxmap)+
+      scale_y_continuous(breaks=coordymap,expand=c(0,0))+
+      coord_sf(xlim=c(coordslim[1]-2, coordslim[2]+2), ylim=c(coordslim[3]-2,coordslim[4]+2))+
+      ylab("Latitude")+
+      xlab("Longitude")+
+      facet_grid(rows = vars(gear),
+                 cols = vars(season))
+      # force_panelsizes(total_width= unit(x= 15, units = "cm"),
+      #                  total_height = unit(x= 8, units = "cm"))
+    
+    bycatch_plot  
+    ggsave(paste0("inst/extdata/wp4/NS_",species,".jpeg"),dpi = 300, height =8,width =  15)
+  }
+  

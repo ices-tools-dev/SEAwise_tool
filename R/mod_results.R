@@ -11,17 +11,7 @@ mod_results_ui <- function(id){
   ns <- NS(id)
   tagList(
     fluidRow(titlePanel(title = textOutput(ns("region_title"))), uiOutput(ns("subregion_dropdown"), inline = T)),
-    tabsetPanel(
-      tabPanel("Social and Economic Effects", 
-               mod_wp2_ui(ns("wp2"))),
-      tabPanel("Ecological effects on Fisheries",
-               mod_wp3_ui(ns("wp3"))),
-      tabPanel("Ecological consequences of Fisheries",
-               mod_wp4_ui(ns("wp4"))),
-      #tabPanel("Spatial Management Impacts"),
-      tabPanel("Management Strategy and Trade-off Evaluation",
-               mod_wp6_ui(ns("wp6"))),
-    )
+    uiOutput(ns("dynamic_tabs"))
   )
 }
     
@@ -31,6 +21,26 @@ mod_results_ui <- function(id){
 mod_results_server <- function(id, case_study){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
+    
+    output$dynamic_tabs <- renderUI({
+      ns <- NS(id)  # Adjust if needed
+      
+      # Conditional logic for tab visibility
+      tabs <- list()
+      if (case_study() %in% c("western_waters", "greater_north_sea", "mediterranean")) {
+        tabs[[length(tabs) + 1]] <- tabPanel("Social and Economic Effects", mod_wp2_ui(ns("wp2")))
+        tabs[[length(tabs) + 1]] <-  tabPanel("Ecological effects on Fisheries", mod_wp3_ui(ns("wp3")))
+        tabs[[length(tabs) + 1]] <-  tabPanel("Ecological consequences of Fisheries", mod_wp4_ui(ns("wp4")))
+        tabs[[length(tabs) + 1]] <- tabPanel("Management Strategy and Trade-off Evaluation", mod_wp6_ui(ns("wp6")))
+      }
+      if (case_study() == "baltic_sea") {
+        tabs[[length(tabs) + 1]] <-  tabPanel("Management Strategy and Trade-off Evaluation", mod_wp6_ui(ns("wp6")))
+      }
+      
+      do.call(tabsetPanel, tabs)
+    })
+    
+  
     display_region <- reactive ({
       switch(case_study(),
                         "baltic_sea" = "Baltic Sea", 

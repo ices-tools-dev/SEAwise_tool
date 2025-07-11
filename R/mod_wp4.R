@@ -44,12 +44,8 @@ mod_wp4_server <- function(id, ecoregion){
         tabPanel("Litter",
                  mod_litter_ui(ns("litter_1"))),
         tabPanel("Bycatch",
-                 mod_bycatch_ui(ns("bycatch_1"))),
-        if(ecoregion() %in% c("greater_north_sea", "western_waters", "celtic_seas", "bay_of_biscay")){
-          tabPanel("Ecosystem Depletion Risk",
-                   mod_ecosystem_risk_ui(ns("ecosystem_risk_1")))
-        }
-      )
+                 mod_bycatch_ui(ns("bycatch_1")))
+        )
     })
     
     map_parameters <- reactive({

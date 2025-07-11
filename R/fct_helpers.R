@@ -10,9 +10,15 @@
 #'
 #' @noRd
 
-select_text <- function(list_object, tab, section){
-  
+select_text <- function(list_object, tab, section, ...){
+  args <- rlang::list2(...)
+
+  if (!is.null(args$ecoregion)) {
+    list_object <- list_object[[args$ecoregion]]
+  }
+  if (!is.null(list_object[[tab]])) {
   list_object[[tab]] %>% dplyr::filter(section == !!section) %>% dplyr::pull(text)
+  }
 }
 
 scenario_colours <- c(
@@ -24,18 +30,22 @@ scenario_colours <- c(
 seawise_var_labels <- function(){
   var_labels <- c(
     'avg.KW' = "Average kW",
+    CO2_emission = "CO2 Emissions",
+    'CO2 emissions' = "CO2 Emissions (kg)",
+    GT = "Average Gross Tonnage",
     GVA   = "Gross Value Add",
+    'jobs' = "Full Time Employment",
+    KW = "Average kW",
+    'Employment(FTE)' = "Full Time Employment",
     land_val = "Landings value",
     'landings.value' = "Landings value",
     landings = "Landings",
     land = "Landings",
-    vessels = "Vessels",
     "Number.of.vessels" = "Vessels",
-    'Employment(FTE)' = "Full Time Employment",
-    'jobs' = "Full Time Employment",
-    CO2_emission = "CO2 Emissions",
-    'CO2 emissions' = "CO2 Emissions (kg)",
+    unpaid = "Unpaid Labour",
+    vessels = "Vessels",
     BE = "Belgium",
+    Croatia = "Croatia",
     DK = "Denmark",
     DE = "Germany",
     EN = "England",
@@ -44,25 +54,44 @@ seawise_var_labels <- function(){
     France = "France",
     FR = "France",
     GE = "Germany",
+    GRC = "Greece",
+    Italy = "Italy",
     IE = "Ireland",
     NL = "Netherlands",
     SC = "Scotland",
+    Slovenia = "Slovenia",
     Spain = "Spain",
     SW = "Sweden",
     UKE = "England",
     "Case-study" = "Case-study",
     "Case-study-mod" = "Case-study-mod",
     "Case-study_gear" = "Case-study_gear",
+    "CaseSpecific_do" = "CaseSpecific_do",
+    "CaseSpecific_no" = "CaseSpecific_no",
+    "CaseSpecific_tr" = "CaseSpecific_tr",
+    "ChangeSel" = "Change Selectivity",
+    "ChangeSel_Red25" = "Change Selectivity; Reduce 25",
+    "F01" = "F01",
+    "F01_new" = "F01_new",
+    "Fcomb" = "Fcomb",
     "FMSY-Min" = "FMSY-Min",
     "FMSY-Min_gearmo" = "FMSY-Min_gearmo",
     "FMSY-Min_unifor" = "FMSY-Min_unifor",
     "FMSY-Min_weight" = "FMSY-Min_weight",
+    "Fmsy_closures" = "Fmsy + closures",
+    "Fmsy_crust" = "Fmsy crust",
+    "PGY" = "Pretty Good Yield",
     "PGY-Min" = "PGY-Min",
     "PGY-Min_uniform" = "PGY-Min_uniform",
     "PGY-Min_weighte" = "PGY-Min_weighte",
+    "PGY_closures" = "PGY + closures",
+    "PGY_new" = "PGY new",
     "Status quo" = "Status quo",
     "Status-quo_unif" = "Status-quo_unif",
     "Status-quo_weig" = "Status-quo_weig",
+    "StatusQuo_dolph" = "S.Quo + Dolphin Closure",
+    "StatusQuo_trawl" = "S.Quo + 50% Trawl Effort reduction",
+    "SQ_closures" = "Status Quo + closures",
     "FLBEIA" = "FLBEIA"
   )
   return(var_labels)

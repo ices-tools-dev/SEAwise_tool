@@ -14,7 +14,9 @@ mod_bycatch_ui <- function(id){
   tagList(
     card(height = "70vh", full_screen = TRUE, max_height = "100%",
          layout_sidebar(sidebar = sidebar(uiOutput(ns("bycatch_selection_panel"))),
-                        uiOutput(ns("bycatch_main_panel"))))
+                        uiOutput(ns("bycatch_main_panel")))),
+    card(card_header("Figure Information"),
+         uiOutput(ns("caption")))
   )
 }
 
@@ -29,34 +31,20 @@ mod_bycatch_server <- function(id, data, map_parameters, ecoregion){
       if(ecoregion()=="greater_north_sea") {
         tagList(
           selectInput(ns("bycatch_species"), "Select bycatch species", choices = unique(data$species)),
-          radioButtons(ns("bycatch_switch"), "Select bycatch risk for specific season and gear or view all:", choices = c("Selection", "All combinations (SLOW >30s)"))        
+          # radioButtons(ns("bycatch_switch"), "Select bycatch risk for specific season and gear or view all:", choices = c("Selection", "All combinations (SLOW >30s)"))
         )
       }
     })
     
     output$bycatch_main_panel <- renderUI({
       if(ecoregion()=="greater_north_sea"){
-        req(input$bycatch_switch)
-        if (input$bycatch_switch == "Selection") {
-          tagList(
-            card(
-            card_header(
-              fluidRow(column(width = 6, 
-                              selectInput(ns("bycatch_season"), "Select bycatch risk season", choices = unique(data$season))
-                              ),
-                       column(width = 6,
-              selectInput(ns("bycatch_gear"), "Select bycatch gear season", choices = unique(data$gear))
-              ))
-            ),
-            withSpinner(plotOutput(ns("bycatch_plot"), height = "55vh"))
-          ))
-        } else {
+        req(input$bycatch_species)
           tagList(
             card(
               withSpinner(plotOutput(ns("bycatch_facet_plot"), height = "65vh"))
             )
           )
-        }
+      
       } else if(ecoregion() %in% c("mediterranean", "central_mediterranean", "eastern_mediterranean")){
         ns("bycatch_med_plot")
       } else if(ecoregion() %in% c("celtic_seas")){
@@ -104,38 +92,29 @@ mod_bycatch_server <- function(id, data, map_parameters, ecoregion){
         ylab("Latitude")+
         xlab("Longitude")
       
-    }) %>% bindCache(ecoregion(), input$bycatch_switch, input$bycatch_species, input$bycatch_gear, input$bycatch_season)
+    }) %>% bindCache(ecoregion(), input$bycatch_species, input$bycatch_gear, input$bycatch_season)
     
-    output$bycatch_facet_plot <- renderPlot({
-      req(filtered_data())
+    output$bycatch_facet_plot <- renderImage({
       
-      nameFilllit <- bquote(atop(
-        Predicted ~ fisheries ~ related,
-        litter ~ (Numbers/km^2)
-      ))
+      req(input$bycatch_species, ecoregion())
       
-      ggplot()+
-        geom_raster(aes(x = x, y = y, fill =value), data = filtered_data(), na.rm=T)+
-        scale_fill_viridis_d(name= "Bycatch mortality risk" ,na.value="white",labels=c("Low","Medium","High",""),option ="viridis",drop = FALSE)+
-        geom_sf(data=land,col=NA,fill="grey")+
-        theme_classic()+
-        theme(plot.background=element_blank(),
-              panel.background=element_blank(),
-              axis.text.y   = element_text(size=16),
-              axis.text.x   = element_text(size=16),
-              axis.title.y  = element_text(size=16),
-              axis.title.x  = element_text(size=16),
-              panel.border  = element_rect(colour = "grey", linewidth=.5,fill=NA),
-              legend.text   = element_text(size=11),
-              legend.title  = element_text(size=11))+
-        scale_x_continuous(breaks=map_parameters()$coordxmap)+
-        scale_y_continuous(breaks=map_parameters()$coordymap,expand=c(0,0))+
-        coord_sf(xlim=c(map_parameters()$coordslim[1], map_parameters()$coordslim[2]), ylim=c(map_parameters()$coordslim[3],map_parameters()$coordslim[4]))+
-        ylab("Latitude")+
-        xlab("Longitude")+
-        facet_grid(rows = vars(gear),
-                   cols = vars(season))
-    }) %>% bindCache(ecoregion(), input$bycatch_switch)
+      if (ecoregion() == "greater_north_sea"){ #&& input$rbs_switch == "time_series"){
+        imagefile <- system.file("extdata/wp4", paste0("NS_",input$bycatch_species,".jpeg"), package = "SEAwiseTool")
+        if (imagefile == "") {
+          # File not found – return NULL to avoid errors
+          return(NULL)
+        }
+        return(list(
+          src = imagefile,
+          width = "auto",      # or any numeric value or "auto"
+          height = "500",     # or any numeric value or "auto"
+          alt = paste("Bycatch of", input$bycatch_species," in the Greater North Sea, by gear and quarter", sep = " ")
+        ))
+      } else {
+        cat(">>> Checking data before plotting\n")
+        return(NULL)
+      }
+    })
     
     output$bycatch_med_plot <- renderPlot({
       if(ecoregion() %in% c("mediterranean", "central_mediterranean", "eastern_mediterranean")) {
@@ -167,7 +146,7 @@ mod_bycatch_server <- function(id, data, map_parameters, ecoregion){
           ylab("Latitude")+
           xlab("Longitude")
       }
-    }) %>% bindCache(ecoregion(), input$bycatch_switch)
+    }) %>% bindCache(ecoregion())
     
     output$bycatch_ww_shearwater_plot <- renderPlot({
       
@@ -217,6 +196,14 @@ mod_bycatch_server <- function(id, data, map_parameters, ecoregion){
                    ylim=c(map_parameters()$coordslim$coordslim_cs[3],map_parameters()$coordslim$coordslim_cs[4]))+
           ylab("Latitude")+
           xlab("Longitude")
+    })
+    
+    output$caption <- renderUI({
+      validate(
+        need(!is.null(figure_texts[[ecoregion()]]), message = "")
+      )
+      text <- paste(select_text(figure_texts, ecoregion = ecoregion(), "bycatch", "caption"))
+      HTML(text)
     })
   })
 }

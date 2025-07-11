@@ -1,5 +1,5 @@
 ## code to prepare `stock_productivity` dataset goes here
-
+library(dplyr)
 load("data-raw/wp3/finalobject.Rdata")
 stock_productivity <- final
 stock_productivity$wide <- NULL
@@ -12,12 +12,21 @@ names(stock_productivity$mediterranean$data)[names(stock_productivity$mediterran
 
 # Celtic Seas
 stock_productivity$celtic_seas$data <- stock_productivity$celtic_seas$data[stock_productivity$celtic_seas$data$indicator %in% c("catch", "rec", "ssb", "f"),]
+stock_productivity$celtic_seas$data <- stock_productivity$celtic_seas$data %>% 
+  filter(scenario != "baseline")
+
+stock_productivity$celtic_seas$data$scenario[stock_productivity$celtic_seas$data$scenario=="status quo"] <- "No Climate Change"
+
 
 # BS
 stock_productivity$baltic_sea <- NULL
 
+# GNS
+lookup <- c("noCC" = "No Climate Change",
+            "rcp45" = "RCP4.5",
+            "rcp85" = "RCP8.5")
 
-
+stock_productivity$greater_north_sea$data$scenario <- unname(lookup[stock_productivity$greater_north_sea$data$scenario])
 
 
 ### Bob
@@ -28,6 +37,8 @@ stock_productivity$bay_of_biscay$refs <- mutate(stock_productivity$bay_of_biscay
 
 bob_rcp85 <- read.csv("data-raw/wp3/Task_3.5_BoB_Demersal_Indicators_CCpe85.csv")[,-1]
 bob_rcp85$stock <- "hke.27.3a46-8abd"
+bob_rcp85$scenario <- "CCpe85_DD"
+
 #bob_rcp85_refs <- read.csv("data-raw/wp3/Task_3.5_BoB_Demersal_RefPts_CCpe85.csv")[,-1]
 stock_productivity$bay_of_biscay$data <- rbind(stock_productivity$bay_of_biscay$data, bob_rcp85)
 
@@ -52,6 +63,7 @@ sms <- sms %>% mutate(management_scenario = stringr::str_split_i(scenario ,patte
 
 stock_productivity$greater_north_sea$data <- list("flbeia" = stock_productivity$greater_north_sea$data,
                                                   "sms" = sms)
+
 
 usethis::use_data(stock_productivity, overwrite = TRUE)
 

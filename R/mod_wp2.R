@@ -20,13 +20,13 @@ mod_wp2_ui <- function(id){
       tabPanel("Carbon Emissions",
                mod_carbon_ui(ns("carbon_1")),
       ),
-      tabPanel("Fuel use and cost",
+      tabPanel("Fuel Use and Cost",
                mod_fish_fuel_ui(ns("fish_fuel_1")),
       ),
       tabPanel("Meal Provision",
                mod_adult_portions_ui(ns("adult_portions_1"))
       ),
-      tabPanel("Climate and Management impacts",
+      tabPanel("Climate and Management Scenario Projections",
                mod_wp2_projections_ui(ns("wp2_projections_1"))
       )
     )
