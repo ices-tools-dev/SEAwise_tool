@@ -22,6 +22,22 @@ app_ui <- function(request) {
 });
   ")),
       theme = bs_theme("lumen", version = 5),
+      # Custom CSS to highlight active tab
+      tags$style(HTML("
+    /* Active tab */
+    .nav-tabs > li.active > a,
+    .nav-tabs > li.active > a:focus,
+    .nav-tabs > li.active > a:hover {
+      background-color: #007bff; /* Change to your preferred color */
+      color: white !important;
+    }
+    
+    /* Inactive tabs */
+    .nav-tabs > li > a {
+      background-color: #f8f9fa;
+      color: #333;
+    }
+  ")),
       position = "static-top",
       collapsible = TRUE,
       windowTitle = "SEAwise EBFM Toolbox",
