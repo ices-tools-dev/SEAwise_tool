@@ -10,7 +10,11 @@
 mod_results_ui <- function(id){
   ns <- NS(id)
   tagList(
-    fluidRow(titlePanel(title = textOutput(ns("region_title"))), uiOutput(ns("subregion_dropdown"), inline = T)),
+    fluidRow(column(width = 3,
+                    titlePanel(title = textOutput(ns("region_title")))),
+             mod_scenarios_ui(ns("scenarios_1")),
+             column(width = 3)),
+             uiOutput(ns("subregion_dropdown"), inline = TRUE),
     uiOutput(ns("dynamic_tabs"))
   )
 }
@@ -77,6 +81,7 @@ mod_results_server <- function(id, case_study){
     mod_wp3_server("wp3", local_case)
     mod_wp4_server("wp4", local_case)
     mod_wp6_server("wp6", local_case)
+    mod_scenarios_server("scenarios_1", local_case)
   })
 }
     
