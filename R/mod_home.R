@@ -17,13 +17,12 @@ mod_home_ui <- function(id){
   tagList(
     card(
       card_header("Welcome to the SEAwise Ecosystem Based Fisheries Management Toolbox", class = "bg-primary"),
-      card_body(
-        layout_column_wrap(
-          width = NULL, fill = FALSE,
+      div(
+        style = "column-count: 2; column-gap: 1.5rem; text-align: justify;",
           style = css(grid_template_columns = "4fr 1fr"),
           heights_equal = "row",
           uiOutput(ns("welcome"))
-          ))),
+          )),
     card(height = "40vh", full_screen = FALSE,
       
       layout_column_wrap(width = 1/2,heights_equal = "all",
@@ -37,21 +36,21 @@ mod_home_ui <- function(id){
                 inputId = ns("selected_locations"),
                 label = "",
                 choices = c("Please select a case study region", sort(eco_shape$Ecoregion)),
-                selected = NULL,selectize = T,
+                selected = NULL,selectize = TRUE,
                   
                 multiple = FALSE,
                 width = "100%")
               ))
         )
+    ),card(
+      card_header("Looking for SEAwise's accessible tool?", class = "bg-primary"),uiOutput(ns("ebfm_tool")),
+      
     ),
-    layout_column_wrap(heights_equal = "row", width = 1/2, fixed_width = FALSE, fillable = T,
       card(
-         card_header("Featured SEAwise Research", class = "bg-warning"),
-         uiOutput(ns("featured_research"))),
-      card(
-        card_header("Partners", class = "bg-success"),uiOutput(ns("who")),
-                  card_image(file = NULL, src = "img/normal-reproduction-high-resolution.jpg", height = "50px", width = "75px", border_radius = "all"))
-    )
+        card_header("Partners", class = "bg-primary"),uiOutput(ns("who")),
+                  card_image(file = NULL, src = "img/normal-reproduction-high-resolution.jpg",
+                             height = "50px", width = "75px", border_radius = "all", container = card_body)
+    ),
   )
 }
     
@@ -111,6 +110,9 @@ mod_home_server <- function(id, parent_session, selected_locations){
     
     output$who <- renderUI({
       HTML(select_text(texts, "landing_page", "who"))
+    })
+    output$ebfm_tool <- renderUI({
+      HTML(select_text(texts, "landing_page", "ebfm_tool"))
     })
 
   })
