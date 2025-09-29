@@ -1,4 +1,28 @@
+# Script to prepare the data for WP4 of the Western Waters case study.
+# Code adapted from Author: LB 
+# Date: 10/11/2023
+#R version 4.2.1
 
+# The script is organized into the following sections:
+# 1. Prepare map parameters
+# 2. Prepare RBS data
+# 3. Prepare litter data
+# 4. Prepare bycatch data
+# 5. Prepare ecosystem data
+# 6. Write WP4_WW object
+
+# The following files are required:
+# Europe_coastline_poly.shp
+# rbs_bob.RData
+# newrelbs.RDA
+# litter_casper_NE_atlantic.RData
+# PUFMAU.shp
+# bigdat.rda
+# WW_BIOMASS_RESULTS.csv
+# WW_ECOSYSTEM_RISK_RESULTS.csv
+
+#The following files are produced by this script:
+# WP4_WW.RData
 
 rm(list=ls())
 
@@ -13,13 +37,10 @@ library(ggnewscale)
 library(ggtext)
 library(stringr)
 
+# Prepare map parameters
 
 land <- read_sf("./data-raw/wp4/data/Europe_coastline_shapefile/Europe_coastline_poly.shp")
-# ecoreg <- read_sf("./data-raw/data/ICES_ecoregions_20171207_erase_ESRI.shp")
-#ecoreg_centroids <- st_centroid(ecoreg)
-#head(ecoreg)
-
-###set the projection for land!!
+#set the projection for land
 land <-sf::st_transform(land, crs =4326)
 
 minlong <- -15
@@ -42,9 +63,6 @@ coordymap_bob <- round(seq(minlat,52,length.out = 4))
 coordxmap_cs <- round(seq(minlong,2,length.out = 4))
 coordymap_cs <- round(seq(48,maxlat,length.out = 4))
 
-
-
-
 ext <- st_bbox(c(xmin = minlong, xmax = maxlong,
                  ymin = minlat, ymax = maxlat),
                crs =  4326)
@@ -56,24 +74,21 @@ cutext_igfs <- st_bbox(c(xmin = minlong, xmax = maxlong,
                          ymin = cutlat, ymax = cutlat),
                        crs =  4326)
 
+# 2. Prepare RBS data
+
 load(file = "./data-raw/wp4/data/WW/rbs_bob.RData" ) # object is rbs_bob
 load("./data-raw/wp4/data/WW/newrelbs.RDA") #object is depsar_dat and is celtic sea region
 
 raster::crs(rbs_bob) <- "EPSG:3035"
 rbs_bob <- projectRaster(rbs_bob, crs=4326)
-
-# plot(rbs_bob)
 rbs_bob <- crop(rbs_bob,cutext_bob)
 rbs_cs <- depsar_dat[depsar_dat$y>50,]
-
 rbs_bob <- as.data.frame(rbs_bob,xy=TRUE)
 
 rbs_data <- list(rbs_cs = rbs_cs,
                  rbs_bob = rbs_bob)
 
-
-
-###litter 
+# 3. Prepare litter data
 
 load("./data-raw/wp4/data/litter_casper_NE_atlantic.RData")
 litter$noperkm <- litter$Fishing.related.2021*length(litter$lon) 
@@ -81,20 +96,15 @@ litter <- litter %>%
   filter(str_detect(as.character(litter$ICES_SUB), paste(c("\nVb\n","VI", "VII"),collapse = '|')))
 
 
-####bycatch risk
-PUFMAU_bob <- read_sf("./data-raw/wp4/data/WW/amaia/PUFMAU.shp/PUFMAU.shp",crs=4326)
-table(PUFMAU_bob$z)
-class(PUFMAU_bob$z)
+# 4. Prepare bycatch data
 
+PUFMAU_bob <- read_sf("./data-raw/wp4/data/WW/amaia/PUFMAU.shp/PUFMAU.shp",crs=4326)
 factor_levels <- c("Low","Medium", "High")
 
 PUFMAU_bob$z <- factor(PUFMAU_bob$z, levels = 1:3, labels = factor_levels)
-table(PUFMAU_bob$z)
 
 load("data-raw/wp4/data/WW/bigdat.rda") ## irish waters cetatcean risk
-head(longdat)
 pph <- longdat[longdat$species=="Pph" & longdat$gear=="nets" & longdat$season=="summer",]
-dim(pph)
 pph <- pph %>% group_by(grid_id) %>% summarise(mean = mean(R, na.rm=TRUE))
 tmp_notsf <- tmp_notsf[,c("grid_id","x")]
 tmp_notsf$R <- pph$mean[match(pph$grid_id,tmp_notsf$grid_id)]
@@ -103,16 +113,15 @@ tmp_notsf$R1.score<-NA
 tmp_notsf$R1.score<-ifelse(tmp_notsf$R>3.18, 3,tmp_notsf$R1.score)
 tmp_notsf$R1.score<-ifelse(tmp_notsf$R<=3.18&  tmp_notsf$R>2.64, 2,tmp_notsf$R1.score)
 tmp_notsf$R1.score<-factor(ifelse(tmp_notsf$R<2.64,1,tmp_notsf$R1.score))
-summary(tmp_notsf$R1.score)
 levels(tmp_notsf$R1.score) <- c(1,2,3)
-min(st_coordinates(tmp_notsf$x)[,1])
 
 tmp <- sf::st_as_sf(tmp_notsf, crs =4326)
 
 bycatch <- list(shearwater = PUFMAU_bob,
                 cetacean = tmp)
 
-#####ecosystem
+# 5. Prepare ecosystem data
+
 SCENARIO<-"ALLGEARS"
 subreg<-"CS"
 sh <- "WW"
@@ -182,7 +191,7 @@ ecosystem_data <- data.frame(
   risk = AGCSrisk
 )
 
-
+# 6. Write WP4_WW object
 WP4_WW <- list(rbs = rbs_data,
                bycatch = bycatch,
                litter = litter,

@@ -1,16 +1,30 @@
-## code to prepare `stock_productivity` dataset goes here
+# Script to prepare the data for WP3 of the project.
+# Requires the following files:
+# - finalobject.Rdata
+# - Task_3.5_BoB_Demersal_Indicators_CCpe85.csv
+# - sms_output.csv
+#
+# Generates the following data objects:
+# - stock_productivity
+
+# The script is organized into the following sections:
+# 1. Celtic Seas
+# 2. Baltic Sea
+# 3. Bob
+# 4. Greater North Sea
+
 library(dplyr)
 load("data-raw/wp3/finalobject.Rdata")
 stock_productivity <- final
 stock_productivity$wide <- NULL
 rm(final)
+# standardize names
 names(stock_productivity)[names(stock_productivity) == "gns"] <- "greater_north_sea"
-
 names(stock_productivity$mediterranean$data)[names(stock_productivity$mediterranean$data) == "Stock"] <- "stock"
 names(stock_productivity$mediterranean$data)[names(stock_productivity$mediterranean$data) == "Scenario"] <- "scenario"
 names(stock_productivity$mediterranean$data)[names(stock_productivity$mediterranean$data) == "Indicator"] <- "indicator"
 
-# Celtic Seas
+# 1. Celtic Seas - remove baseline scenario and standardize names
 stock_productivity$celtic_seas$data <- stock_productivity$celtic_seas$data[stock_productivity$celtic_seas$data$indicator %in% c("catch", "rec", "ssb", "f"),]
 stock_productivity$celtic_seas$data <- stock_productivity$celtic_seas$data %>% 
   filter(scenario != "baseline")
@@ -18,18 +32,12 @@ stock_productivity$celtic_seas$data <- stock_productivity$celtic_seas$data %>%
 stock_productivity$celtic_seas$data$scenario[stock_productivity$celtic_seas$data$scenario=="status quo"] <- "No Climate Change"
 
 
-# BS
+# 2. Baltic Sea - remove
 stock_productivity$baltic_sea <- NULL
 
-# GNS
-lookup <- c("noCC" = "No Climate Change",
-            "rcp45" = "RCP4.5",
-            "rcp85" = "RCP8.5")
-
-stock_productivity$greater_north_sea$data$scenario <- unname(lookup[stock_productivity$greater_north_sea$data$scenario])
 
 
-### Bob
+# 3. Bob - Convert "NA" to NA, convert b and f to numeric. Add CCpe85 for Hake.
 
 stock_productivity$bay_of_biscay$refs[stock_productivity$bay_of_biscay$refs == "NA"] <- NA
 stock_productivity$bay_of_biscay$refs <- mutate(stock_productivity$bay_of_biscay$refs, b = as.numeric(b), f = as.numeric(f))
@@ -39,11 +47,16 @@ bob_rcp85 <- read.csv("data-raw/wp3/Task_3.5_BoB_Demersal_Indicators_CCpe85.csv"
 bob_rcp85$stock <- "hke.27.3a46-8abd"
 bob_rcp85$scenario <- "CCpe85_DD"
 
-#bob_rcp85_refs <- read.csv("data-raw/wp3/Task_3.5_BoB_Demersal_RefPts_CCpe85.csv")[,-1]
 stock_productivity$bay_of_biscay$data <- rbind(stock_productivity$bay_of_biscay$data, bob_rcp85)
 
-# purrr::map(.x = stock_productivity, ~c(unique(.x[[1]]$scenario)))
+# 4. Greater North Sea - standardize names
+lookup <- c("noCC" = "No Climate Change",
+            "rcp45" = "RCP4.5",
+            "rcp85" = "RCP8.5")
 
+stock_productivity$greater_north_sea$data$scenario <- unname(lookup[stock_productivity$greater_north_sea$data$scenario])
+
+#  Separate management and climate scenarios
 stock_productivity <- purrr::map(stock_productivity, function(region) {
   region$data <- region$data %>%
     mutate(management_scenario = "FMSY") %>%
@@ -51,9 +64,7 @@ stock_productivity <- purrr::map(stock_productivity, function(region) {
   return(region)
 })
 
-stock_productivity$bay_of_biscay$data
-
-# GNS
+# Load SMS data
 sms <- read.csv("data-raw/wp3/sms_output.csv")
 sms <- sms %>% rename('recruitment' = 'rec', 'f' = 'FI', "catch" = "Yield") %>% 
   tidyr::pivot_longer(c('ssb','recruitment','catch','f'), names_to = "indicator")

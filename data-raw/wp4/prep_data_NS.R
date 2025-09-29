@@ -1,10 +1,17 @@
-###===================================================
-# Standardise maps for WP 4 north sea
-# Author: LB 
+# Script to prepare the data for WP4 of the North Sea case study.
+
+# Code adapted from Author: LB 
 # Date: 10/11/2023
 #R version 4.2.1
-###=====================================================
+#=====================================================
 
+# The script is organized into the following sections:
+# 1. Prepare map parameters
+# 2. Prepare RBS data
+# 3. Prepare litter data
+# 4. Prepare bycatch data
+# 5. Prepare ecosystem data
+# 7. Create WP4_NS object
 
 rm(list=ls())
 
@@ -22,10 +29,11 @@ library(ggh4x)
 library(units)
 
 
+#1. Prepare map parameters
 land <- read_sf("data-raw/wp4/data/Europe_coastline_shapefile/Europe_coastline_poly.shp")
-###set the projection for land!!
+#set the projection for land
 land <-sf::st_transform(land, crs =4326)
-usethis::use_data(land)
+usethis::use_data(land, overwrite = T)
 
 minlong <- -4
 maxlong <- 11
@@ -38,13 +46,11 @@ coordymap <- round(seq(minlat,maxlat,length.out = 4))
 ext <- st_bbox(c(xmin = minlong, xmax = maxlong,
                                   ymin = minlat, ymax = maxlat),
                                 crs =  4326)
-
-
 sf_use_s2(FALSE)
 slim_land <- st_crop(land,ext)
 sf_use_s2(TRUE)
 
-####SRBS
+#2. Prepare RBS data
 load("data-raw/wp4/data/NS/Luke_NSstate_VMSdatacall2019.RData")
 colnames(NS)[1] <- "csquares"
 
@@ -53,9 +59,7 @@ grid <- st_as_sf(Region)
 rbs_grid <- left_join(grid,NS)
 names(rbs_grid) <- str_remove(names(rbs_grid), "state_")
 
-# usethis::use_data(rbs_grid, overwrite = T)
-
-###litter 
+#3. Prepare litter data
 
 load("data-raw/wp4/data/litter_casper_NE_atlantic.RData") #caspers results cover whole NE atlantic
 
@@ -63,8 +67,6 @@ litter$noperkm <- litter$Fishing.related.2021*length(litter$lon)
 
 litter <- litter %>%
   filter(str_detect(as.character(litter$ICES_SUB), paste(c("IV",20),collapse = '|')))
-
-# usethis::use_data(litter)
 
 
 
@@ -75,8 +77,28 @@ nameFilllit <- bquote(
 )
 )
 
-#bycatch
+#4. Prepare bycatch data
 ###
+
+for (i in 1:length(unique(bycatch$species))) {
+species <- unique(bycatch$species)[i]
+  filtered_data <- filter(bycatch, species == species)
+  bycatch_plot <- ggplot()+
+      geom_raster(aes(x = x, y = y, fill =value), data = filtered_data, na.rm=T)+
+      scale_fill_viridis_d(name= "Bycatch mortality risk" ,na.value="white",labels=c("Low","Medium","High",""),option ="viridis",drop = FALSE)+
+      geom_sf(data=land,col=NA,fill="grey")+
+      theme_linedraw(base_size = 14)+
+      scale_x_continuous(breaks=coordxmap)+
+      scale_y_continuous(breaks=coordymap,expand=c(0,0))+
+      coord_sf(xlim=c(coordslim[1]-2, coordslim[2]+2), ylim=c(coordslim[3]-2,coordslim[4]+2))+
+      ylab("Latitude")+
+      xlab("Longitude")+
+      facet_grid(rows = vars(gear),
+      cols = vars(season))
+bycatch_plot
+ggsave(paste0("inst/extdata/wp4/NS_",species,".jpeg"),dpi = 300, height =8,width =  15)
+}
+
 bycatch_files <- list.files("data-raw/wp4/data/NS/Final risk scores_T4.2_Cefas/")
 bycatch <- purrr::map(.x = bycatch_files, ~ get(load(paste0("data-raw/wp4/data/NS/Final risk scores_T4.2_Cefas/", .x))))
 names <- str_remove(bycatch_files, pattern = "_final.risk.RData")
@@ -99,7 +121,7 @@ bycatch <- mutate(bycatch,
 # usethis::use_data(bycatch, overwrite = T)
 
 
-#####ecosystem
+#5. Prepare ecosystem data
 
 SCENARIO<-"ALLGEARS"
 MODEL<-"NORTH_SEA"
@@ -171,7 +193,7 @@ ecosystem_data <- data.frame(
   risk = AGNSrisk
 )
 
-# usethis::use_data(ecosystem_data)
+#7. Write WP4_NS object
 
 WP4_NS <- list(rbs = rbs_grid,
                bycatch = bycatch,

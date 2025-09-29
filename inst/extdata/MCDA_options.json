@@ -1,0 +1,178 @@
+{
+  "criteria": {
+    "ssb": {
+      "weight": [1],
+      "sub_criteria": {
+        "ARA181920": {
+          "weight": [1],
+          "function_": ["logistic2p"],
+          "ref_points": [83.5, 167, 0.1, 0.5]
+        },
+        "ARS181920": {
+          "weight": [1],
+          "function_": ["logistic2p"],
+          "ref_points": [281.5, 563, 0.1, 0.5]
+        },
+        "DPS171819": {
+          "weight": [1],
+          "function_": ["logistic2p"],
+          "ref_points": [1455, 4850, 0.1, 0.99]
+        },
+        "HKE1718": {
+          "weight": [1],
+          "function_": ["logistic2p"],
+          "ref_points": [26188, 104752, 0.1, 0.99]
+        },
+        "HKE19": {
+          "weight": [1],
+          "function_": ["logistic2p"],
+          "ref_points": [962, 1924, 0.1, 0.5]
+        },
+        "MUT1718": {
+          "weight": [1],
+          "function_": ["logistic2p"],
+          "ref_points": [3198, 12791, 0.1, 0.99]
+        },
+        "MUT19": {
+          "weight": [1],
+          "function_": ["logistic2p"],
+          "ref_points": [371, 742, 0.1, 0.5]
+        },
+        "NEP17": {
+          "weight": [1],
+          "function_": ["logistic2p"],
+          "ref_points": [381, 761, 0.1, 0.99]
+        },
+        "NEP18": {
+          "weight": [1],
+          "function_": ["logistic2p"],
+          "ref_points": [368.5, 737, 0.1, 0.5]
+        },
+        "SOL17": {
+          "weight": [1],
+          "function_": ["logistic2p"],
+          "ref_points": [1943, 3887, 0.1, 0.99]
+        }
+      },
+      "function_": {},
+      "ref_points": {}
+    },
+    "f": {
+      "weight": [1],
+      "sub_criteria": {
+        "ARA181920": {
+          "weight": [1],
+          "function_": ["logistic2p"],
+          "ref_points": [0.206, 0.412, 0.99, 0.1]
+        },
+        "ARS181920": {
+          "weight": [1],
+          "function_": ["logistic2p"],
+          "ref_points": [0.37, 0.74, 0.99, 0.1]
+        },
+        "DPS171819": {
+          "weight": [1],
+          "function_": ["logistic2p"],
+          "ref_points": [0.937, 1.874, 0.99, 0.1]
+        },
+        "HKE1718": {
+          "weight": [1],
+          "function_": ["logistic2p"],
+          "ref_points": [0.231, 0.462, 0.99, 0.1]
+        },
+        "HKE19": {
+          "weight": [1],
+          "function_": ["logistic2p"],
+          "ref_points": [0.211, 0.422, 0.99, 0.1]
+        },
+        "MUT1718": {
+          "weight": [1],
+          "function_": ["logistic2p"],
+          "ref_points": [0.306, 0.612, 0.99, 0.1]
+        },
+        "MUT19": {
+          "weight": [1],
+          "function_": ["logistic2p"],
+          "ref_points": [0.38, 0.76, 0.99, 0.1]
+        },
+        "NEP17": {
+          "weight": [1],
+          "function_": ["logistic2p"],
+          "ref_points": [0.418, 0.836, 0.99, 0.1]
+        },
+        "NEP18": {
+          "weight": [1],
+          "function_": ["logistic2p"],
+          "ref_points": [0.14, 0.28, 0.99, 0.1]
+        },
+        "SOL17": {
+          "weight": [1],
+          "function_": ["logistic2p"],
+          "ref_points": [0.209, 0.418, 0.99, 0.1]
+        }
+      },
+      "function_": {},
+      "ref_points": {}
+    },
+    "employment": {
+      "weight": [1],
+      "sub_criteria": {},
+      "function_": ["logistic2p"],
+      "ref_points": [445.1157, 890.2315, 0.1, 0.5]
+    },
+    "wage": {
+      "weight": [1],
+      "sub_criteria": {},
+      "function_": ["logistic2p"],
+      "ref_points": [1734621.6185, 3469243.237, 0.1, 0.5]
+    },
+    "gva": {
+      "weight": [1],
+      "sub_criteria": {},
+      "function_": ["logistic2p"],
+      "ref_points": [3945138.591, 7890277.182, 0.1, 0.5]
+    },
+    "rsl": {
+      "weight": [1],
+      "sub_criteria": {},
+      "function_": ["beta1p"],
+      "ref_points": [0.4127, 4]
+    },
+    "co2": {
+      "weight": [1],
+      "sub_criteria": {},
+      "function_": ["logistic2p"],
+      "ref_points": [1, 331.3683, 0.99, 0.5]
+    },
+    "mml": {
+      "weight": [1],
+      "sub_criteria": {},
+      "function_": ["logistic2p"],
+      "ref_points": [23.1, 46.2, 0.1, 0.5]
+    },
+    "apex_pred": {
+      "weight": [1],
+      "sub_criteria": {},
+      "function_": ["logistic2p"],
+      "ref_points": [295.075, 590.15, 0.1, 0.5]
+    },
+    "rbs": {
+      "weight": [1],
+      "sub_criteria": {},
+      "function_": ["logistic2p"],
+      "ref_points": [32.315, 64.63, 0.1, 0.5]
+    }
+  },
+  "data": {
+    "ssb": ["MCDA_stock_med.csv"],
+    "f": ["MCDA_stock_med.csv"],
+    "employment": ["MCDA_socioeco_med.csv"],
+    "wage": ["MCDA_socioeco_med.csv"],
+    "gva": ["MCDA_socioeco_med.csv"],
+    "rsl": ["MCDA_socioeco_med.csv"],
+    "co2": ["MCDA_socioeco_med.csv"],
+    "mml": ["MCDA_biodiv_med.csv"],
+    "apex_pred": ["MCDA_biodiv_med.csv"],
+    "rbs": ["MCDA_habitats_med.csv"]
+  }
+}

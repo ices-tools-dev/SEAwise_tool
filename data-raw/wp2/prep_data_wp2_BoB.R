@@ -1,9 +1,27 @@
+# Script to prepare the data for WP2 of the BoB case study.
+# Requires the following files:
+# - template for deliverable 2.10.1_BoB_Demersal.xlsx
+# - Fish_portions.xlsx
+# - tool_social_input.txt
+
+# Generates the following data objects:
+# BoB_data.rds
+
+# The script is organized into the following sections:
+# 1. Fleet data
+# 2. Socioeconomic data
+# 3. Carbon data
+# 4. Fuel use and cost
+# 5. Adult portions
+# 6. Climate and management scenario projections
+
+
+
 rm(list=ls())
 library(ggplot2)
 library(dplyr)
-#setwd("C:\\Users\\Utente\\OneDrive - Coispa Tecnologia & Ricerca S.C.A.R.L\\H2020-SEAwise\\_____________WP2\\TASK 2.6\\templates")
 
-
+# 1. Fleet data
 
 fleet_data=data.frame(readxl::read_xlsx("data-raw/wp2/template for deliverable 2.10.1_BoB_Demersal.xlsx",sheet="aggregated"))
 
@@ -11,72 +29,25 @@ fleet_data1=fleet_data[fleet_data$variable %in% c("vessels","land"),]
 fleet_data1=fleet_data1[!is.na(fleet_data1$value),]
 
 output_data <- list(fleet_data = fleet_data1)  
-# ggplot(aes(x=year,y=value,colour=Fleet),data=fleet_data1)+geom_line(aes(x=year,y=value,colour=Fleet, group=Fleet),data=fleet_data1,size=1) +facet_wrap(country+variable~.,scale="free")
-# 
-# ggsave("Fleet.jpg",width = 20,unit="cm")
-# 
-# 
-# ggplot(data=fleet_data1, aes(x=year, y=value, fill=Fleet)) + 
-#   geom_bar(stat="identity", position=position_dodge())+
-#   facet_wrap(country + variable~.,scales="free_y",drop=FALSE,ncol=6)+ 
-#   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
-# 
-# ggsave("Fleet_histograms.jpg",width = 30,height=15,unit="cm")
 
-
-# unique(fleet_data$variable)
-
-# GVA = Income from landings + other income - energy costs - repair and maintenance costs - other variable costs - non variable costs.
-
-
-# fleet_data2=fleet_data[fleet_data$variable %in% c("land_val", "Energy_costs", "Repair_and_maintenance_costs","Other_variable_costs","fcosts","Other_non-variable_costs"),]
-# head(fleet_data2)
-# 
-# fleet_data2$id=paste(fleet_data2$year,fleet_data2$Fleet,fleet_data2$country)
-# GVA_records=data.frame(matrix(nrow=0,ncol=8))
-# colnames(GVA_records)=colnames(fleet_data2)  
-# 
-# for (comb in unique(fleet_data2$id)){
-#   fleet_data2_temp=fleet_data2[fleet_data2$id==comb,]
-#   GVA = fleet_data2_temp[fleet_data2_temp$variable=="landings.value","value"]-fleet_data2_temp[fleet_data2_temp$variable=="Energy_costs","value"]-fleet_data2_temp[fleet_data2_temp$variable=="Repair_and_maintenance_costs","value"]- fleet_data2_temp[fleet_data2_temp$variable=="Other_non-variable_costs","value"]-fleet_data2_temp[fleet_data2_temp$variable=="Other_variable_costs","value"]
-#   
-#   GVA_records2=fleet_data2_temp[1,]
-#   GVA_records2$variable="GVA"
-#   GVA_records2$value=GVA
-#   GVA_records=rbind(GVA_records,GVA_records2)  
-# }
-
-
-# fleet_data=rbind(fleet_data,GVA_records[,-ncol(GVA_records)])
+# 2. Socioeconomic data
 
 fleet_data3=fleet_data[fleet_data$variable %in% c("land_val",  "jobs"),]
 fleet_data3=fleet_data3[!is.na(fleet_data3$value),]
 
 output_data$socioeco_data <- fleet_data3
-# ggplot(aes(x=year,y=value,colour=Fleet),data=fleet_data3)+geom_line(aes(x=year,y=value,colour=Fleet, group=Fleet),size=1)+facet_wrap(country~variable,scale="free",ncol=6) + theme(axis.text.x = element_text(angle=45))
-# 
-# ggsave("Economic.jpg",width = 30,height=15,unit="cm")
 
-
+# 3. Carbon data
 
 carbon_data=fleet_data[fleet_data$variable %in% c("CO2 emissions"),]
 output_data$carbon_data <- carbon_data
-# ggplot(aes(x=year,y=value,colour=Fleet),data=fleet_data3)+geom_line(aes(x=year,y=value,colour=Fleet,group=Fleet),size=1)+facet_wrap(country+variable~.,scale="free")
-# 
-# 
-# 
-# ggplot(data=data.frame(fleet_data3), aes(x=year, y=value, fill=Fleet)) +
-#   geom_bar(stat="identity", position=position_dodge())+
-#   facet_wrap(country~ variable,scales="free_y",drop=FALSE,ncol=3)+
-#   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))+
-#   labs(fill='Year')
-# 
-# 
-# 
- # ggsave("Carbon_dem.jpg",width = 20,height=10, unit="cm")
-# 
+
+# 4. Fuel use and cost
+
+
 
 # Linear regressions
+
 # small_scale=data.frame(readxl::read_xlsx("data-raw/template for deliverable 2.10.1_BoB_Demersal.xlsx",sheet="fish price SP"))
 # # head(small_scale)
 # small_scale=small_scale[small_scale$Fleet=="<24",]
@@ -154,7 +125,7 @@ output_data$carbon_data <- carbon_data
 #   # formula<-y~x
 #   # ggplot(DF,aes(x=fuel_price, y=Price,colour=Fleet,group=Fleet)) +
 #   #   geom_point() +
-#   #   geom_smooth(method='lm',se=T)+facet_wrap(~spec,scale="free") +ggtitle(paste(Country,sep=" ")) +
+#   #   geom_smooth(method='lm',se=TRUE)+facet_wrap(~spec,scale="free") +ggtitle(paste(Country,sep=" ")) +
 #   #   stat_fit_glance(method = 'lm',
 #   #                   method.args = list(formula = formula),
 #   #                   geom = 'text',
@@ -417,19 +388,32 @@ output_data$carbon_data <- carbon_data
 # # 
 # # ggsave(paste("Fish_fuel_price",Country,".jpg",sep=" "),width=20,height=20,units="cm")
 
-# Adult portions
+# 5.  Adult portions
 
-dat=readxl::read_xlsx("data-raw/Fish_portions.xlsx",sheet="BoB") 
+dat=readxl::read_xlsx("data-raw/wp2/Fish_portions.xlsx",sheet="BoB") 
+dat$Country <- "Spain"
+
+dat2=readxl::read_xlsx("data-raw/wp2/Fish_portions.xlsx",sheet="BoB_dem")
+adult_portions <- rbind(dat, dat2)
+
+output_data$adult_portions <- adult_portions
+
+# 6. Socio-eco projections
+
+projections <- read.csv("data-raw/wp2/tool_social_input.txt", sep = '\t')
+
+projections <- projections %>% filter(Area %in% c('WW BoB'))
+projections <- projections %>% select(active, everything()) %>% tidyr::pivot_longer(9:20) #%>% na.exclude() 
+projections <- projections %>% group_by(Area, Model, SSF_LSF, 
+                                        Mgt_scenario, Climate, year, Quantile, name) %>% summarise(value = mean(value))
+
+projections <- projections %>% filter(!Mgt_scenario == "PGY")
+projections$Quantile[projections$Quantile == '0.025'] <- 'lower'
+projections$Quantile[projections$Quantile == '0.975'] <- 'higher'
+projections$Quantile[projections$Quantile == '0.5'] <- 'median'
+
+projections <- projections %>% tidyr::pivot_wider(values_from = value, names_from = Quantile)
+output_data$projection_data <- projections
 
 
-dat2=readxl::read_xlsx("data-raw/Fish_portions.xlsx",sheet="BoB_dem")
-
-output_data$adult_portions <- rbind(dat,dat2)
 saveRDS(output_data, file = "data/wp2/BoB_data.rds")
-
-# ggplot(data=dat, aes(y=Country, x=adult_portions, fill=Fleet)) +
-#   geom_bar(stat="identity", position=position_dodge())+
-#   facet_wrap(Stock~.,scales="free_x",drop=FALSE,ncol=4)+
-#   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))+labs(y="thousands")+ggtitle ("Numer of adult portions by Country and Stock")
-# 
-# ggsave(paste("Adult_portions_BoB_dem.jpg",sep=" "),width=30,height=20,units="cm")
