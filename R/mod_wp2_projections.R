@@ -60,12 +60,6 @@ mod_wp2_projections_server <- function(id, projection_data, ecoregion){
         geom_point(aes(y = median), size = 1.5)+
         geom_line(aes(y = median), size = 1)+
         geom_ribbon(aes(ymin = lower, ymax = higher, fill = Climate), alpha =.1, linetype = 0, show.legend = FALSE)+
-        # facet_wrap(~Mgt_scenario, scales = 'fixed', 
-        #            labeller = as_labeller(var_labels)
-        # #            )+
-        # facet_grid(Model~Mgt_scenario, scales = 'fixed', rows = 2,
-        #             labeller = as_labeller(seawise_var_labels()) 
-        #            )+
         facet_wrap(~Mgt_scenario, scales = 'fixed', nrow = 2,
                     labeller = as_labeller(seawise_var_labels()) 
                    )+
@@ -73,16 +67,27 @@ mod_wp2_projections_server <- function(id, projection_data, ecoregion){
         scale_colour_discrete(name = "Climate Scenario",
                               labels = c("current" = "Current", "RCP4.5" = "RCP 4.5", "RCP8.5" = "RCP 8.5"))+
         theme(axis.text.x = element_text(angle = 45, hjust = 1))+
-        labs(color = 'Climate scenario')#+
-      #ggtitle(inpu)
+        labs(color = 'Climate scenario')
+      
       p1
     })
+    
     output$caption <- renderUI({
       validate(
         need(!is.null(figure_texts[[ecoregion()]]), message = "")
       )
       text <- paste(select_text(figure_texts, ecoregion = ecoregion(), "projections", "caption"))
-      HTML(text)
+      tagList(HTML(text),
+              tags$p(
+                "Further information is available in the",
+                tags$a(
+                  "deliverable report",
+                  href   = dois[dois$topic=="wp2_projections",]$doi,
+                  target = "_blank", 
+                  rel    = "noopener noreferrer"
+                )
+              )
+      )
     })
     
   })

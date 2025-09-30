@@ -74,7 +74,17 @@ mod_carbon_server <- function(id, carbon_data, ecoregion){
         need(!is.null(figure_texts[[ecoregion()]]), message = "")
       )
       text <- paste(select_text(figure_texts, ecoregion = ecoregion(), "carbon", "caption"))
-      HTML(text)
+      tagList(HTML(text),
+              tags$p(
+                "Further information is available in the",
+                tags$a(
+                  "deliverable report",
+                  href   = dois[dois$topic=="wp2",]$doi,
+                  target = "_blank", 
+                  rel    = "noopener noreferrer"
+                )
+              )
+      )
     })
   })
 }

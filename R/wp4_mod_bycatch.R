@@ -50,7 +50,7 @@ mod_bycatch_server <- function(id, data, map_parameters, ecoregion){
           )
       
       } else if(ecoregion() %in% c("mediterranean", "central_mediterranean", "eastern_mediterranean")){
-        ns("bycatch_med_plot")
+        plotOutput(ns("bycatch_med_plot"),height = "70vh")
       } else if(ecoregion() %in% c("celtic_seas")){
         plotOutput(ns("bycatch_ww_cetacean_plot"), height = "70vh")
       } else if(ecoregion() %in% c("bay_of_biscay", "western_waters")){
@@ -103,7 +103,7 @@ mod_bycatch_server <- function(id, data, map_parameters, ecoregion){
       req(input$bycatch_species, ecoregion())
       
       if (ecoregion() == "greater_north_sea"){ #&& input$rbs_switch == "time_series"){
-        imagefile <- system.file("extdata/wp4", paste0("NS_",input$bycatch_species,".jpeg"), package = "SEAwiseTool")
+        imagefile <- system.file("extdata/wp4", paste0("NS_",input$bycatch_species,".jpeg"), package = "SEAwiseToolbox")
         if (imagefile == "") {
           # File not found – return NULL to avoid errors
           return(NULL)

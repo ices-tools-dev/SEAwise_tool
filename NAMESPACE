@@ -2,12 +2,7 @@
 
 export("%>%")
 export(calculate_utilities)
-export(generate_df)
-export(plot_histogram)
-export(plot_mse_generic)
-export(plot_mse_indicators_regional)
 export(run_app)
-export(top_scenarios)
 import(RColorBrewer)
 import(dplyr)
 import(ggplot2)

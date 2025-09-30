@@ -12,7 +12,7 @@
 mod_wp3_ui <- function(id){
   ns <- NS(id)
   tagList(
-      layout_sidebar(sidebar = sidebar(
+      layout_sidebar(sidebar = sidebar(mod_context_ui(ns("context_1")),
         uiOutput(ns("stock_selector")),
         uiOutput(ns("scenario_panel"))),
       fluidRow(column(6, card(plotOutput(ns("cat")), height = "40vh",full_screen = TRUE)),
@@ -206,7 +206,17 @@ mod_wp3_server <- function(id, case_study){
         need(!is.null(figure_texts[[case_study()]]), message = "")
       )
       text <- paste(select_text(figure_texts, ecoregion = case_study(), "wp3", "caption"))
-      HTML(text)
+      tagList(HTML(text),
+              tags$p(
+                "Further information is available in the",
+                tags$a(
+                  "deliverable report",
+                  href   = dois[dois$topic=="wp3",]$doi,
+                  target = "_blank", 
+                  rel    = "noopener noreferrer"
+                )
+              )
+      )
     })
   })
 }

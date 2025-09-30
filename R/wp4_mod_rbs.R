@@ -47,7 +47,7 @@ mod_rbs_server <- function(id, data, map_parameters, ecoregion){
       req(ecoregion())
       # req(input$rbs_switch)
       if (ecoregion() == "greater_north_sea"){ #&& input$rbs_switch == "time_series"){
-        imagefile <- system.file("extdata/wp4", "NS_rbs.jpeg", package = "SEAwiseTool")
+        imagefile <- system.file("extdata/wp4", "NS_rbs.jpeg", package = "SEAwiseToolbox")
         if (imagefile == "") {
           # File not found – return NULL to avoid errors
           return(NULL)

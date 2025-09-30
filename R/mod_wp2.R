@@ -11,29 +11,29 @@ mod_wp2_ui <- function(id){
   ns <- NS(id)
   tagList(
     tabsetPanel(
-      tabPanel("Fleet Characteristics",
+      tabPanel("Fleet Characteristics",value = "fleet",
                mod_fleet_histograms_ui(ns("fleet_histograms_1")),
       ),
-      tabPanel("Communities",
+      tabPanel("Communities",value = "communities",
                mod_socioeconomics_ui(ns("socioeconomics_1")),
       ),
-      tabPanel("Carbon Emissions",
+      tabPanel("Carbon Emissions",value = "carbon",
                mod_carbon_ui(ns("carbon_1")),
       ),
-      tabPanel("Fuel Use and Cost",
+      tabPanel("Fuel Use and Cost",value = "fuel",
                mod_fish_fuel_ui(ns("fish_fuel_1")),
       ),
-      tabPanel("Meal Provision",
+      tabPanel("Meal Provision",value = "meals",
                mod_adult_portions_ui(ns("adult_portions_1"))
       ),
-      tabPanel("Climate and Management Scenario Projections",
+      tabPanel("Climate and Management Scenario Projections",value = "projections",
                mod_wp2_projections_ui(ns("wp2_projections_1"))
       )
     )
   )
 }
 
-#' wp2 Server Functions
+#' wp2 Server Functions. This module provides the server for the social and economic effects work package, loading the data and passing it to the respective sub-modules.
 #'
 #' @noRd 
 mod_wp2_server <- function(id, case_study) {
@@ -60,13 +60,13 @@ mod_wp2_server <- function(id, case_study) {
   
   mod_fleet_histograms_server("fleet_histograms_1", fleet_data = fleet_data, ecoregion = case_study)
   
-  mod_adult_portions_server("adult_portions_1", portion_data = portion_data, ecoregion = case_study)
-  
   mod_socioeconomics_server("socioeconomics_1", social_data = social_data, ecoregion = case_study)
   
   mod_carbon_server("carbon_1", carbon_data = carbon_data, ecoregion = case_study)
   
   mod_fish_fuel_server("fish_fuel_1", fuel_data = fuel_data, ecoregion = case_study)
+  
+  mod_adult_portions_server("adult_portions_1", portion_data = portion_data, ecoregion = case_study)
   
   mod_wp2_projections_server("wp2_projections_1", projection_data = projection_data, ecoregion = case_study)
   

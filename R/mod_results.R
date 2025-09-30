@@ -26,32 +26,35 @@ mod_results_server <- function(id, case_study){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
     
+    
     output$dynamic_tabs <- renderUI({
-      ns <- NS(id)  # Adjust if needed
+      ns <- NS(id)  
       
-      # Conditional logic for tab visibility
+      # Conditional logic for displaying relevant tabs for each region
       tabs <- list()
       if (case_study() %in% c("western_waters", "greater_north_sea", "mediterranean")) {
-        tabs[[length(tabs) + 1]] <- tabPanel("Social and Economic Effects", mod_wp2_ui(ns("wp2")))
-        tabs[[length(tabs) + 1]] <-  tabPanel("Ecological effects on Fisheries", mod_wp3_ui(ns("wp3")))
-        tabs[[length(tabs) + 1]] <-  tabPanel("Ecological consequences of Fisheries", mod_wp4_ui(ns("wp4")))
-        tabs[[length(tabs) + 1]] <- tabPanel("Management Strategy and Trade-off Evaluation", mod_wp6_ui(ns("wp6")))
+        tabs[[length(tabs) + 1]] <- tabPanel("Social and Economic Effects", mod_wp2_ui(ns("wp2")), value = "wp2")
+        tabs[[length(tabs) + 1]] <-  tabPanel("Ecological effects on Fisheries", mod_wp3_ui(ns("wp3")), value = "wp3")
+        tabs[[length(tabs) + 1]] <-  tabPanel("Ecological consequences of Fisheries", mod_wp4_ui(ns("wp4")), value = "wp4")
+        #tabs[[length(tabs) + 1]] <-  tabPanel("Spatial Management", mod_wp5_ui(ns("wp5")), value = "wp5")
+        tabs[[length(tabs) + 1]] <- tabPanel("Management Strategy and Trade-off Evaluation", mod_wp6_ui(ns("wp6")), value = "wp6")
       }
       if (case_study() == "baltic_sea") {
-        tabs[[length(tabs) + 1]] <-  tabPanel("Management Strategy and Trade-off Evaluation", mod_wp6_ui(ns("wp6")))
+        tabs[[length(tabs) + 1]] <-  tabPanel("Management Strategy and Trade-off Evaluation", mod_wp6_ui(ns("wp6")), value = "wp6")
       }
       
       do.call(tabsetPanel, tabs)
     })
     
-  
+    
     display_region <- reactive ({
       switch(case_study(),
-                        "baltic_sea" = "Baltic Sea", 
-                        "western_waters" = "Western Waters",
-                        "greater_north_sea" = "Greater North Sea", 
-                        "mediterranean" = "Mediterranean")
+             "baltic_sea" = "Baltic Sea", 
+             "western_waters" = "Western Waters",
+             "greater_north_sea" = "Greater North Sea", 
+             "mediterranean" = "Mediterranean")
     })
+    output$region_title <- renderText(display_region())
     
     subregion <- reactive({
       if(case_study() == "mediterranean") {
@@ -63,23 +66,24 @@ mod_results_server <- function(id, case_study){
     
     output$subregion_dropdown <- renderUI({
       if(case_study() %in% c("mediterranean", "western_waters")) {
-      selectInput(ns("select_subregion"), "", choices = subregion())  
+        selectInput(ns("select_subregion"), "", choices = subregion())  
       }
     })
     
+    #The following reactive value is used to determine whether the region or subregion is selected and passed to the respective work package modules.
     local_case <- reactive({
       if(case_study() %in% c("greater_north_sea", "baltic_sea")){
         case_study()
-        } else {
+      } else {
         req(input$select_subregion)
         input$select_subregion
       }
     })
     
-    output$region_title <- renderText(display_region())
     mod_wp2_server("wp2", local_case)
     mod_wp3_server("wp3", local_case)
     mod_wp4_server("wp4", local_case)
+    mod_wp5_server("wp5", local_case)
     mod_wp6_server("wp6", local_case)
     mod_scenarios_server("scenarios_1", local_case)
   })
