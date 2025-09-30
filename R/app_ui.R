@@ -1,6 +1,23 @@
-#' The application User-Interface
-#'
-#' @param request Internal parameter for `{shiny}`.
+#' The application User-Interface. The code is organized into modules, each of which is responsible for a specific part of the application.
+#' The ui is organized into a navbarPage, which contains the following tabs:
+#' - Home: The home page of the application
+#' - About: Contains the following tabs:
+#'   - SEAwise project: Provides an overview of the project and its objectives
+#'   - Themes: Provides an overview of the themes of the project
+#'   - Case Studies: Provides an overview of the case studies of the project
+#' - Results: Contains the following tabs:
+#'   - Baltic Sea; Greater North Sea; Mediterranean (GSA 17-19, GSA 20); Western Waters (Celtic Sea, Bay of Biscay).
+#' - Resources: Provides links to the app license and resources associated with the project
+#'  
+#' For each region, the results are organized into tabs, each of which is responsible for a specific part of the application.
+#' The tabs include:
+#' - WP2: Social and economic effects of and on fishing
+#' - WP3: Ecological effects on fisheries
+#' - WP4: Ecological effects of fisheries
+#' - WP5: Spatial management impacts on ecological systems and fisheries
+#' - WP6: Strategy Evaluation
+#' 
+#'#' @param request Internal parameter for `{shiny}`.
 #'     DO NOT REMOVE.
 #' @import shiny
 #' @importFrom htmltools css
@@ -34,7 +51,7 @@ app_ui <- function(request) {
     
     /* Inactive tabs */
     .nav-tabs > li > a {
-      background-color: #f8f9fa;
+      background-color: #efeff0;
       color: #333;
     }
   ")),
@@ -94,7 +111,7 @@ golem_add_external_resources <- function() {
     favicon(ext = "png"),
     bundle_resources(
       path = app_sys("app/www"),
-      app_title = "SEAwiseTool"
+      app_title = "SEAwiseToolbox"
     ),
     # Add here other external resources
     # for example, you can add shinyalert::useShinyalert()
