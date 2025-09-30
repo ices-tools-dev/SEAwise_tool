@@ -124,9 +124,6 @@ plot_mse_stock_landings <- function(df) {
 #' @param input 
 #' @param list_params 
 #' @param ecoregion 
-#'
-#' @return
-#' @export
 #' @importFrom magrittr  %>% 
 #' @importFrom dplyr filter
 #' @importFrom ggthemes theme_hc
@@ -168,11 +165,8 @@ plot_mse_generic <- function(df, input, list_params, ecoregion) {
 
 #' Plot regional level changes in indicators
 #'
-#' @param df 
-#'
-#' @return
-#' 
-#' @export
+#' @param df dataframe of management strategy evaluation results
+#' @param ecoregion string input indicating which ecoregion results to filter
 #' @importFrom magrittr  %>% 
 #' @importFrom dplyr filter
 #' @importFrom ggthemes theme_hc

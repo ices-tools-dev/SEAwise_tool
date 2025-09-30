@@ -11,7 +11,7 @@ mod_seawise_ui <- function(id){
   ns <- NS(id)
   tagList(
    
-    layout_column_wrap(heights_equal = "row", width = 1/2, fixed_width = FALSE, fillable = T,
+    layout_column_wrap(heights_equal = "row", width = 1/2, fixed_width = FALSE, fillable = TRUE,
       card(
         card_header("The SEAwise Objective", class = "bg-secondary"),
                   uiOutput(ns("objective"))),
@@ -19,7 +19,7 @@ mod_seawise_ui <- function(id){
         card_header("Research Themes", class = "bg-success"),
         uiOutput(ns("themes")))
       ),
-    layout_column_wrap(heights_equal = "row", width = 1/3, fixed_width = FALSE, fillable = T,
+    layout_column_wrap(heights_equal = "row", width = 1/3, fixed_width = FALSE, fillable = TRUE,
       card(
         card_header("Case Studies", class = "bg-info"),
         uiOutput(ns("case_study_regions"))),
@@ -29,7 +29,7 @@ mod_seawise_ui <- function(id){
       card(
         card_header("SEAwise Website", class = "bg-danger"),uiOutput(ns("website"))),
       ),
-    layout_column_wrap(heights_equal = "row", width = 1, fixed_width = FALSE, fillable = T,
+    layout_column_wrap(heights_equal = "row", width = 1, fixed_width = FALSE, fillable = TRUE,
                        card(
                          card_header("Today's Featured Research", class = "bg-primary"),
                          uiOutput(ns("featured_research")))

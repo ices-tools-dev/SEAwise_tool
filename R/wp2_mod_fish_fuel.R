@@ -1,4 +1,4 @@
-#' fish_fuel UI Function
+#' fish_fuel UI Function. WP2 submodule. 
 #'
 #' @description A shiny Module.
 #'
@@ -13,7 +13,10 @@ mod_fish_fuel_ui <- function(id){
   ns <- NS(id)
   tagList(
     card(height = "70vh", full_screen = TRUE, max_height = "100%",
-         layout_sidebar(sidebar = sidebar(uiOutput(ns("plot_filters"))),
+         layout_sidebar(sidebar = sidebar(mod_context_ui(ns("context_3")),
+                                          uiOutput(ns("plot_filters")),
+                                          #downloadButton(ns("test"), label = "Download")
+                                          ),
                         plotOutput(ns("fuel_plot")))
     ),
     card(card_header("Figure Information"),
@@ -28,10 +31,11 @@ mod_fish_fuel_server <- function(id, ecoregion, fuel_data){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
  
+    mod_context_server("context_3", "wp2")
     
     output$plot_filters <- renderUI({
       validate(
-        need(nrow(fuel_data())>0, message = "Carbon emissions data not available for this region.")
+        need(nrow(fuel_data())>0, message = "Fuel price data not available for this region.")
       )
       countries <- unique(fuel_data()$country)
       selectizeInput(ns("country_input"), "Select Country", choices = countries)
@@ -68,7 +72,7 @@ mod_fish_fuel_server <- function(id, ecoregion, fuel_data){
         
       plot <- ggplot(dat, aes(x=fuel_price, y=Price,colour=Fleet,group=Fleet)) +
         geom_point(size = 1.5) +
-        geom_smooth(method='lm',se=T)+
+        geom_smooth(method='lm',se=TRUE)+
         ggtitle(paste(var_labels[input$country_input],sep=" ")) +
         ylab(y_label)+
         scale_colour_discrete(name = "Fleet type",
@@ -82,9 +86,9 @@ mod_fish_fuel_server <- function(id, ecoregion, fuel_data){
         expand_limits(y = 2)
         
       if(ecoregion() == "greater_north_sea"){
-          plot + facet_wrap(spec~.,scale="free")
+          plot + facet_wrap(spec~.,scales="free")
         } else {
-          plot + facet_wrap(Stock~.,scale="free")
+          plot + facet_wrap(Stock~.,scales="free")
         }
       #}
     }) 
@@ -93,8 +97,18 @@ mod_fish_fuel_server <- function(id, ecoregion, fuel_data){
       validate(
         need(!is.null(figure_texts[[ecoregion()]]), message = "")
       )
-      text <- paste(select_text(figure_texts, ecoregion = ecoregion(), "wp3", "caption"))
-      HTML(text)
+      text <- paste(select_text(figure_texts, ecoregion = ecoregion(), "fish_fuel", "caption"))
+      tagList(HTML(text),
+              tags$p(
+                "Further information is available in the",
+                tags$a(
+                  "deliverable report",
+                  href   = dois[dois$topic=="wp2",]$doi,
+                  target = "_blank", 
+                  rel    = "noopener noreferrer"
+                )
+              )
+      )
     })
   })
 }

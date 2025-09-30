@@ -1,12 +1,12 @@
-Package: SEAwiseTool
-Title: SEAwise tool Landing Page
-Version: 0.0.0.9035
+Package: SEAwiseToolbox
+Title: SEAwise toolbox
+Version: 0.0.0.9041
 Authors@R: 
     person(given = "Neil",
            family = "Maginnis",
            role = c("aut", "cre"),
            email = "neil.maginnis@ices.com")
-Description: The landing page for the users of the SEAwise Ecosystem Based Fisheries Management Tool
+Description: The SEAwise Ecosystem Based Fisheries Management Toolbox, displaying outputs of the EU Horizon 2020 project #101000318.
 License: MIT + file LICENSE
 Imports: 
     bslib,
@@ -21,20 +21,17 @@ Imports:
     htmltools,
     leaflet,
     magrittr,
-    openxlsx,
-    pals,
-    pkgload,
-    R.utils,
+    rlang,
     RColorBrewer,
     reshape2,
     scales,
-    sf,
     shiny (>= 1.8.0),
     shinycssloaders,
     shinyjs,
     shinyWidgets,
     stringr,
-    tidyr
+    plotly,
+    sf
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.3.2

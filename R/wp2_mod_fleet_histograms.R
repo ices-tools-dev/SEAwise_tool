@@ -1,4 +1,4 @@
-#' fleet_histograms UI Function
+#' fleet_histograms UI Function. Submodules of WP2. Displays the time series of fleet characteristics for different countries and variables.
 #'
 #' @description A shiny Module.
 #'
@@ -12,7 +12,10 @@ mod_fleet_histograms_ui <- function(id){
   ns <- NS(id)
   tagList(
     card(height = "70vh", full_screen = TRUE, max_height = "100%",
-         layout_sidebar(sidebar = sidebar(uiOutput(ns("plot_filters"))),
+         layout_sidebar(sidebar = sidebar(mod_context_ui(ns("context_1")),
+                                          uiOutput(ns("plot_filters")),
+                                          #downloadButton(ns("test"), label = "Download")
+                                          ),
                         plotOutput(ns("fleet_histograms")))
     ),
     card(
@@ -28,6 +31,8 @@ mod_fleet_histograms_server <- function(id, fleet_data, ecoregion){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
  
+    mod_context_server("context_1", "wp2")
+    
     data <- reactive({
       
       dat <- fleet_data()
@@ -40,8 +45,8 @@ mod_fleet_histograms_server <- function(id, fleet_data, ecoregion){
       countries <- unique(data()$country)
       variables <- unique(data()$variable)
       tagList(
-        selectizeInput(ns("country_filter"), "Select Countries", choices = countries, selected = countries, multiple = T),
-        selectizeInput(ns("variable_filter"), "Select Fleet variables", choices = variables, selected = variables, multiple = T)
+        selectizeInput(ns("country_filter"), "Select Countries", choices = countries, selected = countries, multiple = TRUE),
+        selectizeInput(ns("variable_filter"), "Select Fleet variables", choices = variables, selected = variables, multiple = TRUE)
       )
     })
     
@@ -54,16 +59,11 @@ mod_fleet_histograms_server <- function(id, fleet_data, ecoregion){
       req(nrow(filtered_data()) > 0, ecoregion(), input$country_filter, input$variable_filter)
       
       ggplot(data=filtered_data(), aes(x=year, y=value, colour=fleet)) + 
-        geom_point(inherit.aes = T, size = 1.5,)+
+        geom_point(inherit.aes = TRUE, size = 1.5,)+
         geom_line(stat="identity",aes(x=year, y=value, colour = fleet, group = fleet),size=1)+
-        # scale_x_discrete(
-        #   breaks = as.numeric(seq(min(filtered_data()$year), max(filtered_data()$year), by = 2))
-        # )+
         scale_colour_discrete(name = "Fleet type",
                               labels = c("large" = "Large scale", "small" = "Small scale"))+
-        # facet_wrap(country + variable~.,scales="free_y",drop=FALSE,ncol=6)+
         facet_grid(variable ~ country, scales="free_y", drop=FALSE, labeller = as_labeller(seawise_var_labels()))+
-        # labs(x='Year', y='Number')+
         labs(x='Year', y='')+
         theme(axis.text.x = element_text(angle = 45,  hjust=1))
       
@@ -74,7 +74,19 @@ mod_fleet_histograms_server <- function(id, fleet_data, ecoregion){
         need(!is.null(figure_texts[[ecoregion()]]), message = "")
       )
       text <- paste(select_text(figure_texts, ecoregion = ecoregion(), "fleet_characteristics", "caption"))
-      HTML(text)
+      
+      tagList(HTML(text),
+              tags$p(
+                "Further information is available in the",
+                tags$a(
+                  "deliverable report",
+                  href   = dois[dois$topic=="wp2",]$doi,
+                  target = "_blank", 
+                  rel    = "noopener noreferrer"
+                )
+              )
+      )
+      
     })
   })
 }

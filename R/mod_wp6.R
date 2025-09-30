@@ -1,4 +1,6 @@
-#' wp6 UI Function
+#' wp6 UI Function. This module provides the UI for assessing the impact of management measures on the ecosystem and fisheries.
+#' It includes a tab for management strategy evaluation and a tab for multi-criteria decision analysis, depending on the case study region.
+#' 
 #'
 #' @description A shiny Module.
 #'

@@ -216,12 +216,9 @@ calculate_sub_utilities <- function(mcda, data, criteria) {
 #' @param mcda 
 #' @param ... 
 #'
-#' @returns
 #' @export
 #' @importFrom dplyr filter
 #'
-#'
-#' @examples
 calculate_utilities <- function(mcda, ... ) {
   args <- list(...)
   
@@ -373,12 +370,8 @@ run_maut <- function(mcda, criteria) {
 #' @param mcda 
 #' @param criteria 
 #' @param sub_criteria 
-#'
-#' @returns
-#' @export
 #' @importFrom dplyr select
 #'
-#' @examples
 generate_df <- function(mcda, criteria, sub_criteria = NULL) {
   
   # funciton to exctract the final scores form the mcda object.
@@ -425,12 +418,7 @@ generate_df <- function(mcda, criteria, sub_criteria = NULL) {
 #' @param criterion 
 #' @param num 
 #' @param ascending 
-#'
-#' @returns
-#' @export
 #' @importFrom dplyr arrange
-#'
-#' @examples
 top_scenarios <- function(dataframe, criterion, num = 5, ascending = FALSE) {
   
   dataframe %>%
@@ -516,15 +504,11 @@ plot_parallel_graph <- function(df, criteria, highlight = "top", top_bottom_crit
 #' @param subcriteria 
 #' @param parents 
 #' @param color 
-#'
-#' @returns
-#' @export
 #' @import dplyr
 #' @import RColorBrewer
 #' @import grDevices
 #' @importFrom reshape2 melt
-#'
-#' @examples
+
 plot_histogram <- function(df, criteria, weights, scenarios = NULL, subcriteria = FALSE, parents = NULL, color = "Set3") {
   
   # Filtrare i dati per gli scenari selezionati

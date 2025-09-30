@@ -1,4 +1,4 @@
-#' mse UI Function
+#' mse UI Function. Primary module for WP6, displaying the MSE results for the selected region. 
 #'
 #' @description A shiny Module.
 #'
@@ -10,8 +10,9 @@
 mod_mse_ui <- function(id){
   ns <- NS(id)
   tagList(
-                                      card(full_screen = T, 
-    layout_sidebar(sidebar = sidebar(selectInput(inputId = ns("mse_plot_id"),
+                                      card(full_screen = TRUE, 
+    layout_sidebar(sidebar = sidebar(mod_context_ui(ns("context_1")),
+                                     selectInput(inputId = ns("mse_plot_id"),
                                                             label = "Select plot for display", 
                                                             choices = c("Changes at Regional Level" = "regional_change",
                                                                         "SSB" = "SSB",
@@ -25,11 +26,11 @@ mod_mse_ui <- function(id){
                                                      selected = "regional_change")
                                      ),
                                            card_body(plotOutput(ns("mse_plot"), height = "70vh"), 
-                                                     max_height_full_screen =  "100%", fill = T)),
+                                                     max_height_full_screen =  "100%", fill = TRUE))
+      
+    ),
     card(card_header("Figure Information"),
          uiOutput(ns("caption"))) 
-      
-    )
   )
 }
     
@@ -39,6 +40,8 @@ mod_mse_ui <- function(id){
 mod_mse_server <- function(id, case_study){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
+    
+    mod_context_server("context_1", "wp6")
  
     output$mse_plot <- renderPlot({
       ecoregion <- switch(case_study(),
@@ -80,7 +83,17 @@ mod_mse_server <- function(id, case_study){
         need(!is.null(figure_texts[[case_study()]]), message = "")
       )
       text <- paste(select_text(figure_texts, ecoregion = case_study(), "mse", "caption"))
-      HTML(text)
+      tagList(HTML(text),
+              tags$p(
+                "Further information is available in the",
+                tags$a(
+                  "deliverable report",
+                  href   = dois[dois$topic=="wp6",]$doi,
+                  target = "_blank", 
+                  rel    = "noopener noreferrer"
+                )
+              )
+      )
     })
   })
 }

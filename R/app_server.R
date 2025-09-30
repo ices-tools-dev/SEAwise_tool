@@ -1,5 +1,15 @@
-#' The application server-side
-#'
+#' The application server-side. The server code is organized into modules, each of which is responsible for a specific part of the application.
+#' The modules include:
+#' - home: The home page of the application
+#' - seawise: Provides an overview of the project and its objectives
+#' - themes: Provides an overview of the themes of the project
+#' - case_studies: Provides an overview of the case studies of the project
+#' - resources: Provides links to the app license and resources associated with the project
+#' - results: Main engine of the application. Provides the results of the project.
+#' 
+#' - The server contains an observer that monitors the navbar selection and drop-down box, 
+#' updating the selected_locations reactive value and initializing the appropriate results module.
+#' - 
 #' @param input,output,session Internal parameters for {shiny}.
 #'     DO NOT REMOVE.
 #' @import shiny

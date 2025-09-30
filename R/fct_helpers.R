@@ -1,12 +1,13 @@
 #' helpers
 #'
-#' @description ´display_text´ subsets a list of dataframes and extracts the relevant section of text
+#' @description ´display_text´ subsets a list of dataframes and extracts the relevant section of text for the ecorregion, tab and section
 #'
 #' @param list_object a list of dataframes each containing 'ref' and 'text' columns
 #' @param tab a character vector - the name of a list entry
 #' @param section a character vector indicating which row to extract
 #'
 #' @return A character string
+#' @importFrom rlang '::'
 #'
 #' @noRd
 

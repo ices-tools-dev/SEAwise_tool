@@ -1,4 +1,4 @@
-#' carbon UI Function
+#' carbon UI Function. WP2 submodle, displaying the time series CO2 emissions from fishing of different countries. Filters by country
 #'
 #' @description A shiny Module.
 #'
@@ -11,7 +11,10 @@ mod_carbon_ui <- function(id){
   ns <- NS(id)
   tagList(
     card(height = "70vh", full_screen = TRUE, max_height = "100%",
-         layout_sidebar(sidebar = sidebar(uiOutput(ns("plot_filters"))),
+         layout_sidebar(sidebar = sidebar(mod_context_ui(ns("context_4")),
+                                          uiOutput(ns("plot_filters")),
+                                          #downloadButton(ns("test"), label = "Download")
+                                          ),
                         plotOutput(ns("carbon_plot")))
     ),
     card(card_header("Figure Information"),
@@ -25,6 +28,8 @@ mod_carbon_ui <- function(id){
 mod_carbon_server <- function(id, carbon_data, ecoregion){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
+    
+    mod_context_server("context_4", "wp2")
     
     data <- reactive({
       validate(
@@ -40,7 +45,7 @@ mod_carbon_server <- function(id, carbon_data, ecoregion){
       countries <- unique(data()$country)
       variables <- unique(data()$variable)
       tagList(
-        selectizeInput(ns("country_filter"), "Select Countries", choices = countries, selected = countries, multiple = T),
+        selectizeInput(ns("country_filter"), "Select Countries", choices = countries, selected = countries, multiple = TRUE),
         )
     })
     
@@ -54,7 +59,7 @@ mod_carbon_server <- function(id, carbon_data, ecoregion){
       req(nrow(filtered_data()) > 0, ecoregion())
       
       ggplot(data=data.frame(filtered_data()), aes(x=year, y=value, colour=fleet)) + 
-        geom_point(inherit.aes = T, size = 1.5)+
+        geom_point(inherit.aes = TRUE, size = 1.5)+
         geom_line(aes(x=year,y=value,colour=fleet, group=fleet),size=1)+
         scale_colour_discrete(name = "Fleet type",
                               labels = c("large" = "Large scale", "small" = "Small scale"))+
@@ -69,7 +74,17 @@ mod_carbon_server <- function(id, carbon_data, ecoregion){
         need(!is.null(figure_texts[[ecoregion()]]), message = "")
       )
       text <- paste(select_text(figure_texts, ecoregion = ecoregion(), "carbon", "caption"))
-      HTML(text)
+      tagList(HTML(text),
+              tags$p(
+                "Further information is available in the",
+                tags$a(
+                  "deliverable report",
+                  href   = dois[dois$topic=="wp2",]$doi,
+                  target = "_blank", 
+                  rel    = "noopener noreferrer"
+                )
+              )
+      )
     })
   })
 }

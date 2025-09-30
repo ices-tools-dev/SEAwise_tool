@@ -1,4 +1,5 @@
-#' socioeconomics UI Function
+#' socioeconomics UI Function. Submodule of WP2.
+#' Plots the time series of socioeconomic variables for different countries and fleet types, with filters for country and variable.
 #'
 #' @description A shiny Module.
 #'
@@ -11,7 +12,10 @@ mod_socioeconomics_ui <- function(id){
   ns <- NS(id)
   tagList(
     card(height = "70vh", full_screen = TRUE, max_height = "100%",
-         layout_sidebar(sidebar = sidebar(uiOutput(ns("plot_filters"))),
+         layout_sidebar(sidebar = sidebar(mod_context_ui(ns("context_1")),
+                                          uiOutput(ns("plot_filters")),
+                                          #downloadButton(ns("test"), label = "Download")
+                                          ),
                         plotOutput(ns("socioeco_plot")))
         ),
     card(card_header("Figure Information"),
@@ -26,6 +30,8 @@ mod_socioeconomics_server <- function(id, ecoregion, social_data){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
     
+    mod_context_server("context_1", "wp2")
+    
     data <- reactive({
       
       dat <- social_data()
@@ -38,8 +44,8 @@ mod_socioeconomics_server <- function(id, ecoregion, social_data){
       countries <- unique(data()$country)
       variables <- unique(data()$variable)
       tagList(
-        selectizeInput(ns("country_filter"), "Select Countries", choices = countries, selected = countries, multiple = T),
-        selectizeInput(ns("variable_filter"), "Select Fleet variables", choices = variables, selected = variables, multiple = T)
+        selectizeInput(ns("country_filter"), "Select Countries", choices = countries, selected = countries, multiple = TRUE),
+        selectizeInput(ns("variable_filter"), "Select Fleet variables", choices = variables, selected = variables, multiple = TRUE)
       )
     })
     
@@ -53,7 +59,7 @@ mod_socioeconomics_server <- function(id, ecoregion, social_data){
       req(nrow(filtered_data()) > 0, ecoregion())
 
       ggplot(aes(x=year,y=value,colour=fleet),data=filtered_data())+
-        geom_point(inherit.aes = T, size = 1.5) +
+        geom_point(inherit.aes = TRUE, size = 1.5) +
         geom_line(aes(x=year,y=value,colour=fleet, group=fleet),size=1)+
         # scale_x_discrete(
         #   breaks = as.numeric(seq(min(filtered_data()$year), max(filtered_data()$year), by = 2))
@@ -71,7 +77,17 @@ mod_socioeconomics_server <- function(id, ecoregion, social_data){
         need(!is.null(figure_texts[[ecoregion()]]), message = "")
       )
       text <- paste(select_text(figure_texts, ecoregion = ecoregion(), "communities", "caption"))
-      HTML(text)
+      tagList(HTML(text),
+              tags$p(
+                "Further information is available in the",
+                tags$a(
+                  "deliverable report",
+                  href   = dois[dois$topic=="wp2",]$doi,
+                  target = "_blank", 
+                  rel    = "noopener noreferrer"
+                )
+              )
+      )
     })
   })
 }

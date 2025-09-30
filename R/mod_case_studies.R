@@ -1,4 +1,4 @@
-#' case_studies UI Function
+#' case_studies UI Function. This module provides text overview of the case studies for each case-study region, together with the projects map of the area.
 #'
 #' @description A shiny Module.
 #'
