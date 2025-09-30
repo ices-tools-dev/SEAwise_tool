@@ -118,7 +118,7 @@ mod_rbs_server <- function(id, data, map_parameters, ecoregion){
         data_range <- data[[input$rbs_year]]
         
         ggplot(data = data,aes(fill = data_range, col=data_range))+
-          geom_sf(na.rm=T)+
+          geom_sf(na.rm=TRUE)+
           scale_fill_viridis_c(option="viridis",na.value = NA, name = "RBS",direction = -1)+
           scale_color_viridis_c(option="viridis",na.value = NA, name = "RBS",direction = -1)+
           geom_sf(data=land,col=NA,fill="grey")+
@@ -142,13 +142,13 @@ mod_rbs_server <- function(id, data, map_parameters, ecoregion){
       } else if (ecoregion() %in% c("mediterranean", "central_mediterranean", "eastern_mediterranean")) {
         
         ggplot()+
-          geom_raster(aes(x = x, y = y, fill =RBS_2017_2021_AdriaticSea_GSAs17_18),data = data[[1]],na.rm=T)+
+          geom_raster(aes(x = x, y = y, fill =RBS_2017_2021_AdriaticSea_GSAs17_18),data = data[[1]],na.rm=TRUE)+
           scale_fill_viridis_c(option="viridis",na.value = NA, name = "RBS in GSA 17 & 18",direction = -1)+
           new_scale_fill() +
-          geom_raster(aes(x = x, y = y, fill =RBS_2017_2021_WesternIonianSea_GSA19),data = data[[2]],na.rm=T)+
+          geom_raster(aes(x = x, y = y, fill =RBS_2017_2021_WesternIonianSea_GSA19),data = data[[2]],na.rm=TRUE)+
           scale_fill_viridis_c(option="magma",na.value = NA, name = "RBS in GSA 19",direction = -1)+
           new_scale_fill() +
-          geom_raster(aes(x = x, y = y, fill =GSA20_RBS),data = data[[3]],na.rm=T)+
+          geom_raster(aes(x = x, y = y, fill =GSA20_RBS),data = data[[3]],na.rm=TRUE)+
           scale_fill_viridis_c(option="plasma",na.value = NA, name = "RBS in GSA 20",direction = -1)+
           geom_sf(data=land,col=NA,fill="grey")+
           geom_sf(data=gsa[gsa$fid %in% c(9:12),],col="orange",alpha=0.2,fill=NA)+
@@ -171,7 +171,7 @@ mod_rbs_server <- function(id, data, map_parameters, ecoregion){
       } else if (ecoregion() %in% c("celtic_seas", "western_waters")){
         
         ggplot()+
-          geom_raster(aes(x = x, y = y, fill =state),data = data$rbs_cs,na.rm=T)+
+          geom_raster(aes(x = x, y = y, fill =state),data = data$rbs_cs,na.rm=TRUE)+
           scale_fill_viridis_c(option="plasma",na.value = NA, name = "RBS with the IGFS survey",direction = -1)+
           geom_sf(data=land,col=NA,fill="grey")+
           theme_classic()+
@@ -194,7 +194,7 @@ mod_rbs_server <- function(id, data, map_parameters, ecoregion){
       } else if (ecoregion() %in% c("bay_of_biscay", "western_waters")){
         
         ggplot()+
-          geom_raster(aes(x = x, y = y, fill =  RBS_surface_sarmean),data = data$rbs_bob,na.rm=T)+
+          geom_raster(aes(x = x, y = y, fill =  RBS_surface_sarmean),data = data$rbs_bob,na.rm=TRUE)+
           scale_fill_viridis_c(option="viridis",na.value = NA, name = "RBS with EVHOE survey",direction = -1)+
           geom_sf(data=land,col=NA,fill="grey")+
           theme_classic()+

@@ -74,7 +74,7 @@ mod_bycatch_server <- function(id, data, map_parameters, ecoregion){
                     season == input$bycatch_season)
       
       ggplot()+
-        geom_raster(aes(x = x, y = y, fill =value), data = dat, na.rm=T)+
+        geom_raster(aes(x = x, y = y, fill =value), data = dat, na.rm=TRUE)+
         scale_fill_viridis_d(name= "Bycatch mortality risk" ,na.value="white",labels=c("Low","Medium","High",""),option ="viridis",drop = FALSE)+
         geom_sf(data=land,col=NA,fill="grey")+
         theme_classic()+
@@ -123,10 +123,10 @@ mod_bycatch_server <- function(id, data, map_parameters, ecoregion){
         nameFillgsa20 <- c("Exposure of bull ray to LLS gear in GSA 20")
         
         ggplot()+
-          geom_sf(aes(fill = R3.score),col=NA,data = data[[1]],na.rm=T)+
+          geom_sf(aes(fill = R3.score),col=NA,data = data[[1]],na.rm=TRUE)+
           scale_fill_viridis_d(name= stringr::str_wrap(nameFillgsa18,25) ,na.value="white",labels=c("Low","Medium","High",""),option ="plasma",drop = FALSE) +
           new_scale_fill() +
-          geom_raster(aes(x = x, y = y, fill =T4_2_MPO_LLS_ex_score_GSA20),data = data[[2]],na.rm=T)+
+          geom_raster(aes(x = x, y = y, fill =T4_2_MPO_LLS_ex_score_GSA20),data = data[[2]],na.rm=TRUE)+
           scale_fill_viridis_c(option="plasma",na.value = NA, name = stringr::str_wrap(nameFillgsa20,25),direction=-1)+
           geom_sf(data=land,col=NA,fill="grey")+
           geom_sf(data=gsa[gsa$fid %in% c(9:12),],col="orange",alpha=0.2,fill=NA)+
@@ -153,7 +153,7 @@ mod_bycatch_server <- function(id, data, map_parameters, ecoregion){
       
       nameFillshearwater <- c("Bycatch mortality risk of balearic shearwater to longlines in the Bay of Biscay")
       ggplot() +
-        geom_sf(aes(fill = z),col=NA,data = data$shearwater,na.rm=T)+
+        geom_sf(aes(fill = z),col=NA,data = data$shearwater,na.rm=TRUE)+
           scale_fill_viridis_d(name= stringr::str_wrap(nameFillshearwater,25) ,na.value="white",labels=c("Low","Medium","High",""),option ="viridis",drop = FALSE) +
           geom_sf(data=land,col=NA,fill="grey")+
           # theme_classic()+
@@ -178,7 +178,7 @@ mod_bycatch_server <- function(id, data, map_parameters, ecoregion){
       nameFillcetacean <- c("Bycatch mortality risk of harbour porpoise to netters in Irish waters in summer")
      
       ggplot() +
-          geom_sf(aes(fill = R1.score),col=NA,data = data$cetacean,na.rm=T)+
+          geom_sf(aes(fill = R1.score),col=NA,data = data$cetacean,na.rm=TRUE)+
           scale_fill_viridis_d(na.value="white",labels=c("Low","Medium","High",""),option ="plasma",drop = FALSE,name = stringr::str_wrap(nameFillcetacean,25)) +
           geom_sf(data=land,col=NA,fill="grey")+
           # theme_classic()+

@@ -13,9 +13,9 @@
 mod_litter_ui <- function(id){
   ns <- NS(id)
   tagList(
-    card(card_header("Fishing Litter"),
-         withSpinner(plotOutput(ns("litter_plot"), height = "70vh")), full_screen = T
-    ),
+    card(layout_sidebar(sidebar = sidebar(mod_context_ui(ns("context_1"))),
+                        withSpinner(plotOutput(ns("litter_plot"), height = "70vh")), full_screen = TRUE
+    )),
     card(card_header("Figure Information"),
          uiOutput(ns("caption")))
   )
@@ -38,7 +38,7 @@ mod_litter_server <- function(id, data, map_parameters, ecoregion){
       
       if (ecoregion() == "greater_north_sea") {
         ggplot()+
-          geom_tile(aes(x = lon, y = lat, fill =noperkm),data = data,na.rm=T)+
+          geom_tile(aes(x = lon, y = lat, fill =noperkm),data = data,na.rm=TRUE)+
           scale_fill_viridis_c(option="viridis",na.value = NA, name = nameFilllit,direction = -1,trans = "sqrt")+
           geom_sf(data=land,col=NA,fill="grey")+
           theme_classic()+
@@ -74,18 +74,17 @@ mod_litter_server <- function(id, data, map_parameters, ecoregion){
         )
         
         litmap <- ggplot()+
-          geom_raster(aes(x = x, y = y, fill =pred),data = data[[1]],na.rm=T)+
+          geom_raster(aes(x = x, y = y, fill =pred),data = data[[1]],na.rm=TRUE)+
           scale_fill_viridis_c(option="viridis",na.value = NA, name = nameFillgsa18,direction = -1,trans = "sqrt")+
           new_scale_fill() +
-          # geom_raster(aes(x = x, y = y, fill =RBS_2017_2021_WesternIonianSea_GSA19),data = rbs_gsa19,na.rm=T)+
+          # geom_raster(aes(x = x, y = y, fill =RBS_2017_2021_WesternIonianSea_GSA19),data = rbs_gsa19,na.rm=TRUE)+
           # scale_fill_viridis_c(option="magma",na.value = NA, name = "RBSin GSA 19",direction = -1)+
           # new_scale_fill() +
-          geom_raster(aes(x = x, y = y, fill =T4_5_trawlslitter_GSA20),data = data[[2]],na.rm=T)+
+          geom_raster(aes(x = x, y = y, fill =T4_5_trawlslitter_GSA20),data = data[[2]],na.rm=TRUE)+
           scale_fill_viridis_c(option="plasma",na.value = NA, name = nameFillgsa20,direction = -1,trans = "sqrt",limits=c(0,1))+
           geom_sf(data=land,col=NA,fill="grey")+
           geom_sf(data=gsa[gsa$fid %in% c(9:12),],col="orange",alpha=0.2,fill=NA)+
           geom_sf_label(data=map_parameters()$gsa_centroids[gsa$fid %in% c(9:12),],aes(label = GSA),col="black")+
-          #geom_vline(xintercept = c(15.7,15.75) )+
           theme_classic()+
           theme(plot.background=element_blank(),
                 panel.background=element_blank(),
@@ -114,10 +113,9 @@ mod_litter_server <- function(id, data, map_parameters, ecoregion){
         )
 
         lit_plot <- ggplot()+
-          geom_raster(aes(x = lon, y = lat, fill =noperkm),data = data,na.rm=T)+
+          geom_raster(aes(x = lon, y = lat, fill =noperkm),data = data,na.rm=TRUE)+
           scale_fill_viridis_c(option="viridis",na.value = NA, name = nameFilllit,direction = -1,trans = "sqrt")+
           geom_sf(data=land,col=NA,fill="grey")+
-          #theme_classic()+
           theme(plot.background=element_blank(),
                 panel.background=element_blank(),
                 axis.text.y   = element_text(size=16),

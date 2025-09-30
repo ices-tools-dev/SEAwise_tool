@@ -40,7 +40,7 @@ mod_carbon_server <- function(id, carbon_data, ecoregion){
       countries <- unique(data()$country)
       variables <- unique(data()$variable)
       tagList(
-        selectizeInput(ns("country_filter"), "Select Countries", choices = countries, selected = countries, multiple = T),
+        selectizeInput(ns("country_filter"), "Select Countries", choices = countries, selected = countries, multiple = TRUE),
         )
     })
     
@@ -54,7 +54,7 @@ mod_carbon_server <- function(id, carbon_data, ecoregion){
       req(nrow(filtered_data()) > 0, ecoregion())
       
       ggplot(data=data.frame(filtered_data()), aes(x=year, y=value, colour=fleet)) + 
-        geom_point(inherit.aes = T, size = 1.5)+
+        geom_point(inherit.aes = TRUE, size = 1.5)+
         geom_line(aes(x=year,y=value,colour=fleet, group=fleet),size=1)+
         scale_colour_discrete(name = "Fleet type",
                               labels = c("large" = "Large scale", "small" = "Small scale"))+

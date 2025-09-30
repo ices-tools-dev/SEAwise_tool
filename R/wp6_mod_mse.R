@@ -25,11 +25,11 @@ mod_mse_ui <- function(id){
                                                      selected = "regional_change")
                                      ),
                                            card_body(plotOutput(ns("mse_plot"), height = "70vh"), 
-                                                     max_height_full_screen =  "100%", fill = T)),
+                                                     max_height_full_screen =  "100%", fill = TRUE))
+      
+    ),
     card(card_header("Figure Information"),
          uiOutput(ns("caption"))) 
-      
-    )
   )
 }
     
@@ -39,6 +39,8 @@ mod_mse_ui <- function(id){
 mod_mse_server <- function(id, case_study){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
+    
+    mod_context_server("context_1", "wp6")
  
     output$mse_plot <- renderPlot({
       ecoregion <- switch(case_study(),

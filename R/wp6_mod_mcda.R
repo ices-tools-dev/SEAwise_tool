@@ -137,7 +137,7 @@ mod_mcda_server <- function(id, case_study){
       req(mcda_data_outputs())
       scenario_utilities <- mcda_data_outputs()$results
       scenario_utilities[,-1] <- round(scenario_utilities[,-1], digits = 3)
-      scenario_utilities <- scenario_utilities[order(scenario_utilities$total_utility, decreasing = T),]
+      scenario_utilities <- scenario_utilities[order(scenario_utilities$total_utility, decreasing = TRUE),]
     
       scenario_utilities <- scenario_utilities %>% select(scenario, stocks, biodiversity, habitats, community, revenue, "well-being", "Total Utility" = total_utility) %>% rename_with(str_to_title)
       DT::datatable(data = scenario_utilities,

@@ -39,8 +39,8 @@ mod_socioeconomics_server <- function(id, ecoregion, social_data){
       countries <- unique(data()$country)
       variables <- unique(data()$variable)
       tagList(
-        selectizeInput(ns("country_filter"), "Select Countries", choices = countries, selected = countries, multiple = T),
-        selectizeInput(ns("variable_filter"), "Select Fleet variables", choices = variables, selected = variables, multiple = T)
+        selectizeInput(ns("country_filter"), "Select Countries", choices = countries, selected = countries, multiple = TRUE),
+        selectizeInput(ns("variable_filter"), "Select Fleet variables", choices = variables, selected = variables, multiple = TRUE)
       )
     })
     
@@ -54,7 +54,7 @@ mod_socioeconomics_server <- function(id, ecoregion, social_data){
       req(nrow(filtered_data()) > 0, ecoregion())
 
       ggplot(aes(x=year,y=value,colour=fleet),data=filtered_data())+
-        geom_point(inherit.aes = T, size = 1.5) +
+        geom_point(inherit.aes = TRUE, size = 1.5) +
         geom_line(aes(x=year,y=value,colour=fleet, group=fleet),size=1)+
         # scale_x_discrete(
         #   breaks = as.numeric(seq(min(filtered_data()$year), max(filtered_data()$year), by = 2))

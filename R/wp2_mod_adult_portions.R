@@ -41,8 +41,8 @@ mod_adult_portions_server <- function(id, portion_data, ecoregion){
         stocks <- sort(unique(data()$stock))
       }
       tagList(
-        selectizeInput(ns("country_filter"), "Select Countries", choices = countries, selected = countries, multiple = T),
-        selectizeInput(ns("stock_filter"), "Select Stock", choices = stocks, selected = stocks[1:5], multiple = T)
+        selectizeInput(ns("country_filter"), "Select Countries", choices = countries, selected = countries, multiple = TRUE),
+        selectizeInput(ns("stock_filter"), "Select Stock", choices = stocks, selected = stocks[1:5], multiple = TRUE)
       )
     })
     
