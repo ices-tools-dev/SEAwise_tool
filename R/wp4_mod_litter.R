@@ -27,6 +27,9 @@ mod_litter_ui <- function(id){
 mod_litter_server <- function(id, data, map_parameters, ecoregion){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
+    
+    mod_context_server("context_1", "wp4")
+    
     output$litter_plot <- renderPlot({
       
       nameFilllit <- bquote(
@@ -150,7 +153,17 @@ mod_litter_server <- function(id, data, map_parameters, ecoregion){
         need(!is.null(figure_texts[[ecoregion()]]), message = "")
       )
       text <- paste(select_text(figure_texts, ecoregion = ecoregion(), "litter", "caption"))
-      HTML(text)
+      tagList(HTML(text),
+              tags$p(
+                "Further information is available in the",
+                tags$a(
+                  "deliverable report",
+                  href   = dois[dois$topic=="wp4",]$doi,
+                  target = "_blank", 
+                  rel    = "noopener noreferrer"
+                )
+              )
+      )
     })
     
   })

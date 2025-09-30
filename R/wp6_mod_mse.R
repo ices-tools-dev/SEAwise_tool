@@ -10,8 +10,9 @@
 mod_mse_ui <- function(id){
   ns <- NS(id)
   tagList(
-                                      card(full_screen = T, 
-    layout_sidebar(sidebar = sidebar(selectInput(inputId = ns("mse_plot_id"),
+                                      card(full_screen = TRUE, 
+    layout_sidebar(sidebar = sidebar(mod_context_ui(ns("context_1")),
+                                     selectInput(inputId = ns("mse_plot_id"),
                                                             label = "Select plot for display", 
                                                             choices = c("Changes at Regional Level" = "regional_change",
                                                                         "SSB" = "SSB",
@@ -82,7 +83,17 @@ mod_mse_server <- function(id, case_study){
         need(!is.null(figure_texts[[case_study()]]), message = "")
       )
       text <- paste(select_text(figure_texts, ecoregion = case_study(), "mse", "caption"))
-      HTML(text)
+      tagList(HTML(text),
+              tags$p(
+                "Further information is available in the",
+                tags$a(
+                  "deliverable report",
+                  href   = dois[dois$topic=="wp6",]$doi,
+                  target = "_blank", 
+                  rel    = "noopener noreferrer"
+                )
+              )
+      )
     })
   })
 }

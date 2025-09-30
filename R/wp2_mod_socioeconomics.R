@@ -12,7 +12,10 @@ mod_socioeconomics_ui <- function(id){
   ns <- NS(id)
   tagList(
     card(height = "70vh", full_screen = TRUE, max_height = "100%",
-         layout_sidebar(sidebar = sidebar(uiOutput(ns("plot_filters"))),
+         layout_sidebar(sidebar = sidebar(mod_context_ui(ns("context_1")),
+                                          uiOutput(ns("plot_filters")),
+                                          #downloadButton(ns("test"), label = "Download")
+                                          ),
                         plotOutput(ns("socioeco_plot")))
         ),
     card(card_header("Figure Information"),
@@ -26,6 +29,8 @@ mod_socioeconomics_ui <- function(id){
 mod_socioeconomics_server <- function(id, ecoregion, social_data){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
+    
+    mod_context_server("context_1", "wp2")
     
     data <- reactive({
       
@@ -72,7 +77,17 @@ mod_socioeconomics_server <- function(id, ecoregion, social_data){
         need(!is.null(figure_texts[[ecoregion()]]), message = "")
       )
       text <- paste(select_text(figure_texts, ecoregion = ecoregion(), "communities", "caption"))
-      HTML(text)
+      tagList(HTML(text),
+              tags$p(
+                "Further information is available in the",
+                tags$a(
+                  "deliverable report",
+                  href   = dois[dois$topic=="wp2",]$doi,
+                  target = "_blank", 
+                  rel    = "noopener noreferrer"
+                )
+              )
+      )
     })
   })
 }

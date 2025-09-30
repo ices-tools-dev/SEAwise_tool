@@ -14,7 +14,8 @@ mod_bycatch_ui <- function(id){
   ns <- NS(id)
   tagList(
     card(height = "70vh", full_screen = TRUE, max_height = "100%",
-         layout_sidebar(sidebar = sidebar(uiOutput(ns("bycatch_selection_panel"))),
+         layout_sidebar(sidebar = sidebar(mod_context_ui(ns("context_1")),
+                                          uiOutput(ns("bycatch_selection_panel"))),
                         uiOutput(ns("bycatch_main_panel")))),
     card(card_header("Figure Information"),
          uiOutput(ns("caption")))
@@ -27,6 +28,8 @@ mod_bycatch_ui <- function(id){
 mod_bycatch_server <- function(id, data, map_parameters, ecoregion){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
+    
+    mod_context_server("context_1", "wp4")
     
     output$bycatch_selection_panel <- renderUI({
       if(ecoregion()=="greater_north_sea") {
@@ -204,7 +207,17 @@ mod_bycatch_server <- function(id, data, map_parameters, ecoregion){
         need(!is.null(figure_texts[[ecoregion()]]), message = "")
       )
       text <- paste(select_text(figure_texts, ecoregion = ecoregion(), "bycatch", "caption"))
-      HTML(text)
+      tagList(HTML(text),
+              tags$p(
+                "Further information is available in the",
+                tags$a(
+                  "deliverable report",
+                  href   = dois[dois$topic=="wp4",]$doi,
+                  target = "_blank", 
+                  rel    = "noopener noreferrer"
+                )
+              )
+      )
     })
   })
 }

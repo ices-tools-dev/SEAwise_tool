@@ -11,7 +11,8 @@ mod_adult_portions_ui <- function(id){
   ns <- NS(id)
   tagList(
     card(height = "70vh", full_screen = TRUE, max_height = "100%",
-         layout_sidebar(sidebar = sidebar(uiOutput(ns("plot_filters"))),
+         layout_sidebar(sidebar = sidebar(mod_context_ui(ns("context_5")),
+                                          uiOutput(ns("plot_filters"))),
                         plotOutput(ns("adult_portions"))),
          card(card_header("Figure Information"),
               uiOutput(ns("caption")))
@@ -25,6 +26,8 @@ mod_adult_portions_ui <- function(id){
 mod_adult_portions_server <- function(id, portion_data, ecoregion){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
+    
+    mod_context_server("context_5", "wp2")
     
     data <- reactive({
       dat <- portion_data()

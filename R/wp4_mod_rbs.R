@@ -13,11 +13,9 @@ mod_rbs_ui <- function(id){
   ns <- NS(id)
   tagList(
     card(height = "70vh", full_screen = TRUE, max_height = "100%",
-         #layout_sidebar(sidebar = sidebar(uiOutput(ns("plot_filters"))),
+         layout_sidebar(sidebar = sidebar(mod_context_ui(ns("context_1"))),
                         withSpinner(uiOutput(ns("rbs_main_panel"),height = "65vh"))
-         
-                                    
-      #)
+      )
     ),
     card(card_header("Figure Information"),
          uiOutput(ns("caption")))
@@ -32,54 +30,12 @@ mod_rbs_server <- function(id, data, map_parameters, ecoregion){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
  
-    output$plot_filters <- renderUI({
-  
-      if (ecoregion() == "greater_north_sea") {
-        tagList(
-          radioButtons(
-            inputId = ns("rbs_switch"),
-            label = "Select single year or RBS time series:",
-            choices = c("Single Year" = "focus", "Time Series" = "time_series"),
-            selected = "time_series"
-          ),
-          # Conditionally create the year selector if "focus" is selected
-          if (!is.null(input$rbs_switch) && input$rbs_switch == "focus") {
-            selectInput(
-              inputId = ns("rbs_year"),
-              label = "Relative Benthic State in Year:",
-              choices = as.character(2009:2018),
-              selected = "2018"
-            )
-          } else {
-            NULL
-          }
-        )
-      } else {
-        # If ecoregion() is anything else, show nothing or some alternative
-        NULL
-      }
-    })
-      
-      # if(ecoregion() == "greater_north_sea"){
-      #   tagList(
-      #     radioButtons(ns("rbs_switch"), "Select focused view or RBS time series:", choices = c("Single Year" = "focus", "Time Series" = "time_series"), selected = "time_series"),
-      #       if(input$rbs_switch == "focus"){
-      #         selectInput(ns("rbs_year"), "Relative Benthic State in Year:", choices = as.character(2009:2018), selected = "2018")
-      #       } else {NULL}
-      #     
-      #   )
-      # 
-      #   
-      # }
-    # })
+    mod_context_server("context_1", "wp4")
+    
     
     output$rbs_main_panel <- renderUI({
       req(ecoregion())
-      #req(!is.null(input$rbs_switch))
-      
-      # if (ecoregion() == "greater_north_sea" && input$rbs_switch == "focus") {
-      #   withSpinner(plotOutput(ns("rbs_plot"),height = "70vh"))
-      # } else 
+     
         if(ecoregion() == "greater_north_sea"){  #&& input$rbs_switch == "time_series") {
         plotOutput(ns("rbs_time_series"),height = "70vh")
       } else { 
@@ -218,7 +174,17 @@ mod_rbs_server <- function(id, data, map_parameters, ecoregion){
   
     output$caption <- renderUI({
       text <- paste(select_text(figure_texts, ecoregion = ecoregion(), "rbs", "caption"))
-      HTML(text)
+      tagList(HTML(text),
+              tags$p(
+                "Further information is available in the",
+                tags$a(
+                  "deliverable report",
+                  href   = dois[dois$topic=="wp4",]$doi,
+                  target = "_blank", 
+                  rel    = "noopener noreferrer"
+                )
+              )
+      )
     })
   })
 }

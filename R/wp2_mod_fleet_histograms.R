@@ -12,7 +12,10 @@ mod_fleet_histograms_ui <- function(id){
   ns <- NS(id)
   tagList(
     card(height = "70vh", full_screen = TRUE, max_height = "100%",
-         layout_sidebar(sidebar = sidebar(uiOutput(ns("plot_filters"))),
+         layout_sidebar(sidebar = sidebar(mod_context_ui(ns("context_1")),
+                                          uiOutput(ns("plot_filters")),
+                                          #downloadButton(ns("test"), label = "Download")
+                                          ),
                         plotOutput(ns("fleet_histograms")))
     ),
     card(
@@ -28,6 +31,8 @@ mod_fleet_histograms_server <- function(id, fleet_data, ecoregion){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
  
+    mod_context_server("context_1", "wp2")
+    
     data <- reactive({
       
       dat <- fleet_data()

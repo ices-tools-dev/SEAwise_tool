@@ -11,7 +11,10 @@ mod_wp2_projections_ui <- function(id){
   ns <- NS(id)
   tagList(
       card(height = "70vh", full_screen = TRUE, max_height = "100%",
-           layout_sidebar(sidebar = sidebar(uiOutput(ns("filters"))),
+           layout_sidebar(sidebar = sidebar(mod_context_ui(ns("context_1")),
+                                            uiOutput(ns("filters")),
+                                            #downloadButton(ns("test"), label = "Download")
+                                            ),
       plotOutput(ns("projections_plot"))
          )
       ),
@@ -27,6 +30,8 @@ mod_wp2_projections_server <- function(id, projection_data, ecoregion){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
  
+    mod_context_server("context_1", "wp2_projections")
+    
     output$filters <- renderUI({
       validate(
         need(!is.null(projection_data()), message = "Projection data not available."),

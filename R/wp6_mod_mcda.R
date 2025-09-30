@@ -15,11 +15,12 @@
 mod_mcda_ui <- function(id){
   ns <- NS(id)
   tagList(
-    layout_sidebar(sidebar = sidebar("Set Weightings", 
+    layout_sidebar(sidebar = sidebar(mod_context_ui(ns("context_1")),
+                                     "Set Weightings", 
                                      sliderInput(ns("stocks"), "Set Stocks utility weighting", value = 5, min = 0, max = 10, step = 1),
                                      sliderInput(ns("biodiversity"), "Set Biodiversity utility weighting", value = 5, min = 0, max = 10, step = 1),
                                      sliderInput(ns("habitats"), "Set habitats utility weighting", value = 5, min = 0, max = 10, step = 1),
-                                     sliderInput(ns("community"), "Set community utility weighting", value = 5, min = 0, max = 10, step = 1, ticks = T),
+                                     sliderInput(ns("community"), "Set community utility weighting", value = 5, min = 0, max = 10, step = 1, ticks = TRUE),
                                      sliderInput(ns("revenue"), "Set revenue utility weighting", value = 5, min = 0, max = 10),
                                      sliderInput(ns("well-being"), "Set well-being Weighting", value = 5, min = 0, max = 10)
                                      ),
@@ -35,7 +36,9 @@ mod_mcda_ui <- function(id){
       )
     )
     
-    )
+    ),
+    card(card_header("Figure Information"),
+         uiOutput(ns("caption")))
   )
 }
 
@@ -46,7 +49,7 @@ mod_mcda_server <- function(id, case_study){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
     
-    
+    mod_context_server("context_1", "wp6")
     # macro_weight <- reactive({sum(input$fisheries_weighting, input$socioeconomic_weighting, input$ecological_weighting)})
     
     weightings <- reactive({
@@ -155,6 +158,24 @@ mod_mcda_server <- function(id, case_study){
                      subcriteria = FALSE,
       )
       
+    })
+    
+    output$caption <- renderUI({
+      validate(
+        need(!is.null(figure_texts[[case_study()]]), message = "")
+      )
+      text <- paste(select_text(figure_texts, ecoregion = case_study(), "mcda", "caption"))
+      tagList(HTML(text),
+              tags$p(
+                "Further information is available in the",
+                tags$a(
+                  "deliverable report",
+                  href   = dois[dois$topic=="wp6",]$doi,
+                  target = "_blank", 
+                  rel    = "noopener noreferrer"
+                )
+              )
+      )
     })
   })
 }
