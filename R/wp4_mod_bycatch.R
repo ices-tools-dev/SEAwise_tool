@@ -1,4 +1,5 @@
-#' bycatch UI Function
+#' bycatch UI Function. Submodule of WP4.
+#' Plots the bycatch mortality risk for particular Protected, Endangered and Threatened species. Varies by case study.In some cases, filters for species and gear.
 #'
 #' @description A shiny Module.
 #'

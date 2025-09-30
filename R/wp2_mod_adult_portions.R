@@ -1,4 +1,4 @@
-#' adult_portions UI Function
+#' adult_portions UI Function. Submodule of WP2. Takes data on adult portions provided by fishing, generating filters and plots
 #'
 #' @description A shiny Module.
 #'

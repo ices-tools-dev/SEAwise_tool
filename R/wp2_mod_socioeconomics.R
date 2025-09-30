@@ -1,4 +1,5 @@
-#' socioeconomics UI Function
+#' socioeconomics UI Function. Submodule of WP2.
+#' Plots the time series of socioeconomic variables for different countries and fleet types, with filters for country and variable.
 #'
 #' @description A shiny Module.
 #'

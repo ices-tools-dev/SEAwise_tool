@@ -1,4 +1,4 @@
-#' fleet_histograms UI Function
+#' fleet_histograms UI Function. Submodules of WP2. Displays the time series of fleet characteristics for different countries and variables.
 #'
 #' @description A shiny Module.
 #'

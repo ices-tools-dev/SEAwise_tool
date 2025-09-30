@@ -1,4 +1,4 @@
-#' results UI Function
+#' results UI Function. This module provides the SEAwise results, loading and displaying the results of the work packages for the selected region.
 #'
 #' @description A shiny Module.
 #'

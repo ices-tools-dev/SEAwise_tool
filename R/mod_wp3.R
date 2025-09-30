@@ -1,4 +1,5 @@
-#' wp3 UI Function
+#' wp3 UI Function. This module provides the UI for the stock dynamics work package. Plots are displayed
+#' for recruitment, fishing pressure, catch and spawning stock biomass. The user can select the stock and the management and climate scenarios to display.
 #'
 #' @description A shiny Module.
 #'
@@ -25,12 +26,14 @@ mod_wp3_ui <- function(id){
     )
 }
 
-#' wp3 Server Functions
+#' wp3 Server Functions, for displaying results on stock dynamics; recruitment, fishing pressure, catch and spawning stock biomass.
 #'
 #' @noRd 
 mod_wp3_server <- function(id, case_study){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
+    
+    mod_context_server("context_1", "wp3")
     
     case_study_data <- reactive({
       if (case_study() %in% c("central_mediterranean", "eastern_mediterranean")){

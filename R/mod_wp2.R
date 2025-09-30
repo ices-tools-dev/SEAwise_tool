@@ -1,4 +1,4 @@
-#' wp2 UI Function
+#' wp2 UI Function. This module provides the UI for the social and economic effects work package.
 #'
 #' @description A shiny Module.
 #'

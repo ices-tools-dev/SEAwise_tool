@@ -1,4 +1,4 @@
-#' wp2_projections UI Function
+#' wp2_projections UI Function. A separate module for displaying the projections of the social and economic effects of the management scenarios considered by SEAwise.
 #'
 #' @description A shiny Module.
 #'

@@ -48,5 +48,5 @@ map_ecoregion <- function(eco_shape, map_shape) {
       group = "Eco_regions",
       label = ~Ecoregion
     ) %>%
-    leaflet::setView(lng = 12.5, lat = 47.5, zoom = 0.75) 
+    leaflet::setView(lng = 12.5, lat = 50, zoom = 0.75) 
 }

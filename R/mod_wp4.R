@@ -1,4 +1,5 @@
-#' wp4 UI Function
+#' wp4 UI Function. This module provides the UI for the ecological effects of fisheries work package,
+#' specifically the relative benthic state, litter and bycatch modules.
 #'
 #' @description A shiny Module.
 #'
@@ -45,7 +46,7 @@ mod_wp4_server <- function(id, ecoregion){
                  mod_litter_ui(ns("litter_1"))),
         tabPanel("Bycatch",
                  mod_bycatch_ui(ns("bycatch_1")))
-        )
+      )
     })
     
     map_parameters <- reactive({
@@ -58,8 +59,6 @@ mod_wp4_server <- function(id, ecoregion){
     mod_litter_server("litter_1", data()$litter, map_parameters, ecoregion)
     
     mod_rbs_server("rbs_1", data()$rbs, map_parameters, ecoregion)
-    
-    mod_ecosystem_risk_server("ecosystem_risk_1", data()$ecosystem)
     
   })
 }

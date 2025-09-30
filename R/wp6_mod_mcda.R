@@ -1,4 +1,5 @@
-#' mcda UI Function
+#' mcda UI Function. Submodule of WP6, displaying the results of the multi-criteria decision analysis for the mediterranean. 
+#' Users can set the weightings for the different criteria and display the results in a table and histogram.
 #'
 #' @description A shiny Module.
 #'

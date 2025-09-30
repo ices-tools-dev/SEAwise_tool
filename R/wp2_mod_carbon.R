@@ -1,4 +1,4 @@
-#' carbon UI Function
+#' carbon UI Function. WP2 submodle, displaying the time series CO2 emissions from fishing of different countries. Filters by country
 #'
 #' @description A shiny Module.
 #'

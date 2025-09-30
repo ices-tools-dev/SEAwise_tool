@@ -1,4 +1,5 @@
-#' home UI Function
+#' home UI Function. This module provides the home page of the application, including a welcome message, a map of the case study regions, and a list of the partners.
+#' The map focuses on the case study regions, the drop-down box allows the user to select the region to view the results of.
 #'
 #' @description A shiny Module.
 #'

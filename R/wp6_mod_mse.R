@@ -1,4 +1,4 @@
-#' mse UI Function
+#' mse UI Function. Primary module for WP6, displaying the MSE results for the selected region. 
 #'
 #' @description A shiny Module.
 #'

@@ -1,4 +1,4 @@
-#' fish_fuel UI Function
+#' fish_fuel UI Function. WP2 submodule. 
 #'
 #' @description A shiny Module.
 #'
